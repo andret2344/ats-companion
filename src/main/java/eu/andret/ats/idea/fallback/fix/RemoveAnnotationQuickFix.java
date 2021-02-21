@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.ats.idea.fallback.FallbackMethodInspection;
+import eu.andret.ats.idea.utilities.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class RemoveAnnotationQuickFix implements LocalQuickFix {
 					.map(ProblemDescriptor::getPsiElement)
 					.map(PsiElement::getParent)
 					.map(psiElement -> (PsiMethod) psiElement)
-					.map(psiMethod -> psiMethod.getAnnotation(FallbackMethodInspection.API_ANNOTATION_FALLBACK))
+					.map(psiMethod -> psiMethod.getAnnotation(Constants.API_ANNOTATION_FALLBACK))
 					.ifPresent(PsiElement::delete);
 		} catch (final IncorrectOperationException e) {
 			LOG.error(e);

@@ -1,0 +1,10 @@
+public class FooCommand {
+  @Argument
+  public void fooArgument(Foo foo, int bar) {
+  }
+
+  <spot>@Fallback
+  public void fooArgument(String foo, int bar) {
+
+  }</spot>
+}

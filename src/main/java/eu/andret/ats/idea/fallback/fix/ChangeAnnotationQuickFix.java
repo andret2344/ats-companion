@@ -8,7 +8,7 @@ import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.ats.idea.fallback.FallbackMethodInspection;
+import eu.andret.ats.idea.utilities.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -30,10 +30,10 @@ public class ChangeAnnotationQuickFix implements LocalQuickFix {
 					.map(PsiElement::getParent)
 					.map(psiElement -> (PsiMethod) psiElement)
 					.ifPresent(psiMethod -> {
-						final PsiAnnotation annotation = psiMethod.getAnnotation(FallbackMethodInspection.API_ANNOTATION_FALLBACK);
+						final PsiAnnotation annotation = psiMethod.getAnnotation(Constants.API_ANNOTATION_FALLBACK);
 						if (annotation != null) {
 							annotation.delete();
-							psiMethod.getModifierList().addAnnotation(FallbackMethodInspection.API_ANNOTATION_ARGUMENT);
+							psiMethod.getModifierList().addAnnotation(Constants.API_ANNOTATION_ARGUMENT);
 						}
 					});
 		} catch (final IncorrectOperationException e) {

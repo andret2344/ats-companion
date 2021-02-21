@@ -14,6 +14,7 @@ import eu.andret.ats.idea.fallback.fix.ChangeAnnotationQuickFix;
 import eu.andret.ats.idea.fallback.fix.RefactorMethodQuickFix;
 import eu.andret.ats.idea.fallback.fix.RemoveAnnotationQuickFix;
 import eu.andret.ats.idea.fallback.fix.RemoveMethodQuickFix;
+import eu.andret.ats.idea.utilities.Constants;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,9 +24,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionTool {
-	public static final String API_ANNOTATION_ARGUMENT = "eu.andret.arguments.api.annotation.Argument";
-	public static final String API_ANNOTATION_FALLBACK = "eu.andret.arguments.api.annotation.Fallback";
-
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
@@ -44,7 +42,7 @@ public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionToo
 						.isEmpty()) {
 					return;
 				}
-				final PsiAnnotation fallback = method.getAnnotation(API_ANNOTATION_FALLBACK);
+				final PsiAnnotation fallback = method.getAnnotation(Constants.API_ANNOTATION_FALLBACK);
 				if (fallback != null) {
 					final List<PsiMethod> psiMethods = Optional.of(method)
 							.map(PsiJvmMember::getContainingClass)
@@ -53,7 +51,7 @@ public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionToo
 							.flatMap(Arrays::stream)
 							.collect(Collectors.toList());
 					final Optional<PsiMethod> matchingMethod = psiMethods.stream()
-							.filter(psiMethod -> psiMethod.hasAnnotation(API_ANNOTATION_ARGUMENT))
+							.filter(psiMethod -> psiMethod.hasAnnotation(Constants.API_ANNOTATION_ARGUMENT))
 							.filter(psiMethod -> psiMethod.getName().equals(method.getName()))
 							.findAny();
 					if (matchingMethod.isEmpty() && method.getNameIdentifier() != null) {

@@ -1,0 +1,5 @@
+public class FooCommand {
+  @Argument
+  public void <spot>fooArgument(Foo foo, int bar)</spot> {
+  }
+}

@@ -1,6 +1,7 @@
 <idea-plugin>
     <id>eu.andret.ats.idea</id>
-    <name>Utility for Andret Tools System</name>
+    <!--suppress PluginXmlCapitalization -->
+    <name>atsIdea</name>
     <version>0.0.1</version>
     <vendor email="andret2344@gmail.com" url="https://andret.eu/">Andret2344</vendor>
 
@@ -38,6 +39,10 @@
                 level="WARNING"
                 implementationClass="eu.andret.ats.idea.fallback.FallbackMethodInspection"
         />
+        <intentionAction>
+            <className>eu.andret.ats.idea.argument.FallbackMethodGenerator</className>
+            <category>Suggestions for the "Andret Tools System"</category>
+        </intentionAction>
     </extensions>
 
     <application-components>
