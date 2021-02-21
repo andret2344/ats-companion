@@ -1,0 +1,52 @@
+<idea-plugin>
+    <id>eu.andret.ats.idea</id>
+    <name>Utility for Andret Tools System</name>
+    <version>0.0.1</version>
+    <vendor email="andret2344@gmail.com" url="https://andret.eu/">Andret2344</vendor>
+
+    <description>
+        <![CDATA[
+        Utility for <a href="https://gitlab.com/andret-tools-system/ats-arguments">Andret Tools
+            System</a> library.
+        ]]>
+    </description>
+    <change-notes>
+        <![CDATA[
+        <ul>
+            <li><b>0.0.1</b> Initial release.</li>
+        </ul>
+        ]]>
+    </change-notes>
+
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="143.2370.31"/>
+
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection
+                language="JAVA"
+                displayName="Invalid usage of @Fallback annotation"
+                groupPath="Java"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.fallback.FallbackMethodInspection"
+        />
+    </extensions>
+
+    <application-components>
+    </application-components>
+
+    <project-components>
+    </project-components>
+
+    <actions>
+    </actions>
+
+</idea-plugin>
