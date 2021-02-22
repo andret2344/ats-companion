@@ -31,7 +31,7 @@ public class RefactorMethodQuickFix implements LocalQuickFix {
 			Optional.of(descriptor)
 					.map(ProblemDescriptor::getPsiElement)
 					.map(PsiElement::getParent)
-					.map(psiElement -> (PsiMethod) psiElement)
+					.map(PsiMethod.class::cast)
 					.ifPresent(psiMethod -> {
 						final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
 						final RefactoringActionHandler handler = RefactoringActionHandlerFactory.getInstance().createRenameHandler();

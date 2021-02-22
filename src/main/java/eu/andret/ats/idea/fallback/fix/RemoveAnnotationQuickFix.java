@@ -27,7 +27,7 @@ public class RemoveAnnotationQuickFix implements LocalQuickFix {
 			Optional.of(descriptor)
 					.map(ProblemDescriptor::getPsiElement)
 					.map(PsiElement::getParent)
-					.map(psiElement -> (PsiMethod) psiElement)
+					.map(PsiMethod.class::cast)
 					.map(psiMethod -> psiMethod.getAnnotation(Constants.API_ANNOTATION_FALLBACK))
 					.ifPresent(PsiElement::delete);
 		} catch (final IncorrectOperationException e) {

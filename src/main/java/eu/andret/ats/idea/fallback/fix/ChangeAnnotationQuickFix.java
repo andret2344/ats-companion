@@ -4,9 +4,13 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.idea.utilities.Constants;
 import org.jetbrains.annotations.NotNull;
@@ -28,12 +32,16 @@ public class ChangeAnnotationQuickFix implements LocalQuickFix {
 			Optional.of(descriptor)
 					.map(ProblemDescriptor::getPsiElement)
 					.map(PsiElement::getParent)
-					.map(psiElement -> (PsiMethod) psiElement)
+					.map(PsiMethod.class::cast)
 					.ifPresent(psiMethod -> {
 						final PsiAnnotation annotation = psiMethod.getAnnotation(Constants.API_ANNOTATION_FALLBACK);
 						if (annotation != null) {
 							annotation.delete();
-							psiMethod.getModifierList().addAnnotation(Constants.API_ANNOTATION_ARGUMENT);
+							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+							final PsiModifierList psiModifierList = psiMethod.getModifierList();
+							final PsiAnnotation psiAnnotation = factory.createAnnotationFromText("@" + Constants.API_ANNOTATION_ARGUMENT, psiMethod);
+							final PsiElement inserted = psiModifierList.addBefore(psiAnnotation, psiModifierList.getFirstChild());
+							JavaCodeStyleManager.getInstance(project).shortenClassReferences(inserted);
 						}
 					});
 		} catch (final IncorrectOperationException e) {

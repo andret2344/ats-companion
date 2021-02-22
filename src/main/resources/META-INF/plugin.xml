@@ -39,6 +39,26 @@
                 level="WARNING"
                 implementationClass="eu.andret.ats.idea.fallback.FallbackMethodInspection"
         />
+        <localInspection
+                language="JAVA"
+                displayName="Missing superclass for @BaseCommand class"
+                groupPath="Java"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.basecommand.MissingSuperClassInspection"
+        />
+        <localInspection
+                language="JAVA"
+                displayName="Missing @BaseCommand annotation for AnnotatedCommandExecutor subclass"
+                groupPath="Java"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.basecommand.MissingBaseCommandAnnotation"
+        />
         <intentionAction>
             <className>eu.andret.ats.idea.argument.FallbackMethodGenerator</className>
             <category>Suggestions for the "Andret Tools System"</category>
