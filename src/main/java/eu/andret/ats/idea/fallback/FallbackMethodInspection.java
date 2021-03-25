@@ -9,11 +9,12 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJvmMember;
 import com.intellij.psi.PsiMethod;
+import eu.andret.arguments.api.annotation.Argument;
+import eu.andret.arguments.api.annotation.Fallback;
 import eu.andret.ats.idea.fallback.fix.ChangeAnnotationQuickFix;
 import eu.andret.ats.idea.fallback.fix.RefactorMethodQuickFix;
 import eu.andret.ats.idea.fallback.fix.RemoveAnnotationQuickFix;
 import eu.andret.ats.idea.fallback.fix.RemoveMethodQuickFix;
-import eu.andret.ats.idea.utilities.Constants;
 import eu.andret.ats.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -45,12 +46,12 @@ public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionToo
 				if (!Verifier.verifyClass(method.getContainingClass())) {
 					return;
 				}
-				if (!method.hasAnnotation(Constants.API_ANNOTATION_FALLBACK)) {
+				if (!method.hasAnnotation(Fallback.class.getName())) {
 					return;
 				}
 				final List<PsiMethod> allClassMethods = getAllMethods(method.getContainingClass());
 				final Optional<PsiMethod> argumentMethod = allClassMethods.stream()
-						.filter(psiMethod -> psiMethod.hasAnnotation(Constants.API_ANNOTATION_ARGUMENT))
+						.filter(psiMethod -> psiMethod.hasAnnotation(Argument.class.getName()))
 						.filter(psiMethod -> psiMethod.getName().equals(method.getName()))
 						.findAny();
 				if (argumentMethod.isEmpty() && method.getNameIdentifier() != null) {

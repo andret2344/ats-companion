@@ -7,8 +7,9 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
+import eu.andret.arguments.AnnotatedCommandExecutor;
+import eu.andret.arguments.api.annotation.BaseCommand;
 import eu.andret.ats.idea.basecommand.fix.AddMissingAnnotationQuickFix;
-import eu.andret.ats.idea.utilities.Constants;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,10 +34,10 @@ public class MissingBaseCommandAnnotation extends AbstractBaseJavaLocalInspectio
 					return;
 				}
 				Optional.of(aClass)
-						.filter(psiClass -> !psiClass.hasAnnotation(Constants.API_ANNOTATION_BASE_COMMAND))
+						.filter(psiClass -> !psiClass.hasAnnotation(BaseCommand.class.getName()))
 						.map(PsiClass::getSuperClass)
 						.map(PsiClass::getQualifiedName)
-						.filter(Constants.INNER_ANNOTATED_COMMAND_EXECUTOR::equals)
+						.filter(AnnotatedCommandExecutor.class.getName()::equals)
 						.map(x -> aClass.getNameIdentifier())
 						.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION_TEMPLATE, getFixes()));
 			}

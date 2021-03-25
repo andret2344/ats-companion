@@ -12,7 +12,7 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.ats.idea.utilities.Constants;
+import eu.andret.arguments.api.annotation.BaseCommand;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class AddMissingAnnotationQuickFix implements LocalQuickFix {
 					.map(PsiModifierListOwner::getModifierList)
 					.ifPresent(psiModifierList -> {
 						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-						final PsiAnnotation psiAnnotation = factory.createAnnotationFromText("@" + Constants.API_ANNOTATION_BASE_COMMAND + "(\"\")", psiModifierList.getParent());
+						final PsiAnnotation psiAnnotation = factory.createAnnotationFromText("@" + BaseCommand.class.getName() + "(\"\")", psiModifierList.getParent());
 						final PsiElement inserted = psiModifierList.addBefore(psiAnnotation, psiModifierList.getFirstChild());
 						JavaCodeStyleManager.getInstance(project).shortenClassReferences(inserted);
 					});

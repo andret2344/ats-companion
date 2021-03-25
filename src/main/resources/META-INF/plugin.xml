@@ -59,6 +59,16 @@
                 level="WARNING"
                 implementationClass="eu.andret.ats.idea.basecommand.MissingBaseCommandAnnotation"
         />
+        <localInspection
+                language="JAVA"
+                displayName="Static method cannot have @Argument annotation"
+                groupPath="Java"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.argument.ArgumentMethodInspection"
+        />
         <intentionAction>
             <className>eu.andret.ats.idea.argument.FallbackMethodGenerator</className>
             <category>Suggestions for the "Andret Tools System"</category>
