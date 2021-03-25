@@ -1,6 +1,6 @@
 plugins {
-    id 'java'
-    id 'org.jetbrains.intellij' version '0.6.5'
+	id 'java'
+	id 'org.jetbrains.intellij' version '0.6.5'
 }
 
 apply plugin: 'org.jetbrains.intellij'
@@ -11,24 +11,29 @@ targetCompatibility = JavaVersion.VERSION_11
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version = '2020.2.4'
-    plugins = ['com.intellij.java']
+	version = '2020.2.4'
+	plugins = ['com.intellij.java']
 }
 
 buildSearchableOptions {
-    enabled = false
+	enabled = false
 }
 
 patchPluginXml {
-    version = project.version
-    sinceBuild = '202'
-    untilBuild = '203.*'
+	version = project.version
+	sinceBuild = '202'
+	untilBuild = '203.*'
 }
 
 group 'eu.andret.ats.idea'
 version '0.0.1'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
+	maven { url 'https://gitlab.com/api/v4/groups/2877017/-/packages/maven' }
+}
+
+dependencies {
+	implementation group: 'eu.andret', name: 'ats-arguments', version: '0.1.1.2'
 }
 

@@ -12,7 +12,8 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.ats.idea.utilities.Constants;
+import eu.andret.arguments.api.annotation.Argument;
+import eu.andret.arguments.api.annotation.Fallback;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -34,12 +35,12 @@ public class ChangeAnnotationQuickFix implements LocalQuickFix {
 					.map(PsiElement::getParent)
 					.map(PsiMethod.class::cast)
 					.ifPresent(psiMethod -> {
-						final PsiAnnotation annotation = psiMethod.getAnnotation(Constants.API_ANNOTATION_FALLBACK);
+						final PsiAnnotation annotation = psiMethod.getAnnotation(Fallback.class.getName());
 						if (annotation != null) {
 							annotation.delete();
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 							final PsiModifierList psiModifierList = psiMethod.getModifierList();
-							final PsiAnnotation psiAnnotation = factory.createAnnotationFromText("@" + Constants.API_ANNOTATION_ARGUMENT, psiMethod);
+							final PsiAnnotation psiAnnotation = factory.createAnnotationFromText("@" + Argument.class.getName(), psiMethod);
 							final PsiElement inserted = psiModifierList.addBefore(psiAnnotation, psiModifierList.getFirstChild());
 							JavaCodeStyleManager.getInstance(project).shortenClassReferences(inserted);
 						}

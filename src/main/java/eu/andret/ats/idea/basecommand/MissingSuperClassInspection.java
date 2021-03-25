@@ -6,7 +6,8 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
-import eu.andret.ats.idea.utilities.Constants;
+import eu.andret.arguments.AnnotatedCommandExecutor;
+import eu.andret.arguments.api.annotation.BaseCommand;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,10 +32,10 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 						.isEmpty()) {
 					return;
 				}
-				if (aClass.hasAnnotation(Constants.API_ANNOTATION_BASE_COMMAND)) {
+				if (aClass.hasAnnotation(BaseCommand.class.getName())) {
 					final Optional<String> superClass = Arrays.stream(aClass.getSupers())
 							.map(PsiClass::getQualifiedName)
-							.filter(Constants.INNER_ANNOTATED_COMMAND_EXECUTOR::equals)
+							.filter(AnnotatedCommandExecutor.class.getName()::equals)
 							.findAny();
 					if (superClass.isEmpty()) {
 						holder.registerProblem(aClass.getNameIdentifier(), DESCRIPTION_TEMPLATE);

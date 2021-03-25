@@ -1,24 +1,22 @@
-package eu.andret.ats.idea.fallback.fix;
+package eu.andret.ats.idea.argument.fix;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.arguments.api.annotation.Fallback;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class RemoveAnnotationQuickFix implements LocalQuickFix {
-	private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.fallback.fix.RemoveAnnotationQuickFix");
+public class RemoveKeywordQuickFix implements LocalQuickFix {
+	private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.annotation.fix.RemoveKeywordQuickFix");
 
 	@NotNull
 	@Override
 	public String getName() {
-		return "Remove @Fallback annotation";
+		return "Remove keyword";
 	}
 
 	@Override
@@ -26,9 +24,6 @@ public class RemoveAnnotationQuickFix implements LocalQuickFix {
 		try {
 			Optional.of(descriptor)
 					.map(ProblemDescriptor::getPsiElement)
-					.map(PsiElement::getParent)
-					.map(PsiMethod.class::cast)
-					.map(psiMethod -> psiMethod.getAnnotation(Fallback.class.getName()))
 					.ifPresent(PsiElement::delete);
 		} catch (final IncorrectOperationException e) {
 			LOG.error(e);
