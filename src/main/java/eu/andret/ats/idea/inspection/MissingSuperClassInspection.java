@@ -1,6 +1,7 @@
 package eu.andret.ats.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
+import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.JavaElementVisitor;
@@ -38,7 +39,7 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 							.filter(AnnotatedCommandExecutor.class.getName()::equals)
 							.findAny();
 					if (superClass.isEmpty()) {
-						holder.registerProblem(aClass.getNameIdentifier(), DESCRIPTION_TEMPLATE);
+						holder.registerProblem(aClass.getNameIdentifier(), DESCRIPTION_TEMPLATE, ProblemHighlightType.GENERIC_ERROR);
 					}
 				}
 			}

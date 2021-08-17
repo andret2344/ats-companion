@@ -3,6 +3,7 @@ package eu.andret.ats.idea.inspection;
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.ide.DataManager;
 import com.intellij.navigation.NavigationItem;
@@ -66,7 +67,7 @@ public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionToo
 						.filter(psiMethod -> psiMethod.getName().equals(method.getName()))
 						.findAny();
 				if (argumentMethod.isEmpty() && method.getNameIdentifier() != null) {
-					holder.registerProblem(method.getNameIdentifier(), DESCRIPTION_TEMPLATE, getFixes());
+					holder.registerProblem(method.getNameIdentifier(), DESCRIPTION_TEMPLATE, ProblemHighlightType.GENERIC_ERROR, getFixes());
 				}
 			}
 

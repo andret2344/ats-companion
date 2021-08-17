@@ -3,6 +3,7 @@ package eu.andret.ats.idea.inspection;
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
@@ -48,7 +49,7 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 						.map(PsiClass::getQualifiedName)
 						.filter(AnnotatedCommandExecutor.class.getName()::equals)
 						.map(x -> aClass.getNameIdentifier())
-						.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION_TEMPLATE, getFixes()));
+						.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION_TEMPLATE, ProblemHighlightType.GENERIC_ERROR, getFixes()));
 			}
 
 			private LocalQuickFix[] getFixes() {
