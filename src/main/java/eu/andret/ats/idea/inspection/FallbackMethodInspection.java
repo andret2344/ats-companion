@@ -1,0 +1,221 @@
+package eu.andret.ats.idea.inspection;
+
+import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
+import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.ide.DataManager;
+import com.intellij.navigation.NavigationItem;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaElementVisitor;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiJvmMember;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.intellij.refactoring.RefactoringActionHandler;
+import com.intellij.refactoring.RefactoringActionHandlerFactory;
+import com.intellij.util.IncorrectOperationException;
+import eu.andret.arguments.api.annotation.Argument;
+import eu.andret.arguments.api.annotation.Fallback;
+import eu.andret.ats.idea.utilities.Verifier;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NotNull
+	@Override
+	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
+		return new JavaElementVisitor() {
+
+			@NonNls
+			private static final String DESCRIPTION_TEMPLATE = "Not found matching @Argument method";
+
+			@Override
+			public void visitMethod(@NotNull final PsiMethod method) {
+				// FIXME temporary restriction
+				if (Optional.of(method)
+						.map(PsiJvmMember::getContainingClass)
+						.map(NavigationItem::getName)
+						.filter(x -> x.equals("TestCommand"))
+						.isEmpty()) {
+					return;
+				}
+				if (!Verifier.verifyClass(method.getContainingClass())) {
+					return;
+				}
+				if (!method.hasAnnotation(Fallback.class.getName())) {
+					return;
+				}
+				final List<PsiMethod> allClassMethods = getAllMethods(method.getContainingClass());
+				final Optional<PsiMethod> argumentMethod = allClassMethods.stream()
+						.filter(psiMethod -> psiMethod.hasAnnotation(Argument.class.getName()))
+						.filter(psiMethod -> psiMethod.getName().equals(method.getName()))
+						.findAny();
+				if (argumentMethod.isEmpty() && method.getNameIdentifier() != null) {
+					holder.registerProblem(method.getNameIdentifier(), DESCRIPTION_TEMPLATE, getFixes());
+				}
+			}
+
+			private List<PsiMethod> getAllMethods(final PsiClass psiClass) {
+				return Optional.ofNullable(psiClass)
+						.map(PsiClass::getAllMethods)
+						.stream()
+						.flatMap(Arrays::stream)
+						.collect(Collectors.toList());
+			}
+
+			private LocalQuickFix[] getFixes() {
+				return new LocalQuickFix[]{
+						new RemoveMethodQuickFix(),
+						new RefactorMethodQuickFix(),
+						new RemoveAnnotationQuickFix(),
+						new ChangeAnnotationQuickFix()
+				};
+			}
+		};
+	}
+
+	public static class ChangeAnnotationQuickFix implements LocalQuickFix {
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodInspection.ChangeAnnotationQuickFix");
+
+		@NotNull
+		@Override
+		public String getName() {
+			return "Change to @Argument";
+		}
+
+		@Override
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			try {
+				Optional.of(descriptor)
+						.map(ProblemDescriptor::getPsiElement)
+						.map(PsiElement::getParent)
+						.map(PsiMethod.class::cast)
+						.ifPresent(psiMethod -> {
+							final PsiAnnotation annotation = psiMethod.getAnnotation(Fallback.class.getName());
+							if (annotation != null) {
+								annotation.delete();
+								final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+								final PsiModifierList psiModifierList = psiMethod.getModifierList();
+								final PsiAnnotation psiAnnotation = factory.createAnnotationFromText("@" + Argument.class.getName(), psiMethod);
+								final PsiElement inserted = psiModifierList.addBefore(psiAnnotation, psiModifierList.getFirstChild());
+								JavaCodeStyleManager.getInstance(project).shortenClassReferences(inserted);
+							}
+						});
+			} catch (final IncorrectOperationException e) {
+				LOG.error(e);
+			}
+		}
+
+		@Override
+		@NotNull
+		public String getFamilyName() {
+			return getName();
+		}
+	}
+
+	public static class RefactorMethodQuickFix implements LocalQuickFix {
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodInspection.RefactorMethodQuickFix");
+
+		@NotNull
+		@Override
+		public String getName() {
+			return "Rename reference";
+		}
+
+		@Override
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			try {
+				Optional.of(descriptor)
+						.map(ProblemDescriptor::getPsiElement)
+						.map(PsiElement::getParent)
+						.map(PsiMethod.class::cast)
+						.ifPresent(psiMethod -> {
+							final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+							final RefactoringActionHandler handler = RefactoringActionHandlerFactory.getInstance().createRenameHandler();
+							handler.invoke(project, editor, psiMethod.getContainingFile(), DataManager.getInstance().getDataContext(editor.getComponent()));
+						});
+			} catch (final IncorrectOperationException e) {
+				LOG.error(e);
+			}
+		}
+
+		@Override
+		@NotNull
+		public String getFamilyName() {
+			return getName();
+		}
+	}
+
+	public static class RemoveAnnotationQuickFix implements LocalQuickFix {
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodInspection.RemoveAnnotationQuickFix");
+
+		@NotNull
+		@Override
+		public String getName() {
+			return "Remove @Fallback annotation";
+		}
+
+		@Override
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			try {
+				Optional.of(descriptor)
+						.map(ProblemDescriptor::getPsiElement)
+						.map(PsiElement::getParent)
+						.map(PsiMethod.class::cast)
+						.map(psiMethod -> psiMethod.getAnnotation(Fallback.class.getName()))
+						.ifPresent(PsiElement::delete);
+			} catch (final IncorrectOperationException e) {
+				LOG.error(e);
+			}
+		}
+
+		@Override
+		@NotNull
+		public String getFamilyName() {
+			return getName();
+		}
+	}
+
+	public static class RemoveMethodQuickFix implements LocalQuickFix {
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodInspection.RemoveMethodQuickFix");
+
+		@NotNull
+		@Override
+		public String getName() {
+			return "Remove method";
+		}
+
+		@Override
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			try {
+				Optional.of(descriptor)
+						.map(ProblemDescriptor::getPsiElement)
+						.map(PsiElement::getParent)
+						.ifPresent(PsiElement::delete);
+			} catch (final IncorrectOperationException e) {
+				LOG.error(e);
+			}
+		}
+
+		@Override
+		@NotNull
+		public String getFamilyName() {
+			return getName();
+		}
+	}
+}

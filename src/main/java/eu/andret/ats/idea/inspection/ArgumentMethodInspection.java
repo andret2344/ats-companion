@@ -1,16 +1,21 @@
-package eu.andret.ats.idea.argument;
+package eu.andret.ats.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
+import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.navigation.NavigationItem;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiJvmMember;
 import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiMethod;
+import com.intellij.util.IncorrectOperationException;
 import eu.andret.arguments.api.annotation.Argument;
-import eu.andret.ats.idea.argument.fix.RemoveKeywordQuickFix;
 import eu.andret.ats.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -51,5 +56,32 @@ public class ArgumentMethodInspection extends AbstractBaseJavaLocalInspectionToo
 						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION_TEMPLATE, ProblemHighlightType.GENERIC_ERROR, new RemoveKeywordQuickFix()));
 			}
 		};
+	}
+
+	public static class RemoveKeywordQuickFix implements LocalQuickFix {
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.annotation.ArgumentMethodInspection.RemoveKeywordQuickFix");
+
+		@NotNull
+		@Override
+		public String getName() {
+			return "Remove keyword";
+		}
+
+		@Override
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			try {
+				Optional.of(descriptor)
+						.map(ProblemDescriptor::getPsiElement)
+						.ifPresent(PsiElement::delete);
+			} catch (final IncorrectOperationException e) {
+				LOG.error(e);
+			}
+		}
+
+		@Override
+		@NotNull
+		public String getFamilyName() {
+			return getName();
+		}
 	}
 }

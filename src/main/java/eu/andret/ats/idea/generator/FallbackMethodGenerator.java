@@ -1,4 +1,4 @@
-package eu.andret.ats.idea.argument;
+package eu.andret.ats.idea.generator;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;

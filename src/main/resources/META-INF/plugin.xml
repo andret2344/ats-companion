@@ -37,7 +37,7 @@
                 groupKey="group.names.probable.bugs"
                 enabledByDefault="true"
                 level="WARNING"
-                implementationClass="eu.andret.ats.idea.fallback.FallbackMethodInspection"
+                implementationClass="eu.andret.ats.idea.inspection.FallbackMethodInspection"
         />
         <localInspection
                 language="JAVA"
@@ -47,7 +47,7 @@
                 groupKey="group.names.probable.bugs"
                 enabledByDefault="true"
                 level="WARNING"
-                implementationClass="eu.andret.ats.idea.basecommand.MissingSuperClassInspection"
+                implementationClass="eu.andret.ats.idea.inspection.MissingSuperClassInspection"
         />
         <localInspection
                 language="JAVA"
@@ -57,7 +57,7 @@
                 groupKey="group.names.probable.bugs"
                 enabledByDefault="true"
                 level="WARNING"
-                implementationClass="eu.andret.ats.idea.basecommand.MissingBaseCommandAnnotation"
+                implementationClass="eu.andret.ats.idea.inspection.MissingBaseCommandAnnotationInspection"
         />
         <localInspection
                 language="JAVA"
@@ -67,10 +67,20 @@
                 groupKey="group.names.probable.bugs"
                 enabledByDefault="true"
                 level="WARNING"
-                implementationClass="eu.andret.ats.idea.argument.ArgumentMethodInspection"
+                implementationClass="eu.andret.ats.idea.inspection.ArgumentMethodInspection"
+        />
+        <localInspection
+                language="JAVA"
+                displayName="PrimitiveReturnInspection"
+                groupPath="Java"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.inspection.PrimitiveReturnInspection"
         />
         <intentionAction>
-            <className>eu.andret.ats.idea.argument.FallbackMethodGenerator</className>
+            <className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
             <category>Suggestions for the "Andret Tools System"</category>
         </intentionAction>
     </extensions>
