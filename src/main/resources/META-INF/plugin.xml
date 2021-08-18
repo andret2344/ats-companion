@@ -51,7 +51,7 @@
         />
         <localInspection
                 language="JAVA"
-                displayName="Missing @BaseCommand annotation for AnnotatedCommandExecutor subclass"
+                displayName="Missing @BaseCommand annotation"
                 groupPath="ATS"
                 groupBundle="messages.InspectionsBundle"
                 groupKey="group.names.probable.bugs"
@@ -61,7 +61,7 @@
         />
         <localInspection
                 language="JAVA"
-                displayName="Method annotated with @Argument annotation cannot use static qualifier"
+                displayName="Static @Argument method"
                 groupPath="ATS"
                 groupBundle="messages.InspectionsBundle"
                 groupKey="group.names.probable.bugs"
@@ -71,13 +71,28 @@
         />
         <localInspection
                 language="JAVA"
-                displayName="PrimitiveReturnInspection"
+                displayName="Primitive return"
                 groupPath="ATS"
                 groupBundle="messages.InspectionsBundle"
                 groupKey="group.names.probable.bugs"
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="eu.andret.ats.idea.inspection.PrimitiveReturnInspection"
+        />
+        <localInspection
+                language="JAVA"
+                displayName="Position out of bounds"
+                groupPath="ATS"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="eu.andret.ats.idea.inspection.PositionOutOfBoundsInspection"
+        />
+        <completion.contributor
+                language="JAVA"
+                implementationClass="eu.andret.ats.idea.completion.ArgumentPositionCompletionContributor"
+                order="first"
         />
         <intentionAction>
             <className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
