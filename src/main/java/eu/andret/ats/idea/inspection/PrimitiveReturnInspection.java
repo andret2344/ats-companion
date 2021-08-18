@@ -5,7 +5,6 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
@@ -13,7 +12,6 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiJvmMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
@@ -37,14 +35,6 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
-				// FIXME temporary restriction
-				if (Optional.of(method)
-						.map(PsiJvmMember::getContainingClass)
-						.map(NavigationItem::getName)
-						.filter(x -> x.equals("TestCommand"))
-						.isEmpty()) {
-					return;
-				}
 				if (!Verifier.verifyClass(method.getContainingClass())) {
 					return;
 				}

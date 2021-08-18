@@ -37,7 +37,7 @@
                 groupKey="group.names.probable.bugs"
                 enabledByDefault="true"
                 level="ERROR"
-                implementationClass="eu.andret.ats.idea.inspection.FallbackMethodInspection"
+                implementationClass="eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection"
         />
         <localInspection
                 language="JAVA"
@@ -61,13 +61,13 @@
         />
         <localInspection
                 language="JAVA"
-                displayName="Static method cannot have @Argument annotation"
+                displayName="Method annotated with @Argument annotation cannot use static qualifier"
                 groupPath="ATS"
                 groupBundle="messages.InspectionsBundle"
                 groupKey="group.names.probable.bugs"
                 enabledByDefault="true"
                 level="ERROR"
-                implementationClass="eu.andret.ats.idea.inspection.ArgumentMethodInspection"
+                implementationClass="eu.andret.ats.idea.inspection.ArgumentMethodStaticInspection"
         />
         <localInspection
                 language="JAVA"

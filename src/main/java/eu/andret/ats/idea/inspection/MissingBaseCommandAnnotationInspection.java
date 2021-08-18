@@ -5,7 +5,6 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
@@ -30,19 +29,11 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-
 			@NonNls
 			private static final String DESCRIPTION_TEMPLATE = "Missing @BaseCommand annotation";
 
 			@Override
 			public void visitClass(final PsiClass aClass) {
-				// FIXME temporary restriction
-				if (Optional.of(aClass)
-						.map(NavigationItem::getName)
-						.filter(x -> x.equals("TestCommand"))
-						.isEmpty()) {
-					return;
-				}
 				Optional.of(aClass)
 						.filter(psiClass -> !psiClass.hasAnnotation(BaseCommand.class.getName()))
 						.map(PsiClass::getSuperClass)
@@ -61,7 +52,7 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 	}
 
 	public static class AddMissingAnnotationQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.basecommand.AddMissingAnnotationQuickFix");
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.MissingBaseCommandAnnotationInspection.AddMissingAnnotationQuickFix");
 
 		@NotNull
 		@Override

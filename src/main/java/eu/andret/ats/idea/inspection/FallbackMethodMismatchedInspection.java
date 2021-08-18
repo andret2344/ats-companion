@@ -6,7 +6,6 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.ide.DataManager;
-import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -18,7 +17,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiJvmMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
@@ -36,29 +34,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionTool {
+public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-
 			@NonNls
 			private static final String DESCRIPTION_TEMPLATE = "Not found matching @Argument method";
 
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
-				// FIXME temporary restriction
-				if (Optional.of(method)
-						.map(PsiJvmMember::getContainingClass)
-						.map(NavigationItem::getName)
-						.filter(x -> x.equals("TestCommand"))
-						.isEmpty()) {
-					return;
-				}
-				if (!Verifier.verifyClass(method.getContainingClass())) {
-					return;
-				}
-				if (!method.hasAnnotation(Fallback.class.getName())) {
+				if (!Verifier.verifyArgumentMethod(method)) {
 					return;
 				}
 				final List<PsiMethod> allClassMethods = getAllMethods(method.getContainingClass());
@@ -91,7 +77,7 @@ public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionToo
 	}
 
 	public static class ChangeAnnotationQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodInspection.ChangeAnnotationQuickFix");
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection.ChangeAnnotationQuickFix");
 
 		@NotNull
 		@Override
@@ -130,7 +116,7 @@ public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionToo
 	}
 
 	public static class RefactorMethodQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodInspection.RefactorMethodQuickFix");
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection.RefactorMethodQuickFix");
 
 		@NotNull
 		@Override
@@ -147,6 +133,9 @@ public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionToo
 						.map(PsiMethod.class::cast)
 						.ifPresent(psiMethod -> {
 							final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+							if (editor == null) {
+								return;
+							}
 							final RefactoringActionHandler handler = RefactoringActionHandlerFactory.getInstance().createRenameHandler();
 							handler.invoke(project, editor, psiMethod.getContainingFile(), DataManager.getInstance().getDataContext(editor.getComponent()));
 						});
@@ -163,7 +152,7 @@ public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionToo
 	}
 
 	public static class RemoveAnnotationQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodInspection.RemoveAnnotationQuickFix");
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection.RemoveAnnotationQuickFix");
 
 		@NotNull
 		@Override
@@ -193,7 +182,7 @@ public class FallbackMethodInspection extends AbstractBaseJavaLocalInspectionToo
 	}
 
 	public static class RemoveMethodQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodInspection.RemoveMethodQuickFix");
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection.RemoveMethodQuickFix");
 
 		@NotNull
 		@Override
