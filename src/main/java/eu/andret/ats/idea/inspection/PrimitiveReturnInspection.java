@@ -49,6 +49,9 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 				if (!returnType.isValid()) {
 					return;
 				}
+				if (returnType.equalsToText("void")) {
+					return;
+				}
 				if (returnType instanceof PsiPrimitiveType) {
 					holder.registerProblem(returnTypeElement, DESCRIPTION_TEMPLATE, ProblemHighlightType.WARNING, new ChangeToStringQuickFix());
 				}

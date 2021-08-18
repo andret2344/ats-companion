@@ -27,16 +27,16 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION_TEMPLATE_UNUSED = "Executor type is already defined in an annotation";
+
+	@NonNls
+	private static final String DESCRIPTION_TEMPLATE_PROBLEM = "Executor type in an annotation is contradictory";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE_UNUSED = "Executor type is already defined in an annotation";
-
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE_PROBLEM = "Executor type in an annotation is contradictory";
-
 			@Override
 			public void visitInstanceOfExpression(final PsiInstanceOfExpression expression) {
 				final PsiElement context = expression.getContext();
@@ -55,37 +55,46 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				if (!type.isValid()) {
 					return;
 				}
-				Optional.of(method)
-						.map(x -> x.getAnnotation(Argument.class.getName()))
-						.map(x -> x.findAttributeValue("executorType"))
-						.map(PsiElement::getReference)
-						.map(PsiReference::resolve)
-						.map(PsiElement::getText)
-						.map(ExecutorType::valueOf)
-						.ifPresent(executorType -> {
-							final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
-							if (resolve instanceof PsiField && ((PsiField) resolve).getName().equals("sender")) {
-								if (executorType.equals(ExecutorType.PLAYER)) {
-									if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
-										holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED, ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
-									}
-									if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
-										holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM, ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
-									}
-								}
-
-								if (executorType.equals(ExecutorType.CONSOLE)) {
-									if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
-										holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM, ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
-									}
-									if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
-										holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED, ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
-									}
-								}
-							}
-						});
+				extracted(holder, expression, method, type);
 			}
 		};
+	}
+
+	private void extracted(final ProblemsHolder holder, final PsiInstanceOfExpression expression, final PsiMethod method, final PsiType type) {
+		Optional.of(method)
+				.map(x -> x.getAnnotation(Argument.class.getName()))
+				.map(x -> x.findAttributeValue("executorType"))
+				.map(PsiElement::getReference)
+				.map(PsiReference::resolve)
+				.map(PsiElement::getText)
+				.map(ExecutorType::valueOf)
+				.ifPresent(executorType -> {
+					final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
+					if (!(resolve instanceof PsiField) || !((PsiField) resolve).getName().equals("sender")) {
+						return;
+					}
+					analyzeAndReport(holder, expression, type, executorType);
+				});
+	}
+
+	private void analyzeAndReport(final ProblemsHolder holder, final PsiInstanceOfExpression expression, final PsiType type, final ExecutorType executorType) {
+		if (executorType.equals(ExecutorType.PLAYER)) {
+			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
+				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED, ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
+			}
+			if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
+				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM, ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
+			}
+		}
+
+		if (executorType.equals(ExecutorType.CONSOLE)) {
+			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
+				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM, ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
+			}
+			if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
+				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED, ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
+			}
+		}
 	}
 
 	public static class RemoveExpressionQuickFix implements LocalQuickFix {

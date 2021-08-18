@@ -96,7 +96,7 @@
         />
         <localInspection
                 language="JAVA"
-                displayName="PrimitiveReturnInspection"
+                displayName="Instance check"
                 groupPath="ATS"
                 groupBundle="messages.InspectionsBundle"
                 groupKey="group.names.probable.bugs"
