@@ -29,7 +29,6 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-
 			@NonNls
 			private static final String DESCRIPTION_TEMPLATE = "Array is not a valid type, use vararg instead";
 
@@ -39,12 +38,12 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 					return;
 				}
 				Arrays.stream(method.getParameterList().getParameters())
-						.filter(psiType -> psiType.getType().isValid())
-						.filter(obj -> obj.getType() instanceof PsiArrayType)
-						.filter(x -> !x.isVarArgs())
+						.filter(parameter -> parameter.getType().isValid())
+						.filter(parameter -> parameter.getType() instanceof PsiArrayType)
+						.filter(parameter -> !parameter.isVarArgs())
 						.map(PsiParameter::getTypeElement)
 						.filter(Objects::nonNull)
-						.forEach(psiTypeElement -> holder.registerProblem(psiTypeElement, DESCRIPTION_TEMPLATE, ProblemHighlightType.ERROR, getFixes()));
+						.forEach(typeElement -> holder.registerProblem(typeElement, DESCRIPTION_TEMPLATE, ProblemHighlightType.ERROR, getFixes()));
 			}
 
 			private LocalQuickFix[] getFixes() {
@@ -72,11 +71,11 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 						.map(ProblemDescriptor::getPsiElement)
 						.map(PsiElement::getParent)
 						.map(PsiParameter.class::cast)
-						.ifPresent(psiParameter -> {
+						.ifPresent(parameter -> {
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiArrayType type = (PsiArrayType) psiParameter.getType();
+							final PsiArrayType type = (PsiArrayType) parameter.getType();
 							final String newType = type.getComponentType().getCanonicalText() + "...";
-							psiParameter.replace(factory.createParameter(psiParameter.getName(), factory.createTypeByFQClassName(newType)));
+							parameter.replace(factory.createParameter(parameter.getName(), factory.createTypeByFQClassName(newType)));
 						});
 			} catch (final IncorrectOperationException e) {
 				LOG.error(e);

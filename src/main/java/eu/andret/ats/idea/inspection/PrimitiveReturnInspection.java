@@ -76,10 +76,10 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 						.map(PsiElement::getParent)
 						.map(PsiMethod.class::cast)
 						.map(PsiMethod::getReturnTypeElement)
-						.ifPresent(psiTypeElement -> {
+						.ifPresent(typeElement -> {
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							psiTypeElement.replace(factory.createTypeElement(factory.createTypeByFQClassName("String")));
-							JavaCodeStyleManager.getInstance(project).shortenClassReferences(psiTypeElement);
+							typeElement.replace(factory.createTypeElement(factory.createTypeByFQClassName("String")));
+							JavaCodeStyleManager.getInstance(project).shortenClassReferences(typeElement);
 						});
 			} catch (final IncorrectOperationException e) {
 				LOG.error(e);
