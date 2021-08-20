@@ -94,6 +94,16 @@
                 implementationClass="eu.andret.ats.idea.completion.ArgumentPositionCompletionContributor"
                 order="first"
         />
+        <localInspection
+                language="JAVA"
+                displayName="Instance check"
+                groupPath="ATS"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.inspection.InstanceCheckInspection"
+        />
         <intentionAction>
             <className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
             <category>Suggestions for the "Andret Tools System"</category>
