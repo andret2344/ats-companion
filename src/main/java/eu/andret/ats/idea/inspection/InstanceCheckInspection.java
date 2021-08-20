@@ -19,6 +19,7 @@ import com.intellij.psi.PsiTypeElement;
 import com.intellij.util.IncorrectOperationException;
 import eu.andret.arguments.api.annotation.Argument;
 import eu.andret.arguments.api.entity.ExecutorType;
+import eu.andret.ats.idea.utilities.Util;
 import eu.andret.ats.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +44,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				if (context == null) {
 					return;
 				}
-				final PsiMethod method = (PsiMethod) context.getParent().getParent();
+				final PsiMethod method = Util.repeat(context, 2, PsiElement::getParent, PsiMethod.class);
 				if (!Verifier.verifyArgumentMethod(method)) {
 					return;
 				}
@@ -81,17 +82,13 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		if (executorType.equals(ExecutorType.PLAYER)) {
 			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED, ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
-			}
-			if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
+			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM, ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			}
-		}
-
-		if (executorType.equals(ExecutorType.CONSOLE)) {
+		} else if (executorType.equals(ExecutorType.CONSOLE)) {
 			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM, ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
-			}
-			if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
+			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED, ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
 			}
 		}
@@ -114,7 +111,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 					return;
 				}
 				final PsiElement parent = context.getParent();
-				final PsiElement[] children = context.getLastChild().getLastChild().getChildren();
+				final PsiElement[] children = Util.repeat(context, 2, PsiElement::getLastChild).getChildren();
 				final PsiElement[] psiElements = Arrays.copyOfRange(children, 2, children.length - 2);
 				Arrays.stream(psiElements).forEach(x -> parent.addAfter(x, context));
 				context.delete();
