@@ -1,0 +1,75 @@
+package eu.andret.ats.idea.inspection;
+
+import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
+import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaElementVisitor;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiKeyword;
+import com.intellij.psi.PsiModifierListOwner;
+import com.intellij.util.IncorrectOperationException;
+import eu.andret.arguments.api.annotation.BaseCommand;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.Optional;
+
+public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NotNull
+	@Override
+	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
+		return new JavaElementVisitor() {
+			@NonNls
+			private static final String DESCRIPTION_TEMPLATE = "@BaseCommand class cannot be abstract";
+
+			@Override
+			public void visitClass(final PsiClass aClass) {
+				Optional.of(aClass)
+						.filter(psiClass -> psiClass.hasAnnotation(BaseCommand.class.getName()))
+						.map(PsiModifierListOwner::getModifierList)
+						.map(PsiElement::getChildren)
+						.stream()
+						.flatMap(Arrays::stream)
+						.filter(PsiKeyword.class::isInstance)
+						.map(PsiKeyword.class::cast)
+						.filter(keyword -> keyword.getText().equals(PsiKeyword.ABSTRACT))
+						.findAny()
+						.ifPresent(identifier -> holder.registerProblem(identifier, DESCRIPTION_TEMPLATE, ProblemHighlightType.GENERIC_ERROR, new RemoveModifierQuickFix()));
+			}
+		};
+	}
+
+	public static class RemoveModifierQuickFix implements LocalQuickFix {
+		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.AbstractClassInspection.RemoveModifierQuickFix");
+
+		@NotNull
+		@Override
+		public String getName() {
+			return "Remove modifier";
+		}
+
+		@Override
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			try {
+				Optional.of(descriptor)
+						.map(ProblemDescriptor::getPsiElement)
+						.ifPresent(PsiElement::delete);
+			} catch (final IncorrectOperationException e) {
+				LOG.error(e);
+			}
+		}
+
+		@Override
+		@NotNull
+		public String getFamilyName() {
+			return getName();
+		}
+	}
+}
