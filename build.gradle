@@ -36,3 +36,18 @@ dependencies {
 	implementation group: 'eu.andret', name: 'ats-arguments', version: '0.1.1.2'
 }
 
+println "PUBLISH_TOKEN = " + System.getenv("PUBLISH_TOKEN")
+println "CERTIFICATE_CHAIN = " + System.getenv("CERTIFICATE_CHAIN")
+println "PRIVATE_KEY = " + System.getenv("PRIVATE_KEY")
+println "PRIVATE_KEY_PASSWORD = " + System.getenv("PRIVATE_KEY_PASSWORD")
+
+publishPlugin {
+	channels = ['alpha']
+	token = System.getenv("PUBLISH_TOKEN")
+}
+
+signPlugin {
+	certificateChain = System.getenv("CERTIFICATE_CHAIN")
+	privateKey = System.getenv("PRIVATE_KEY")
+	password = System.getenv("PRIVATE_KEY_PASSWORD")
+}
