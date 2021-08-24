@@ -38,6 +38,6 @@ publish:
   script:
     - ./gradlew clean
     - ./gradlew publishPlugin
-  only:
-    - master
+  #  only:
+  #    - master
   when: manual
