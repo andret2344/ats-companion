@@ -27,7 +27,6 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-
 			@NonNls
 			private static final String DESCRIPTION_TEMPLATE
 					= "Position must be positive number not greater than method's parameters count";

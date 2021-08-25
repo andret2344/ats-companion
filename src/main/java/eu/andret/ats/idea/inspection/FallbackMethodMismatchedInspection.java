@@ -6,7 +6,6 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
@@ -54,7 +53,8 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.filter(psiMethod -> psiMethod.getName().equals(method.getName()))
 						.findAny();
 				if (argumentMethod.isEmpty() && method.getNameIdentifier() != null) {
-					holder.registerProblem(method.getNameIdentifier(), DESCRIPTION_TEMPLATE, ProblemHighlightType.GENERIC_ERROR, getFixes());
+					holder.registerProblem(method.getNameIdentifier(), DESCRIPTION_TEMPLATE,
+							ProblemHighlightType.GENERIC_ERROR, getFixes());
 				}
 			}
 
@@ -77,9 +77,8 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 		};
 	}
 
+	@Slf4j
 	public static class ChangeAnnotationQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection.ChangeAnnotationQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -105,7 +104,7 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 							}
 						});
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 
@@ -116,9 +115,8 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 		}
 	}
 
+	@Slf4j
 	public static class RefactorMethodQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection.RefactorMethodQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -141,7 +139,7 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 							handler.invoke(project, editor, psiMethod.getContainingFile(), DataManager.getInstance().getDataContext(editor.getComponent()));
 						});
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 
