@@ -10,7 +10,7 @@ targetCompatibility = JavaVersion.VERSION_11
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version = '2021.2'
+	version = '2021.2.1'
 	plugins = ['com.intellij.java']
 }
 
@@ -21,7 +21,6 @@ buildSearchableOptions {
 patchPluginXml {
 	version = project.version
 	sinceBuild = '202'
-	untilBuild = '212.*'
 }
 
 group 'eu.andret.ats.idea'
@@ -46,10 +45,12 @@ jar {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	}
 }
+
 println "PUBLISH_TOKEN = " + System.getenv("PUBLISH_TOKEN")
 println "CERTIFICATE_CHAIN = " + System.getenv("CERTIFICATE_CHAIN")
 println "PRIVATE_KEY = " + System.getenv("PRIVATE_KEY")
 println "PRIVATE_KEY_PASSWORD = " + System.getenv("PRIVATE_KEY_PASSWORD")
+println System.getenv()
 
 publishPlugin {
 	channels = ['alpha']
