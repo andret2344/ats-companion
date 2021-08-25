@@ -106,16 +106,6 @@
         />
         <localInspection
                 language="JAVA"
-                displayName="Abstract class"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="WARNING"
-                implementationClass="eu.andret.ats.idea.inspection.AbstractClassInspection"
-        />
-        <localInspection
-                language="JAVA"
                 displayName="Array parameter"
                 groupPath="ATS"
                 groupBundle="messages.InspectionsBundle"
@@ -123,6 +113,16 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="eu.andret.ats.idea.inspection.ArrayParameterInspection"
+        />
+        <localInspection
+                language="JAVA"
+                displayName="Abstract class"
+                groupPath="ATS"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.inspection.AbstractClassInspection"
         />
         <intentionAction>
             <className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
