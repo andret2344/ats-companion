@@ -138,8 +138,10 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 							if (editor == null) {
 								return;
 							}
-							final RefactoringActionHandler handler = RefactoringActionHandlerFactory.getInstance().createRenameHandler();
-							handler.invoke(project, editor, method.getContainingFile(), DataManager.getInstance().getDataContext(editor.getComponent()));
+							final RefactoringActionHandler handler = RefactoringActionHandlerFactory.getInstance()
+									.createRenameHandler();
+							handler.invoke(project, editor, method.getContainingFile(),
+									DataManager.getInstance().getDataContext(editor.getComponent()));
 						});
 			} catch (final IncorrectOperationException e) {
 				log.error(getClass().getName(), e);
