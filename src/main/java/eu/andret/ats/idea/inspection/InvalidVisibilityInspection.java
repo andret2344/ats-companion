@@ -1,0 +1,126 @@
+package eu.andret.ats.idea.inspection;
+
+import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
+import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaElementVisitor;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiKeyword;
+import com.intellij.psi.PsiMethod;
+import com.intellij.util.IncorrectOperationException;
+import eu.andret.ats.idea.utilities.Verifier;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NotNull
+	@Override
+	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
+		return new JavaElementVisitor() {
+			@NonNls
+			private static final String DESCRIPTION_TEMPLATE
+					= "Method annotated with @Argument annotation must be public";
+
+			@Override
+			public void visitMethod(@NotNull final PsiMethod method) {
+				if (!Verifier.verifyArgumentMethod(method)) {
+					return;
+				}
+				final PsiElement[] children = method.getModifierList().getChildren();
+				final List<PsiKeyword> keywords = Arrays.stream(children)
+						.filter(PsiKeyword.class::isInstance)
+						.map(PsiKeyword.class::cast)
+						.collect(Collectors.toList());
+
+				keywords.stream()
+						.filter(kw -> Stream.of(PsiKeyword.PRIVATE, PsiKeyword.PROTECTED).anyMatch(kw::textMatches))
+						.findAny()
+						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION_TEMPLATE,
+								ProblemHighlightType.GENERIC_ERROR, new ChangeToPublicQuickFix()));
+
+				final boolean b = keywords.stream()
+						.noneMatch(keyword -> keyword.textMatches(PsiKeyword.PRIVATE)
+								|| keyword.textMatches(PsiKeyword.PROTECTED)
+								|| keyword.textMatches(PsiKeyword.PUBLIC));
+				final PsiElement methodIdentifyingElement = method.getIdentifyingElement();
+				if (methodIdentifyingElement != null && b) {
+					holder.registerProblem(methodIdentifyingElement, DESCRIPTION_TEMPLATE,
+							ProblemHighlightType.GENERIC_ERROR, new AddPublicQuickFix());
+				}
+			}
+		};
+	}
+
+	@Slf4j
+	public static class ChangeToPublicQuickFix implements LocalQuickFix {
+		@NotNull
+		@Override
+		public String getName() {
+			return "Change visibility to public";
+		}
+
+		@Override
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			try {
+				Optional.of(descriptor)
+						.map(ProblemDescriptor::getPsiElement)
+						.ifPresent(psiElement -> {
+							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+							psiElement.replace(factory.createKeyword("public"));
+						});
+			} catch (final IncorrectOperationException e) {
+				log.error(getClass().getName(), e);
+			}
+		}
+
+		@Override
+		@NotNull
+		public String getFamilyName() {
+			return getName();
+		}
+	}
+
+	@Slf4j
+	public static class AddPublicQuickFix implements LocalQuickFix {
+		@NotNull
+		@Override
+		public String getName() {
+			return "Add visibility modifier";
+		}
+
+		@Override
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			try {
+				Optional.of(descriptor)
+						.map(ProblemDescriptor::getPsiElement)
+						.map(PsiElement::getParent)
+						.map(PsiMethod.class::cast)
+						.ifPresent(psiElement -> {
+							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+							psiElement.getModifierList().add(factory.createKeyword("public"));
+						});
+			} catch (final IncorrectOperationException e) {
+				log.error(getClass().getName(), e);
+			}
+		}
+
+		@Override
+		@NotNull
+		public String getFamilyName() {
+			return getName();
+		}
+	}
+}

@@ -124,6 +124,16 @@
                 level="WARNING"
                 implementationClass="eu.andret.ats.idea.inspection.AbstractClassInspection"
         />
+        <localInspection
+                language="JAVA"
+                displayName="Invalid visibility"
+                groupPath="ATS"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.inspection.InvalidVisibilityInspection"
+        />
         <intentionAction>
             <className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
             <category>Suggestions for the "Andret Tools System"</category>
