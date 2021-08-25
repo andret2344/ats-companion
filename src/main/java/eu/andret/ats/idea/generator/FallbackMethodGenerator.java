@@ -37,7 +37,8 @@ public class FallbackMethodGenerator extends PsiElementBaseIntentionAction imple
 	}
 
 	@Override
-	public boolean isAvailable(@NotNull final Project project, final Editor editor, @Nullable final PsiElement element) {
+	public boolean isAvailable(@NotNull final Project project, final Editor editor,
+							   @Nullable final PsiElement element) {
 		return Verifier.verifyArgumentElement(element);
 	}
 
@@ -66,7 +67,9 @@ public class FallbackMethodGenerator extends PsiElementBaseIntentionAction imple
 					.map(PsiType::getCanonicalText)
 					.orElse("void");
 
-			final PsiMethod factoryMethod = factory.createMethodFromText("@Fallback\n\tpublic " + returnType + " " + method.getName() + "(String ignored, " + methodArguments + ") {\n\t\treturn null;\n\t}", null);
+			final PsiMethod factoryMethod = factory.createMethodFromText(
+					"@Fallback\n\tpublic " + returnType + " " + method.getName() + "(String ignored, "
+							+ methodArguments + ") {\n\t\treturn null;\n\t}", null);
 			method.addAfter(factoryMethod, method);
 		}
 	}

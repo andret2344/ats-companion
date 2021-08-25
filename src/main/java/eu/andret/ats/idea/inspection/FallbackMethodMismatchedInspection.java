@@ -26,6 +26,7 @@ import com.intellij.util.IncorrectOperationException;
 import eu.andret.arguments.api.annotation.Argument;
 import eu.andret.arguments.api.annotation.Fallback;
 import eu.andret.ats.idea.utilities.Verifier;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -151,9 +152,8 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 		}
 	}
 
+	@Slf4j
 	public static class RemoveAnnotationQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection.RemoveAnnotationQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -170,7 +170,7 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.map(psiMethod -> psiMethod.getAnnotation(Fallback.class.getName()))
 						.ifPresent(PsiElement::delete);
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 
@@ -181,9 +181,8 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 		}
 	}
 
+	@Slf4j
 	public static class RemoveMethodQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection.RemoveMethodQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -198,7 +197,7 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.map(PsiElement::getParent)
 						.ifPresent(PsiElement::delete);
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 
