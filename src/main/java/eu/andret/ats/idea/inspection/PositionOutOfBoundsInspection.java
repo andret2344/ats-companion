@@ -5,7 +5,6 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiAnnotation;
@@ -16,6 +15,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.util.IncorrectOperationException;
 import eu.andret.arguments.api.annotation.Argument;
 import eu.andret.ats.idea.utilities.Verifier;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +28,8 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "Position must be positive number not greater than method's parameters count";
+			private static final String DESCRIPTION_TEMPLATE
+					= "Position must be positive number not greater than method's parameters count";
 
 			@Override
 			public void visitMethod(@NotNull final PsiMethod psiMethod) {
@@ -50,7 +51,8 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 							try {
 								final int intPosition = Integer.parseInt(nameValuePair.getValue().getText());
 								if (intPosition < 0 || intPosition > args) {
-									holder.registerProblem(nameValuePair.getValue(), DESCRIPTION_TEMPLATE, ProblemHighlightType.ERROR,
+									holder.registerProblem(nameValuePair.getValue(), DESCRIPTION_TEMPLATE,
+											ProblemHighlightType.ERROR,
 											new RemoveParameterQuickFix());
 								}
 							} catch (final NumberFormatException e) {
@@ -61,9 +63,8 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 		};
 	}
 
+	@Slf4j
 	public static class RemoveParameterQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.annotation.PositionOutOfBoundsInspection.RemoveParameterQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -78,7 +79,7 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 						.map(PsiElement::getParent)
 						.ifPresent(PsiElement::delete);
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 

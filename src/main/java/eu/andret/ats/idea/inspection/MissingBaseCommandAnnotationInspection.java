@@ -5,7 +5,6 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.JavaPsiFacade;
@@ -19,6 +18,7 @@ import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import eu.andret.arguments.AnnotatedCommandExecutor;
 import eu.andret.arguments.api.annotation.BaseCommand;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +40,8 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 						.map(PsiClass::getQualifiedName)
 						.filter(AnnotatedCommandExecutor.class.getName()::equals)
 						.map(x -> aClass.getNameIdentifier())
-						.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION_TEMPLATE, ProblemHighlightType.GENERIC_ERROR, getFixes()));
+						.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION_TEMPLATE,
+								ProblemHighlightType.GENERIC_ERROR, getFixes()));
 			}
 
 			private LocalQuickFix[] getFixes() {
@@ -51,9 +52,8 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 		};
 	}
 
+	@Slf4j
 	public static class AddMissingAnnotationQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.inspection.MissingBaseCommandAnnotationInspection.AddMissingAnnotationQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -75,7 +75,7 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 							JavaCodeStyleManager.getInstance(project).shortenClassReferences(inserted);
 						});
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 
