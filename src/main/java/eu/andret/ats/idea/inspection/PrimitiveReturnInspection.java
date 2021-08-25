@@ -8,6 +8,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiElementVisitor;
@@ -76,10 +77,11 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 						.map(PsiElement::getParent)
 						.map(PsiMethod.class::cast)
 						.map(PsiMethod::getReturnTypeElement)
-						.ifPresent(psiTypeElement -> {
+						.ifPresent(typeElement -> {
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							psiTypeElement.replace(factory.createTypeElement(factory.createTypeByFQClassName("String")));
-							JavaCodeStyleManager.getInstance(project).shortenClassReferences(psiTypeElement);
+							final PsiClassType classType = factory.createTypeByFQClassName("String");
+							typeElement.replace(factory.createTypeElement(classType));
+							JavaCodeStyleManager.getInstance(project).shortenClassReferences(typeElement);
 						});
 			} catch (final IncorrectOperationException e) {
 				log.error(getClass().getName(), e);

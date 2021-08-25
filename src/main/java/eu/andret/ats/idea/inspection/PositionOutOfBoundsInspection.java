@@ -27,33 +27,33 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-
 			@NonNls
 			private static final String DESCRIPTION_TEMPLATE
 					= "Position must be positive number not greater than method's parameters count";
 
 			@Override
-			public void visitMethod(@NotNull final PsiMethod method) {
-				if (!Verifier.verifyArgumentMethod(method)) {
+			public void visitMethod(@NotNull final PsiMethod psiMethod) {
+				if (!Verifier.verifyArgumentMethod(psiMethod)) {
 					return;
 				}
-				final int args = method.getParameterList().getParametersCount();
-				Optional.of(method)
-						.map(x -> x.getAnnotation(Argument.class.getName()))
+				final int args = psiMethod.getParameterList().getParametersCount();
+				Optional.of(psiMethod)
+						.map(method -> method.getAnnotation(Argument.class.getName()))
 						.map(PsiAnnotation::getParameterList)
 						.map(PsiAnnotationParameterList::getAttributes)
 						.stream()
 						.flatMap(Arrays::stream)
-						.filter(x -> "position".equals(x.getName()))
+						.filter(nameValuePair -> "position".equals(nameValuePair.getName()))
 						.findFirst()
-						.filter(x -> x.getValue() != null)
+						.filter(nameValuePair -> nameValuePair.getValue() != null)
 						.filter(PsiElement::isValid)
-						.ifPresent(x -> {
+						.ifPresent(nameValuePair -> {
 							try {
-								final int intPosition = Integer.parseInt(x.getValue().getText());
+								final int intPosition = Integer.parseInt(nameValuePair.getValue().getText());
 								if (intPosition < 0 || intPosition > args) {
-									holder.registerProblem(x.getValue(), DESCRIPTION_TEMPLATE,
-											ProblemHighlightType.ERROR, new RemoveParameterQuickFix());
+									holder.registerProblem(nameValuePair.getValue(), DESCRIPTION_TEMPLATE,
+											ProblemHighlightType.ERROR,
+											new RemoveParameterQuickFix());
 								}
 							} catch (final NumberFormatException e) {
 								// Do nothing
