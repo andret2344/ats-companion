@@ -7,7 +7,7 @@
 
     <description>
         <![CDATA[
-        Utility for <a href="https://gitlab.com/andret-tools-system/ats-arguments">Andret Tools
+        Utility for <a href='https://gitlab.com/andret-tools-system/ats-arguments'>Andret Tools
             System</a> library.
         ]]>
     </description>
@@ -103,6 +103,16 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="eu.andret.ats.idea.inspection.InstanceCheckInspection"
+        />
+        <localInspection
+                language="JAVA"
+                displayName="Array parameter"
+                groupPath="ATS"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.inspection.ArrayParameterInspection"
         />
         <intentionAction>
             <className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
