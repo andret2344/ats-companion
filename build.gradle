@@ -33,9 +33,19 @@ repositories {
 }
 
 dependencies {
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 	implementation group: 'eu.andret', name: 'ats-arguments', version: '0.1.1.2'
+	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+
+	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+	testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 }
 
+jar {
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
 println "PUBLISH_TOKEN = " + System.getenv("PUBLISH_TOKEN")
 println "CERTIFICATE_CHAIN = " + System.getenv("CERTIFICATE_CHAIN")
 println "PRIVATE_KEY = " + System.getenv("PRIVATE_KEY")

@@ -5,7 +5,6 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiElement;
@@ -14,6 +13,7 @@ import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.idea.utilities.Verifier;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,9 +44,8 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 		};
 	}
 
+	@Slf4j
 	public static class RemoveQualifierQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.annotation.ArgumentMethodStaticInspection.RemoveQualifierQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -60,7 +59,7 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 						.map(ProblemDescriptor::getPsiElement)
 						.ifPresent(PsiElement::delete);
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 

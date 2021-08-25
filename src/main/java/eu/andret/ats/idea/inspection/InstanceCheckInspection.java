@@ -5,7 +5,6 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiElement;
@@ -21,6 +20,7 @@ import eu.andret.arguments.api.annotation.Argument;
 import eu.andret.arguments.api.entity.ExecutorType;
 import eu.andret.ats.idea.utilities.Util;
 import eu.andret.ats.idea.utilities.Verifier;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +61,8 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		};
 	}
 
-	private void extracted(final ProblemsHolder holder, final PsiInstanceOfExpression expression, final PsiMethod method, final PsiType type) {
+	private void extracted(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
+						   final PsiMethod method, final PsiType type) {
 		Optional.of(method)
 				.map(x -> x.getAnnotation(Argument.class.getName()))
 				.map(x -> x.findAttributeValue("executorType"))
@@ -78,25 +79,29 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				});
 	}
 
-	private void analyzeAndReport(final ProblemsHolder holder, final PsiInstanceOfExpression expression, final PsiType type, final ExecutorType executorType) {
+	private void analyzeAndReport(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
+								  final PsiType type, final ExecutorType executorType) {
 		if (executorType.equals(ExecutorType.PLAYER)) {
 			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED, ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
+				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED,
+						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
 			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM, ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
+				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
+						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			}
 		} else if (executorType.equals(ExecutorType.CONSOLE)) {
 			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM, ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
+				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
+						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED, ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
+				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED,
+						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
 			}
 		}
 	}
 
+	@Slf4j
 	public static class RemoveExpressionQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.annotation.ObsoleteInstanceCheckInspection.RemoveExpressionQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -116,7 +121,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				Arrays.stream(psiElements).forEach(x -> parent.addAfter(x, context));
 				context.delete();
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 

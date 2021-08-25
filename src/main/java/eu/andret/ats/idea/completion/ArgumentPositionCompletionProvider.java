@@ -13,7 +13,8 @@ import java.util.stream.Stream;
 
 public class ArgumentPositionCompletionProvider extends CompletionProvider<CompletionParameters> {
 	@Override
-	public void addCompletions(@NotNull final CompletionParameters parameters, @NotNull final ProcessingContext context, @NotNull final CompletionResultSet result) {
+	public void addCompletions(@NotNull final CompletionParameters parameters, @NotNull final ProcessingContext context,
+							   @NotNull final CompletionResultSet result) {
 		final PsiMethod method = Util.parentOf(parameters.getPosition(), PsiMethod.class);
 		Stream.iterate(0, i -> i + 1)
 				.limit(method.getParameterList().getParametersCount() + 1L)

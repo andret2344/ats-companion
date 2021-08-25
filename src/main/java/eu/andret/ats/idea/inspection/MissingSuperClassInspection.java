@@ -20,7 +20,8 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "@BaseCommand class not extends AnnotatedCommandExecutor";
+			private static final String DESCRIPTION_TEMPLATE
+					= "@BaseCommand class not extends AnnotatedCommandExecutor";
 
 			@Override
 			public void visitClass(final PsiClass aClass) {
@@ -35,7 +36,8 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 						.filter(AnnotatedCommandExecutor.class.getName()::equals)
 						.findAny();
 				if (superClass.isEmpty()) {
-					holder.registerProblem(aClass.getNameIdentifier(), DESCRIPTION_TEMPLATE, ProblemHighlightType.GENERIC_ERROR);
+					holder.registerProblem(aClass.getNameIdentifier(), DESCRIPTION_TEMPLATE,
+							ProblemHighlightType.GENERIC_ERROR);
 				}
 			}
 		};
