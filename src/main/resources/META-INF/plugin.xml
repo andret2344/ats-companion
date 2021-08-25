@@ -114,6 +114,16 @@
                 level="WARNING"
                 implementationClass="eu.andret.ats.idea.inspection.AbstractClassInspection"
         />
+        <localInspection
+                language="JAVA"
+                displayName="Array parameter"
+                groupPath="ATS"
+                groupBundle="messages.InspectionsBundle"
+                groupKey="group.names.probable.bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="eu.andret.ats.idea.inspection.ArrayParameterInspection"
+        />
         <intentionAction>
             <className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
             <category>Suggestions for the "Andret Tools System"</category>

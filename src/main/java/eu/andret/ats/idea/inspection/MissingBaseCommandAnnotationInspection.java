@@ -68,10 +68,12 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 						.map(PsiElement::getParent)
 						.map(PsiClass.class::cast)
 						.map(PsiModifierListOwner::getModifierList)
-						.ifPresent(psiModifierList -> {
+						.ifPresent(modifierList -> {
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiAnnotation psiAnnotation = factory.createAnnotationFromText("@" + BaseCommand.class.getName() + "(\"\")", psiModifierList.getParent());
-							final PsiElement inserted = psiModifierList.addBefore(psiAnnotation, psiModifierList.getFirstChild());
+							final PsiAnnotation psiAnnotation = factory.createAnnotationFromText(
+									"@" + BaseCommand.class.getName() + "(\"\")", modifierList.getParent());
+							final PsiElement firstChild = modifierList.getFirstChild();
+							final PsiElement inserted = modifierList.addBefore(psiAnnotation, firstChild);
 							JavaCodeStyleManager.getInstance(project).shortenClassReferences(inserted);
 						});
 			} catch (final IncorrectOperationException e) {

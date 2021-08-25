@@ -92,14 +92,17 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.map(ProblemDescriptor::getPsiElement)
 						.map(PsiElement::getParent)
 						.map(PsiMethod.class::cast)
-						.ifPresent(psiMethod -> {
-							final PsiAnnotation annotation = psiMethod.getAnnotation(Fallback.class.getName());
+						.ifPresent(method -> {
+							final PsiAnnotation annotation = method.getAnnotation(Fallback.class.getName());
 							if (annotation != null) {
 								annotation.delete();
-								final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-								final PsiModifierList psiModifierList = psiMethod.getModifierList();
-								final PsiAnnotation psiAnnotation = factory.createAnnotationFromText("@" + Argument.class.getName(), psiMethod);
-								final PsiElement inserted = psiModifierList.addBefore(psiAnnotation, psiModifierList.getFirstChild());
+								final PsiElementFactory factory = JavaPsiFacade.getInstance(project)
+										.getElementFactory();
+								final PsiModifierList psiModifierList = method.getModifierList();
+								final PsiAnnotation psiAnnotation = factory.createAnnotationFromText(
+										"@" + Argument.class.getName(), method);
+								final PsiElement firstChild = psiModifierList.getFirstChild();
+								final PsiElement inserted = psiModifierList.addBefore(psiAnnotation, firstChild);
 								JavaCodeStyleManager.getInstance(project).shortenClassReferences(inserted);
 							}
 						});
@@ -130,13 +133,13 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.map(ProblemDescriptor::getPsiElement)
 						.map(PsiElement::getParent)
 						.map(PsiMethod.class::cast)
-						.ifPresent(psiMethod -> {
+						.ifPresent(method -> {
 							final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
 							if (editor == null) {
 								return;
 							}
 							final RefactoringActionHandler handler = RefactoringActionHandlerFactory.getInstance().createRenameHandler();
-							handler.invoke(project, editor, psiMethod.getContainingFile(), DataManager.getInstance().getDataContext(editor.getComponent()));
+							handler.invoke(project, editor, method.getContainingFile(), DataManager.getInstance().getDataContext(editor.getComponent()));
 						});
 			} catch (final IncorrectOperationException e) {
 				log.error(getClass().getName(), e);
@@ -165,7 +168,7 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.map(ProblemDescriptor::getPsiElement)
 						.map(PsiElement::getParent)
 						.map(PsiMethod.class::cast)
-						.map(psiMethod -> psiMethod.getAnnotation(Fallback.class.getName()))
+						.map(method -> method.getAnnotation(Fallback.class.getName()))
 						.ifPresent(PsiElement::delete);
 			} catch (final IncorrectOperationException e) {
 				log.error(getClass().getName(), e);

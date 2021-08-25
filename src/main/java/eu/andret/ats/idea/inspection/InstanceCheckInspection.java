@@ -56,16 +56,16 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				if (!type.isValid()) {
 					return;
 				}
-				extracted(holder, expression, method, type);
+				findElementAndValidate(holder, expression, method, type);
 			}
 		};
 	}
 
-	private void extracted(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
-						   final PsiMethod method, final PsiType type) {
-		Optional.of(method)
-				.map(x -> x.getAnnotation(Argument.class.getName()))
-				.map(x -> x.findAttributeValue("executorType"))
+	private void findElementAndValidate(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
+										final PsiMethod psiMethod, final PsiType type) {
+		Optional.of(psiMethod)
+				.map(method -> method.getAnnotation(Argument.class.getName()))
+				.map(annotation -> annotation.findAttributeValue("executorType"))
 				.map(PsiElement::getReference)
 				.map(PsiReference::resolve)
 				.map(PsiElement::getText)
