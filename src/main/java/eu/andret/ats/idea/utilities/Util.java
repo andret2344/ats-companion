@@ -21,14 +21,15 @@ public class Util {
 		return copy;
 	}
 
-	public static <E extends PsiElement> E repeat(final PsiElement psiElement, final int count, final UnaryOperator<PsiElement> fn, final Class<E> clazz) {
+	public static <E extends PsiElement> E repeat(final PsiElement psiElement, final int count,
+												  final UnaryOperator<PsiElement> fn, final Class<E> clazz) {
 		PsiElement copy = psiElement;
 		for (int i = 0; i < count; i++) {
 			copy = fn.apply(copy);
 		}
 		return clazz.cast(copy);
 	}
-	
+
 	private Util() {
 	}
 }
