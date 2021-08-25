@@ -26,7 +26,8 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "Method annotated with @Argument annotation cannot use static qualifier";
+			private static final String DESCRIPTION_TEMPLATE
+					= "Method annotated with @Argument annotation cannot use static qualifier";
 
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
@@ -38,7 +39,8 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 						.map(PsiKeyword.class::cast)
 						.filter(keyword -> keyword.textMatches(PsiKeyword.STATIC))
 						.findAny()
-						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION_TEMPLATE, ProblemHighlightType.GENERIC_ERROR, new RemoveQualifierQuickFix()));
+						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION_TEMPLATE,
+								ProblemHighlightType.GENERIC_ERROR, new RemoveQualifierQuickFix()));
 			}
 		};
 	}

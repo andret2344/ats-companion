@@ -5,11 +5,11 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiArrayType;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiElementVisitor;
@@ -17,6 +17,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.idea.utilities.Verifier;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +44,8 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 						.filter(parameter -> !parameter.isVarArgs())
 						.map(PsiParameter::getTypeElement)
 						.filter(Objects::nonNull)
-						.forEach(typeElement -> holder.registerProblem(typeElement, DESCRIPTION_TEMPLATE, ProblemHighlightType.ERROR, getFixes()));
+						.forEach(typeElement -> holder.registerProblem(typeElement, DESCRIPTION_TEMPLATE,
+								ProblemHighlightType.ERROR, getFixes()));
 			}
 
 			private LocalQuickFix[] getFixes() {
@@ -55,9 +57,8 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 		};
 	}
 
+	@Slf4j
 	public static class ChangeToVarargQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.annotation.ArrayParameterInspection.ChangeToVarargQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -75,10 +76,11 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 							final PsiArrayType type = (PsiArrayType) parameter.getType();
 							final String newType = type.getComponentType().getCanonicalText() + "...";
-							parameter.replace(factory.createParameter(parameter.getName(), factory.createTypeByFQClassName(newType)));
+							final PsiClassType classType = factory.createTypeByFQClassName(newType);
+							parameter.replace(factory.createParameter(parameter.getName(), classType));
 						});
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 
@@ -89,9 +91,8 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 		}
 	}
 
+	@Slf4j
 	public static class ConvertToSimpleVariableQuickFix implements LocalQuickFix {
-		private static final Logger LOG = Logger.getInstance("#eu.andret.ats.idea.annotation.ArrayParameterInspection.ChangeToSimpleVariableQuickFix");
-
 		@NotNull
 		@Override
 		public String getName() {
@@ -109,10 +110,11 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 							final PsiArrayType type = (PsiArrayType) psiParameter.getType();
 							final String newType = type.getComponentType().getCanonicalText();
-							psiParameter.replace(factory.createParameter(psiParameter.getName(), factory.createTypeByFQClassName(newType)));
+							final PsiClassType classType = factory.createTypeByFQClassName(newType);
+							psiParameter.replace(factory.createParameter(psiParameter.getName(), classType));
 						});
 			} catch (final IncorrectOperationException e) {
-				LOG.error(e);
+				log.error(getClass().getName(), e);
 			}
 		}
 
