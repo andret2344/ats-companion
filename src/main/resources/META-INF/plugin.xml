@@ -28,6 +28,7 @@
 			<li>Use of array in @Argument method's parameter list</li>
 			<li>@Fallback method name must match the @Argument method name</li>
 			<li>Instance checking of sender against executorType</li>
+			<li>Non-public visibility of @Argument method</li>
 			<li>Missing @BaseCommand annotation in class extending AnnotatedCommandExecutor</li>
 			<li>Missing superclass in class annotated with @BaseCommand</li>
 			<li>Position must be positive lower or equal to parameters count</li>
