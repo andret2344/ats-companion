@@ -39,27 +39,41 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 				if (!Verifier.verifyArgumentMethod(method)) {
 					return;
 				}
-				final PsiElement[] children = method.getModifierList().getChildren();
-				final List<PsiKeyword> keywords = Arrays.stream(children)
-						.filter(PsiKeyword.class::isInstance)
-						.map(PsiKeyword.class::cast)
-						.collect(Collectors.toList());
 
+				final List<PsiKeyword> keywords = getKeywords(method.getModifierList().getChildren());
+				validateWrongVisibilityModifier(keywords);
+				validateNoVisibilityModifier(method, keywords);
+			}
+
+			private void validateNoVisibilityModifier(@NotNull final PsiMethod method, final List<PsiKeyword> keywords) {
+				final PsiElement methodIdentifyingElement = method.getIdentifyingElement();
+				if (methodIdentifyingElement == null) {
+					return;
+				}
+				final boolean noneVisibilityModifier = keywords.stream()
+						.noneMatch(keyword -> keyword.textMatches(PsiKeyword.PRIVATE)
+								|| keyword.textMatches(PsiKeyword.PROTECTED)
+								|| keyword.textMatches(PsiKeyword.PUBLIC));
+				if (noneVisibilityModifier) {
+					holder.registerProblem(methodIdentifyingElement, DESCRIPTION_TEMPLATE,
+							ProblemHighlightType.GENERIC_ERROR, new AddPublicQuickFix());
+				}
+			}
+
+			private void validateWrongVisibilityModifier(@NotNull final List<PsiKeyword> keywords) {
 				keywords.stream()
 						.filter(kw -> Stream.of(PsiKeyword.PRIVATE, PsiKeyword.PROTECTED).anyMatch(kw::textMatches))
 						.findAny()
 						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION_TEMPLATE,
 								ProblemHighlightType.GENERIC_ERROR, new ChangeToPublicQuickFix()));
+			}
 
-				final boolean b = keywords.stream()
-						.noneMatch(keyword -> keyword.textMatches(PsiKeyword.PRIVATE)
-								|| keyword.textMatches(PsiKeyword.PROTECTED)
-								|| keyword.textMatches(PsiKeyword.PUBLIC));
-				final PsiElement methodIdentifyingElement = method.getIdentifyingElement();
-				if (methodIdentifyingElement != null && b) {
-					holder.registerProblem(methodIdentifyingElement, DESCRIPTION_TEMPLATE,
-							ProblemHighlightType.GENERIC_ERROR, new AddPublicQuickFix());
-				}
+			@NotNull
+			private List<PsiKeyword> getKeywords(@NotNull final PsiElement[] children) {
+				return Arrays.stream(children)
+						.filter(PsiKeyword.class::isInstance)
+						.map(PsiKeyword.class::cast)
+						.collect(Collectors.toList());
 			}
 		};
 	}

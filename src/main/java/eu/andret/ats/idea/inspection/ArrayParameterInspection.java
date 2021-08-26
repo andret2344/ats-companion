@@ -48,6 +48,7 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 								ProblemHighlightType.ERROR, getFixes()));
 			}
 
+			@NotNull
 			private LocalQuickFix[] getFixes() {
 				return new LocalQuickFix[]{
 						new ChangeToVarargQuickFix(),
