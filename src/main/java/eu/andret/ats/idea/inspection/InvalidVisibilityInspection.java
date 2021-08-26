@@ -48,8 +48,7 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 
 			private void validateNoVisibilityModifier(@NotNull final PsiMethod method,
 													  @NotNull final List<PsiKeyword> keywords) {
-				final boolean visibilityModifierPresent = keywords.stream().anyMatch(this::isVisibilityModifier);
-				if (visibilityModifierPresent) {
+				if (keywords.stream().anyMatch(this::isVisibilityModifier)) {
 					return;
 				}
 				Optional.of(method)
