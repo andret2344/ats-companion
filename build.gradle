@@ -10,7 +10,7 @@ targetCompatibility = JavaVersion.VERSION_11
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version = '2021.2'
+	version = '2021.2.1'
 	plugins = ['com.intellij.java']
 }
 
@@ -24,8 +24,8 @@ patchPluginXml {
 	untilBuild = '212.*'
 }
 
-group 'eu.andret.ats.idea'
-version '0.0.1'
+group project.group
+version project.version
 
 repositories {
 	mavenCentral()
@@ -34,7 +34,7 @@ repositories {
 
 dependencies {
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
-	implementation group: 'eu.andret', name: 'ats-arguments', version: '0.1.1.2'
+	implementation group: 'eu.andret', name: 'ats-arguments', version: project.argumentsVersion
 	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 
 	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
