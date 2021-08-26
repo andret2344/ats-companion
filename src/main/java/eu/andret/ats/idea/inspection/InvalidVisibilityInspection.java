@@ -13,6 +13,7 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
@@ -46,18 +47,16 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 			}
 
 			private void validateNoVisibilityModifier(@NotNull final PsiMethod method, final List<PsiKeyword> keywords) {
-				final PsiElement methodIdentifyingElement = method.getIdentifyingElement();
-				if (methodIdentifyingElement == null) {
+				final boolean visibilityModifierPresent = keywords.stream().anyMatch(keyword ->
+						Stream.of(PsiKeyword.PRIVATE, PsiKeyword.PROTECTED, PsiKeyword.PUBLIC)
+								.anyMatch(keyword::textMatches));
+				if (visibilityModifierPresent) {
 					return;
 				}
-				final boolean noneVisibilityModifier = keywords.stream()
-						.noneMatch(keyword -> keyword.textMatches(PsiKeyword.PRIVATE)
-								|| keyword.textMatches(PsiKeyword.PROTECTED)
-								|| keyword.textMatches(PsiKeyword.PUBLIC));
-				if (noneVisibilityModifier) {
-					holder.registerProblem(methodIdentifyingElement, DESCRIPTION_TEMPLATE,
-							ProblemHighlightType.GENERIC_ERROR, new AddPublicQuickFix());
-				}
+				Optional.of(method)
+						.map(PsiNameIdentifierOwner::getIdentifyingElement)
+						.ifPresent(element -> holder.registerProblem(element, DESCRIPTION_TEMPLATE,
+								ProblemHighlightType.GENERIC_ERROR, new AddPublicQuickFix()));
 			}
 
 			private void validateWrongVisibilityModifier(@NotNull final List<PsiKeyword> keywords) {
