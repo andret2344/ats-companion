@@ -8,13 +8,12 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiArrayType;
-import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
@@ -22,48 +21,71 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionTool {
+public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "Array is not a valid type, use vararg instead";
+			private static final String DESCRIPTION_TEMPLATE
+					= "Method annotated with @Argument annotation must be public";
 
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
 				if (!Verifier.verifyArgumentMethod(method)) {
 					return;
 				}
-				Arrays.stream(method.getParameterList().getParameters())
-						.filter(parameter -> parameter.getType().isValid())
-						.filter(parameter -> parameter.getType() instanceof PsiArrayType)
-						.filter(parameter -> !parameter.isVarArgs())
-						.map(PsiParameter::getTypeElement)
-						.filter(Objects::nonNull)
-						.forEach(typeElement -> holder.registerProblem(typeElement, DESCRIPTION_TEMPLATE,
-								ProblemHighlightType.ERROR, getFixes()));
+
+				final List<PsiKeyword> keywords = getKeywords(method.getModifierList().getChildren());
+				validateWrongVisibilityModifier(keywords);
+				validateNoVisibilityModifier(method, keywords);
+			}
+
+			private void validateNoVisibilityModifier(@NotNull final PsiMethod method,
+													  @NotNull final List<PsiKeyword> keywords) {
+				if (keywords.stream().anyMatch(this::isVisibilityModifier)) {
+					return;
+				}
+				Optional.of(method)
+						.map(PsiNameIdentifierOwner::getIdentifyingElement)
+						.ifPresent(element -> holder.registerProblem(element, DESCRIPTION_TEMPLATE,
+								ProblemHighlightType.GENERIC_ERROR, new AddPublicQuickFix()));
+			}
+
+			private void validateWrongVisibilityModifier(@NotNull final List<PsiKeyword> keywords) {
+				keywords.stream()
+						.filter(kw -> Stream.of(PsiKeyword.PRIVATE, PsiKeyword.PROTECTED).anyMatch(kw::textMatches))
+						.findAny()
+						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION_TEMPLATE,
+								ProblemHighlightType.GENERIC_ERROR, new ChangeToPublicQuickFix()));
+			}
+
+			private boolean isVisibilityModifier(@NotNull final PsiKeyword keyword) {
+				return Stream.of(PsiKeyword.PRIVATE, PsiKeyword.PROTECTED, PsiKeyword.PUBLIC)
+						.anyMatch(keyword::textMatches);
 			}
 
 			@NotNull
-			private LocalQuickFix[] getFixes() {
-				return new LocalQuickFix[]{
-						new ChangeToVarargQuickFix(),
-						new ConvertToSimpleVariableQuickFix()
-				};
+			private List<PsiKeyword> getKeywords(@NotNull final PsiElement[] children) {
+				return Arrays.stream(children)
+						.filter(PsiKeyword.class::isInstance)
+						.map(PsiKeyword.class::cast)
+						.collect(Collectors.toList());
 			}
 		};
 	}
 
 	@Slf4j
-	public static class ChangeToVarargQuickFix implements LocalQuickFix {
+	public static class ChangeToPublicQuickFix implements LocalQuickFix {
 		@NotNull
 		@Override
 		public String getName() {
-			return "Change to vararg";
+			return "Change visibility to public";
 		}
 
 		@Override
@@ -71,14 +93,9 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 			try {
 				Optional.of(descriptor)
 						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiElement::getParent)
-						.map(PsiParameter.class::cast)
-						.ifPresent(parameter -> {
+						.ifPresent(psiElement -> {
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiArrayType type = (PsiArrayType) parameter.getType();
-							final String newType = type.getComponentType().getCanonicalText() + "...";
-							final PsiClassType classType = factory.createTypeByFQClassName(newType);
-							parameter.replace(factory.createParameter(parameter.getName(), classType));
+							psiElement.replace(factory.createKeyword("public"));
 						});
 			} catch (final IncorrectOperationException e) {
 				log.error(getClass().getName(), e);
@@ -93,11 +110,11 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 	}
 
 	@Slf4j
-	public static class ConvertToSimpleVariableQuickFix implements LocalQuickFix {
+	public static class AddPublicQuickFix implements LocalQuickFix {
 		@NotNull
 		@Override
 		public String getName() {
-			return "Convert to simple variable";
+			return "Add visibility modifier";
 		}
 
 		@Override
@@ -106,13 +123,10 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 				Optional.of(descriptor)
 						.map(ProblemDescriptor::getPsiElement)
 						.map(PsiElement::getParent)
-						.map(PsiParameter.class::cast)
-						.ifPresent(psiParameter -> {
+						.map(PsiMethod.class::cast)
+						.ifPresent(psiElement -> {
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiArrayType type = (PsiArrayType) psiParameter.getType();
-							final String newType = type.getComponentType().getCanonicalText();
-							final PsiClassType classType = factory.createTypeByFQClassName(newType);
-							psiParameter.replace(factory.createParameter(psiParameter.getName(), classType));
+							psiElement.getModifierList().add(factory.createKeyword("public"));
 						});
 			} catch (final IncorrectOperationException e) {
 				log.error(getClass().getName(), e);

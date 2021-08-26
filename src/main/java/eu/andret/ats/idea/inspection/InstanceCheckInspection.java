@@ -56,27 +56,27 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				if (!type.isValid()) {
 					return;
 				}
-				findElementAndValidate(holder, expression, method, type);
+				findElementAndValidate(expression, method, type);
+			}
+
+			private void findElementAndValidate(final PsiInstanceOfExpression expression, final PsiMethod psiMethod,
+												final PsiType type) {
+				Optional.of(psiMethod)
+						.map(method -> method.getAnnotation(Argument.class.getName()))
+						.map(annotation -> annotation.findAttributeValue("executorType"))
+						.map(PsiElement::getReference)
+						.map(PsiReference::resolve)
+						.map(PsiElement::getText)
+						.map(ExecutorType::valueOf)
+						.ifPresent(executorType -> {
+							final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
+							if (!(resolve instanceof PsiField) || !((PsiField) resolve).getName().equals("sender")) {
+								return;
+							}
+							analyzeAndReport(holder, expression, type, executorType);
+						});
 			}
 		};
-	}
-
-	private void findElementAndValidate(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
-										final PsiMethod psiMethod, final PsiType type) {
-		Optional.of(psiMethod)
-				.map(method -> method.getAnnotation(Argument.class.getName()))
-				.map(annotation -> annotation.findAttributeValue("executorType"))
-				.map(PsiElement::getReference)
-				.map(PsiReference::resolve)
-				.map(PsiElement::getText)
-				.map(ExecutorType::valueOf)
-				.ifPresent(executorType -> {
-					final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
-					if (!(resolve instanceof PsiField) || !((PsiField) resolve).getName().equals("sender")) {
-						return;
-					}
-					analyzeAndReport(holder, expression, type, executorType);
-				});
 	}
 
 	private void analyzeAndReport(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
