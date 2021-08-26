@@ -52,8 +52,7 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 								final int intPosition = Integer.parseInt(nameValuePair.getValue().getText());
 								if (intPosition < 0 || intPosition > args) {
 									holder.registerProblem(nameValuePair.getValue(), DESCRIPTION_TEMPLATE,
-											ProblemHighlightType.ERROR,
-											new RemoveParameterQuickFix());
+											ProblemHighlightType.ERROR, new RemoveParameterQuickFix());
 								}
 							} catch (final NumberFormatException e) {
 								// Do nothing

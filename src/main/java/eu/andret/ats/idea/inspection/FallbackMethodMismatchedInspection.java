@@ -47,6 +47,9 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 				if (!Verifier.verifyArgumentMethod(method)) {
 					return;
 				}
+				if (method.getContainingClass() == null) {
+					return;
+				}
 				final List<PsiMethod> allClassMethods = getAllMethods(method.getContainingClass());
 				final Optional<PsiMethod> argumentMethod = allClassMethods.stream()
 						.filter(psiMethod -> psiMethod.hasAnnotation(Argument.class.getName()))
@@ -58,14 +61,16 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 				}
 			}
 
-			private List<PsiMethod> getAllMethods(final PsiClass psiClass) {
-				return Optional.ofNullable(psiClass)
+			@NotNull
+			private List<PsiMethod> getAllMethods(@NotNull final PsiClass psiClass) {
+				return Optional.of(psiClass)
 						.map(PsiClass::getAllMethods)
 						.stream()
 						.flatMap(Arrays::stream)
 						.collect(Collectors.toList());
 			}
 
+			@NotNull
 			private LocalQuickFix[] getFixes() {
 				return new LocalQuickFix[]{
 						new RemoveMethodQuickFix(),
