@@ -1,4 +1,4 @@
-package eu.andret.ats.idea.inspection;
+package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
@@ -16,10 +16,9 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.arguments.api.annotation.Argument;
-import eu.andret.arguments.api.entity.ExecutorType;
-import eu.andret.ats.idea.utilities.Util;
-import eu.andret.ats.idea.utilities.Verifier;
+import eu.andret.ats.companion.idea.utilities.Constants;
+import eu.andret.ats.companion.idea.utilities.Util;
+import eu.andret.ats.companion.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -62,26 +61,25 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 			private void findElementAndValidate(final PsiInstanceOfExpression expression, final PsiMethod psiMethod,
 												final PsiType type) {
 				Optional.of(psiMethod)
-						.map(method -> method.getAnnotation(Argument.class.getName()))
+						.map(method -> method.getAnnotation(Constants.ANNOTATION_ARGUMENT))
 						.map(annotation -> annotation.findAttributeValue("executorType"))
 						.map(PsiElement::getReference)
 						.map(PsiReference::resolve)
-						.map(PsiElement::getText)
-						.map(ExecutorType::valueOf)
-						.ifPresent(executorType -> {
+						.map(PsiField.class::cast)
+						.ifPresent(field -> {
 							final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
 							if (!(resolve instanceof PsiField) || !((PsiField) resolve).getName().equals("sender")) {
 								return;
 							}
-							analyzeAndReport(holder, expression, type, executorType);
+							analyzeAndReport(holder, expression, type, field.getName());
 						});
 			}
 		};
 	}
 
 	private void analyzeAndReport(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
-								  final PsiType type, final ExecutorType executorType) {
-		if (executorType.equals(ExecutorType.PLAYER)) {
+								  final PsiType type, @NotNull final String executorType) {
+		if (executorType.equals("PLAYER")) {
 			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED,
 						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
@@ -89,7 +87,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			}
-		} else if (executorType.equals(ExecutorType.CONSOLE)) {
+		} else if (executorType.equals("CONSOLE")) {
 			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());

@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>eu.andret.ats.idea</id>
 	<!--suppress PluginXmlCapitalization -->
-	<name>atsIdea</name>
+	<name>atsCompanion</name>
 	<version>0.0.1</version>
 	<vendor email="andret2344@gmail.com" url="https://andret.eu/">Andret2344</vendor>
 
@@ -10,7 +10,7 @@
 		<p>
 			<span>Utility for</span>
 			<a href='https://gitlab.com/andret-tools-system/ats-arguments'>atsArguments</a>
-			<span>library. It adds a lot of inspections and a few more cool stuff.</span>
+			<span>library, that adds a lot of inspections and a few more cool stuff.</span>
 		</p>
 		]]>
     </description>
@@ -65,7 +65,7 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.FallbackMethodMismatchedInspection"
 		/>
 		<localInspection
 				language="JAVA"
@@ -75,7 +75,7 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.idea.inspection.MissingSuperClassInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.MissingSuperClassInspection"
 		/>
 		<localInspection
 				language="JAVA"
@@ -85,7 +85,7 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.idea.inspection.MissingBaseCommandAnnotationInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.MissingBaseCommandAnnotationInspection"
 		/>
 		<localInspection
 				language="JAVA"
@@ -95,7 +95,7 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.idea.inspection.ArgumentMethodStaticInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.ArgumentMethodStaticInspection"
 		/>
 		<localInspection
 				language="JAVA"
@@ -105,7 +105,7 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="WARNING"
-				implementationClass="eu.andret.ats.idea.inspection.PrimitiveReturnInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.PrimitiveReturnInspection"
 		/>
 		<localInspection
 				language="JAVA"
@@ -115,11 +115,11 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.idea.inspection.PositionOutOfBoundsInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.PositionOutOfBoundsInspection"
 		/>
 		<completion.contributor
 				language="JAVA"
-				implementationClass="eu.andret.ats.idea.completion.ArgumentPositionCompletionContributor"
+				implementationClass="eu.andret.ats.companion.idea.completion.ArgumentPositionCompletionContributor"
 				order="first"
 		/>
 		<localInspection
@@ -130,7 +130,7 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="WARNING"
-				implementationClass="eu.andret.ats.idea.inspection.InstanceCheckInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.InstanceCheckInspection"
 		/>
 		<localInspection
 				language="JAVA"
@@ -140,7 +140,7 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.idea.inspection.ArrayParameterInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.ArrayParameterInspection"
 		/>
 		<localInspection
 				language="JAVA"
@@ -150,7 +150,7 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.idea.inspection.AbstractClassInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.AbstractClassInspection"
 		/>
 		<localInspection
 				language="JAVA"
@@ -160,10 +160,10 @@
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.idea.inspection.InvalidVisibilityInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.InvalidVisibilityInspection"
 		/>
 		<intentionAction>
-			<className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
+			<className>eu.andret.ats.companion.idea.generator.FallbackMethodGenerator</className>
 			<category>Suggestions for the "Andret Tools System"</category>
 		</intentionAction>
 	</extensions>

@@ -1,4 +1,4 @@
-package eu.andret.ats.idea.inspection;
+package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
@@ -16,8 +16,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.arguments.AnnotatedCommandExecutor;
-import eu.andret.arguments.api.annotation.BaseCommand;
+import eu.andret.ats.companion.idea.utilities.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -35,10 +34,10 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 			@Override
 			public void visitClass(final PsiClass aClass) {
 				Optional.of(aClass)
-						.filter(psiClass -> !psiClass.hasAnnotation(BaseCommand.class.getName()))
+						.filter(psiClass -> !psiClass.hasAnnotation(Constants.ANNOTATION_BASE_COMMAND))
 						.map(PsiClass::getSuperClass)
 						.map(PsiClass::getQualifiedName)
-						.filter(AnnotatedCommandExecutor.class.getName()::equals)
+						.filter(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR::equals)
 						.map(x -> aClass.getNameIdentifier())
 						.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION_TEMPLATE,
 								ProblemHighlightType.GENERIC_ERROR, getFixes()));
@@ -72,7 +71,8 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 						.ifPresent(modifierList -> {
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 							final PsiAnnotation psiAnnotation = factory.createAnnotationFromText(
-									"@" + BaseCommand.class.getName() + "(\"\")", modifierList.getParent());
+									"@" + Constants.ANNOTATION_BASE_COMMAND + "(\"\")",
+									modifierList.getParent());
 							final PsiElement firstChild = modifierList.getFirstChild();
 							final PsiElement inserted = modifierList.addBefore(psiAnnotation, firstChild);
 							JavaCodeStyleManager.getInstance(project).shortenClassReferences(inserted);
