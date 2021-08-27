@@ -1,141 +1,180 @@
 <idea-plugin>
-    <id>eu.andret.ats.idea</id>
-    <!--suppress PluginXmlCapitalization -->
-    <name>atsIdea</name>
-    <version>0.0.1</version>
-    <vendor email="andret2344@gmail.com" url="https://andret.eu/">Andret2344</vendor>
+	<id>eu.andret.ats.idea</id>
+	<!--suppress PluginXmlCapitalization -->
+	<name>atsIdea</name>
+	<version>0.0.1</version>
+	<vendor email="andret2344@gmail.com" url="https://andret.eu/">Andret2344</vendor>
 
-    <description>
+	<description>
         <![CDATA[
-        Utility for <a href='https://gitlab.com/andret-tools-system'>Andret Tools System</a> library.
-        ]]>
+		<p>
+			<span>Utility for</span>
+			<a href='https://gitlab.com/andret-tools-system'>atsArguments</a>
+			<span>library. It adds a lot of inspections and a few more cool stuff.</span>
+		</p>
+		]]>
     </description>
-    <change-notes>
+	<change-notes>
         <![CDATA[
-        <ul>
-            <li><b>0.0.1</b> Initial release.</li>
-        </ul>
-        ]]>
+		<h2>atsIdea v0.0.1 - Initial release</h2>
+		<p>
+			<span>atsArguments compatibility version:</span>
+			<strong>0.1.1.2</strong>
+		</p>
+		<h3>Inspections added</h3>
+		<ul>
+			<li>Abstract class annotated with @BaseCommand</li>
+			<li>Static modifier in @Argument method</li>
+			<li>Use of array in @Argument method's parameter list</li>
+			<li>@Fallback method name must match the @Argument method name</li>
+			<li>Instance checking of sender against executorType</li>
+			<li>Non-public visibility of @Argument method</li>
+			<li>Missing @BaseCommand annotation in class extending AnnotatedCommandExecutor</li>
+			<li>Missing superclass in class annotated with @BaseCommand</li>
+			<li>Position must be positive lower or equal to parameters count</li>
+			<li>@Argument method should not return a primitive</li>
+		</ul>
+		<h3>Intentions added</h3>
+		<ul>
+			<li>Fallback method generation</li>
+		</ul>
+		<h3>Completions added</h3>
+		<ul>
+			<li>The position parameter in @Argument annotation</li>
+		</ul>
+		]]>
     </change-notes>
 
-    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-    <idea-version since-build="143.2370.31"/>
+	<!-- https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges -->
+	<idea-version since-build="162"/>
 
-    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
-         on how to target different products -->
-    <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.lang</depends>
-    -->
+	<!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+		 on how to target different products -->
+	<!-- uncomment to enable plugin in all products
+	<depends>com.intellij.modules.lang</depends>
+	-->
+	<depends>com.intellij.java</depends>
+	<depends>com.intellij.modules.java</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <localInspection
-                language="JAVA"
-                displayName="Invalid usage of @Fallback annotation"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="ERROR"
-                implementationClass="eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection"
-        />
-        <localInspection
-                language="JAVA"
-                displayName="Missing superclass for @BaseCommand class"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="ERROR"
-                implementationClass="eu.andret.ats.idea.inspection.MissingSuperClassInspection"
-        />
-        <localInspection
-                language="JAVA"
-                displayName="Missing @BaseCommand annotation"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="ERROR"
-                implementationClass="eu.andret.ats.idea.inspection.MissingBaseCommandAnnotationInspection"
-        />
-        <localInspection
-                language="JAVA"
-                displayName="Static @Argument method"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="ERROR"
-                implementationClass="eu.andret.ats.idea.inspection.ArgumentMethodStaticInspection"
-        />
-        <localInspection
-                language="JAVA"
-                displayName="Primitive return"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="WARNING"
-                implementationClass="eu.andret.ats.idea.inspection.PrimitiveReturnInspection"
-        />
-        <localInspection
-                language="JAVA"
-                displayName="Position out of bounds"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="ERROR"
-                implementationClass="eu.andret.ats.idea.inspection.PositionOutOfBoundsInspection"
-        />
-        <completion.contributor
-                language="JAVA"
-                implementationClass="eu.andret.ats.idea.completion.ArgumentPositionCompletionContributor"
-                order="first"
-        />
-        <localInspection
-                language="JAVA"
-                displayName="Instance check"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="WARNING"
-                implementationClass="eu.andret.ats.idea.inspection.InstanceCheckInspection"
-        />
-        <localInspection
-                language="JAVA"
-                displayName="Array parameter"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="WARNING"
-                implementationClass="eu.andret.ats.idea.inspection.ArrayParameterInspection"
-        />
-        <localInspection
-                language="JAVA"
-                displayName="Abstract class"
-                groupPath="ATS"
-                groupBundle="messages.InspectionsBundle"
-                groupKey="group.names.probable.bugs"
-                enabledByDefault="true"
-                level="WARNING"
-                implementationClass="eu.andret.ats.idea.inspection.AbstractClassInspection"
-        />
-        <intentionAction>
-            <className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
-            <category>Suggestions for the "Andret Tools System"</category>
-        </intentionAction>
-    </extensions>
+	<extensions defaultExtensionNs="com.intellij">
+		<localInspection
+				language="JAVA"
+				displayName="Invalid usage of @Fallback annotation"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.idea.inspection.FallbackMethodMismatchedInspection"
+		/>
+		<localInspection
+				language="JAVA"
+				displayName="Missing superclass for @BaseCommand class"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.idea.inspection.MissingSuperClassInspection"
+		/>
+		<localInspection
+				language="JAVA"
+				displayName="Missing @BaseCommand annotation"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.idea.inspection.MissingBaseCommandAnnotationInspection"
+		/>
+		<localInspection
+				language="JAVA"
+				displayName="Static @Argument method"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.idea.inspection.ArgumentMethodStaticInspection"
+		/>
+		<localInspection
+				language="JAVA"
+				displayName="Primitive return"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="WARNING"
+				implementationClass="eu.andret.ats.idea.inspection.PrimitiveReturnInspection"
+		/>
+		<localInspection
+				language="JAVA"
+				displayName="Position out of bounds"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.idea.inspection.PositionOutOfBoundsInspection"
+		/>
+		<completion.contributor
+				language="JAVA"
+				implementationClass="eu.andret.ats.idea.completion.ArgumentPositionCompletionContributor"
+				order="first"
+		/>
+		<localInspection
+				language="JAVA"
+				displayName="Instance check"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="WARNING"
+				implementationClass="eu.andret.ats.idea.inspection.InstanceCheckInspection"
+		/>
+		<localInspection
+				language="JAVA"
+				displayName="Array parameter"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.idea.inspection.ArrayParameterInspection"
+		/>
+		<localInspection
+				language="JAVA"
+				displayName="Abstract class"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.idea.inspection.AbstractClassInspection"
+		/>
+		<localInspection
+				language="JAVA"
+				displayName="Invalid visibility"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.idea.inspection.InvalidVisibilityInspection"
+		/>
+		<intentionAction>
+			<className>eu.andret.ats.idea.generator.FallbackMethodGenerator</className>
+			<category>Suggestions for the "Andret Tools System"</category>
+		</intentionAction>
+	</extensions>
 
-    <application-components>
-    </application-components>
+	<application-components>
+	</application-components>
 
-    <project-components>
-    </project-components>
+	<project-components>
+	</project-components>
 
-    <actions>
-    </actions>
+	<actions>
+	</actions>
 
 </idea-plugin>

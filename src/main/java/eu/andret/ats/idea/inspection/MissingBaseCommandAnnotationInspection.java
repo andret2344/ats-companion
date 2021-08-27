@@ -44,6 +44,7 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 								ProblemHighlightType.GENERIC_ERROR, getFixes()));
 			}
 
+			@NotNull
 			private LocalQuickFix[] getFixes() {
 				return new LocalQuickFix[]{
 						new AddMissingAnnotationQuickFix(),
