@@ -14,7 +14,7 @@ public class Verifier {
 				.filter(aClass -> aClass.hasAnnotation(Constants.ANNOTATION_BASE_COMMAND))
 				.map(PsiClass::getSuperClass)
 				.map(PsiClass::getQualifiedName)
-				.filter(x -> x.equals(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR))
+				.filter(name -> name.equals(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR))
 				.isPresent();
 	}
 
@@ -36,7 +36,7 @@ public class Verifier {
 	public static boolean verifyArgumentAnnotation(final PsiAnnotation psiAnnotation) {
 		return Optional.of(psiAnnotation)
 				.map(PsiAnnotation::getQualifiedName)
-				.filter(x -> x.equals(Constants.ANNOTATION_ARGUMENT))
+				.filter(name -> name.equals(Constants.ANNOTATION_ARGUMENT))
 				.isPresent();
 	}
 

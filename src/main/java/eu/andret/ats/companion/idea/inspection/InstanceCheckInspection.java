@@ -116,7 +116,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				final PsiElement parent = context.getParent();
 				final PsiElement[] children = Util.repeat(context, 2, PsiElement::getLastChild).getChildren();
 				final PsiElement[] psiElements = Arrays.copyOfRange(children, 2, children.length - 2);
-				Arrays.stream(psiElements).forEach(x -> parent.addAfter(x, context));
+				Arrays.stream(psiElements).forEach(element -> parent.addAfter(element, context));
 				context.delete();
 			} catch (final IncorrectOperationException e) {
 				log.error(getClass().getName(), e);

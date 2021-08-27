@@ -38,7 +38,7 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 						.map(PsiClass::getSuperClass)
 						.map(PsiClass::getQualifiedName)
 						.filter(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR::equals)
-						.map(x -> aClass.getNameIdentifier())
+						.map(name -> aClass.getNameIdentifier())
 						.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION_TEMPLATE,
 								ProblemHighlightType.GENERIC_ERROR, getFixes()));
 			}
