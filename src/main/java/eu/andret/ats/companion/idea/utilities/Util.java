@@ -1,4 +1,4 @@
-package eu.andret.ats.idea.utilities;
+package eu.andret.ats.companion.idea.utilities;
 
 import com.intellij.psi.PsiElement;
 

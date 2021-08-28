@@ -1,4 +1,4 @@
-package eu.andret.ats.idea.inspection;
+package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
@@ -22,9 +22,8 @@ import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringActionHandlerFactory;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.arguments.api.annotation.Argument;
-import eu.andret.arguments.api.annotation.Fallback;
-import eu.andret.ats.idea.utilities.Verifier;
+import eu.andret.ats.companion.idea.utilities.Constants;
+import eu.andret.ats.companion.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +51,7 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 				}
 				final List<PsiMethod> allClassMethods = getAllMethods(method.getContainingClass());
 				final Optional<PsiMethod> argumentMethod = allClassMethods.stream()
-						.filter(psiMethod -> psiMethod.hasAnnotation(Argument.class.getName()))
+						.filter(psiMethod -> psiMethod.hasAnnotation(Constants.ANNOTATION_ARGUMENT))
 						.filter(psiMethod -> psiMethod.getName().equals(method.getName()))
 						.findAny();
 				if (argumentMethod.isEmpty() && method.getNameIdentifier() != null) {
@@ -98,14 +97,14 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.map(PsiElement::getParent)
 						.map(PsiMethod.class::cast)
 						.ifPresent(method -> {
-							final PsiAnnotation annotation = method.getAnnotation(Fallback.class.getName());
+							final PsiAnnotation annotation = method.getAnnotation(Constants.ANNOTATION_FALLBACK);
 							if (annotation != null) {
 								annotation.delete();
 								final PsiElementFactory factory = JavaPsiFacade.getInstance(project)
 										.getElementFactory();
 								final PsiModifierList psiModifierList = method.getModifierList();
 								final PsiAnnotation psiAnnotation = factory.createAnnotationFromText(
-										"@" + Argument.class.getName(), method);
+										"@" + Constants.ANNOTATION_ARGUMENT, method);
 								final PsiElement firstChild = psiModifierList.getFirstChild();
 								final PsiElement inserted = psiModifierList.addBefore(psiAnnotation, firstChild);
 								JavaCodeStyleManager.getInstance(project).shortenClassReferences(inserted);
@@ -175,7 +174,7 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.map(ProblemDescriptor::getPsiElement)
 						.map(PsiElement::getParent)
 						.map(PsiMethod.class::cast)
-						.map(method -> method.getAnnotation(Fallback.class.getName()))
+						.map(method -> method.getAnnotation(Constants.ANNOTATION_FALLBACK))
 						.ifPresent(PsiElement::delete);
 			} catch (final IncorrectOperationException e) {
 				log.error(getClass().getName(), e);

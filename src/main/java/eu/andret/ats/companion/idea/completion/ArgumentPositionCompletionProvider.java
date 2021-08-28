@@ -1,4 +1,4 @@
-package eu.andret.ats.idea.completion;
+package eu.andret.ats.companion.idea.completion;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
@@ -6,7 +6,7 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.ProcessingContext;
-import eu.andret.ats.idea.utilities.Util;
+import eu.andret.ats.companion.idea.utilities.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;

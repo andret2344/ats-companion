@@ -1,4 +1,4 @@
-package eu.andret.ats.idea.inspection;
+package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
@@ -13,7 +13,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.arguments.api.annotation.BaseCommand;
+import eu.andret.ats.companion.idea.utilities.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,7 @@ public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool
 			@Override
 			public void visitClass(final PsiClass aClass) {
 				Optional.of(aClass)
-						.filter(psiClass -> psiClass.hasAnnotation(BaseCommand.class.getName()))
+						.filter(psiClass -> psiClass.hasAnnotation(Constants.ANNOTATION_BASE_COMMAND))
 						.map(PsiModifierListOwner::getModifierList)
 						.map(PsiElement::getChildren)
 						.stream()

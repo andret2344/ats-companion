@@ -1,4 +1,4 @@
-package eu.andret.ats.idea.inspection;
+package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.ProblemHighlightType;
@@ -6,8 +6,8 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
-import eu.andret.arguments.AnnotatedCommandExecutor;
-import eu.andret.ats.idea.utilities.Verifier;
+import eu.andret.ats.companion.idea.utilities.Constants;
+import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +33,7 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 				}
 				final Optional<String> superClass = Arrays.stream(aClass.getSupers())
 						.map(PsiClass::getQualifiedName)
-						.filter(AnnotatedCommandExecutor.class.getName()::equals)
+						.filter(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR::equals)
 						.findAny();
 				if (superClass.isEmpty()) {
 					holder.registerProblem(aClass.getNameIdentifier(), DESCRIPTION_TEMPLATE,
