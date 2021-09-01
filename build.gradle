@@ -28,12 +28,10 @@ version project.version
 
 repositories {
 	mavenCentral()
-	maven { url 'https://gitlab.com/api/v4/groups/2877017/-/packages/maven' }
 }
 
 dependencies {
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
-	implementation group: 'eu.andret', name: 'ats-arguments', version: project.argumentsVersion
 	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 
 	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'

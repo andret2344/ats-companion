@@ -1,4 +1,4 @@
-package eu.andret.ats.idea.inspection;
+package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
@@ -18,8 +18,8 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
-import eu.andret.arguments.api.annotation.Argument;
-import eu.andret.ats.idea.utilities.Verifier;
+import eu.andret.ats.companion.idea.utilities.Constants;
+import eu.andret.ats.companion.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +39,7 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 				if (!Verifier.verifyClass(method.getContainingClass())) {
 					return;
 				}
-				if (!method.hasAnnotation(Argument.class.getName())) {
+				if (!method.hasAnnotation(Constants.ANNOTATION_ARGUMENT)) {
 					return;
 				}
 				final PsiTypeElement returnTypeElement = method.getReturnTypeElement();
