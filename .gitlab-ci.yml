@@ -1,7 +1,7 @@
 #
 # Copyright Andret (c) 2018-2021. Copying and modifying allowed only keeping git link reference.
 #
-image: gradle:jdk11
+image: gradle:jdk16
 
 cache:
   paths:
@@ -15,7 +15,6 @@ before_script:
 stages:
   - prepare
   - build
-  - deploy
 
 wrapper:
   stage: prepare
@@ -32,12 +31,3 @@ compile:
     paths:
       - build/classes/**
       - build/libs/*.jar
-
-publish:
-  stage: deploy
-  script:
-    - ./gradlew clean
-    - ./gradlew publishPlugin
-  #  only:
-  #    - master
-  when: manual
