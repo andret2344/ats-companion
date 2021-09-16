@@ -43,7 +43,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				if (context == null) {
 					return;
 				}
-				final PsiMethod method = Util.repeat(context, 2, PsiElement::getParent, PsiMethod.class);
+				final PsiMethod method = Util.ancestorOf(context, PsiMethod.class);
 				if (!Verifier.verifyArgumentMethod(method)) {
 					return;
 				}

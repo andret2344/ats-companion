@@ -14,6 +14,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiModifierListOwner;
+import com.intellij.psi.PsiTypeParameter;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Constants;
@@ -34,6 +35,7 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 			@Override
 			public void visitClass(final PsiClass aClass) {
 				Optional.of(aClass)
+						.filter(psiClass -> !(psiClass instanceof PsiTypeParameter))
 						.filter(psiClass -> !psiClass.hasAnnotation(Constants.ANNOTATION_BASE_COMMAND))
 						.map(PsiClass::getSuperClass)
 						.map(PsiClass::getQualifiedName)
