@@ -44,12 +44,6 @@ jar {
 	}
 }
 
-println "PUBLISH_TOKEN = " + System.getenv("PUBLISH_TOKEN")
-println "CERTIFICATE_CHAIN = " + System.getenv("CERTIFICATE_CHAIN")
-println "PRIVATE_KEY = " + System.getenv("PRIVATE_KEY")
-println "PRIVATE_KEY_PASSWORD = " + System.getenv("PRIVATE_KEY_PASSWORD")
-println System.getenv()
-
 publishPlugin {
 	channels = ['alpha']
 	token = System.getenv("PUBLISH_TOKEN")
