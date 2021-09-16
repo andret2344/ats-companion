@@ -21,7 +21,6 @@ buildSearchableOptions {
 patchPluginXml {
 	version = project.version
 	sinceBuild = '202'
-	untilBuild = '212.*'
 }
 
 group project.group
@@ -37,4 +36,21 @@ dependencies {
 
 	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 	testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+}
+
+jar {
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
+
+publishPlugin {
+	channels = ['alpha']
+	token = System.getenv("PUBLISH_TOKEN")
+}
+
+signPlugin {
+	certificateChain = System.getenv("CERTIFICATE_CHAIN")
+	privateKey = System.getenv("PRIVATE_KEY")
+	password = System.getenv("PRIVATE_KEY_PASSWORD")
 }

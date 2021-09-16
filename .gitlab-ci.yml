@@ -1,0 +1,33 @@
+#
+# Copyright Andret (c) 2018-2021. Copying and modifying allowed only keeping git link reference.
+#
+image: gradle:jdk16
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  - chmod a+x gradlew
+
+stages:
+  - prepare
+  - build
+
+wrapper:
+  stage: prepare
+  script:
+    - gradle wrapper
+
+compile:
+  stage: build
+  dependencies:
+    - wrapper
+  script:
+    - ./gradlew assemble
+  artifacts:
+    paths:
+      - build/classes/**
+      - build/libs/*.jar
