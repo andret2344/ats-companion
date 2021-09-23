@@ -1,5 +1,5 @@
 <idea-plugin>
-	<id>eu.andret.ats.idea</id>
+	<id>eu.andret.ats.companion.idea</id>
 	<!--suppress PluginXmlCapitalization -->
 	<name>atsCompanion</name>
 	<version>0.0.1</version>
