@@ -80,18 +80,18 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 	private void analyzeAndReport(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
 								  final PsiType type, @NotNull final String executorType) {
 		if (executorType.equals("PLAYER")) {
-			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
+			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED,
 						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
-			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
+			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			}
 		} else if (executorType.equals("CONSOLE")) {
-			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
+			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
-			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
+			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
 				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED,
 						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
 			}

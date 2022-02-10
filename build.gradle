@@ -10,7 +10,7 @@ targetCompatibility = JavaVersion.VERSION_11
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version = '2021.2.2'
+	version = '2021.3.2'
 	plugins = ['com.intellij.java']
 }
 
@@ -31,11 +31,8 @@ repositories {
 }
 
 dependencies {
-	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
-	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
-
-	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
-	testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
 }
 
 jar {

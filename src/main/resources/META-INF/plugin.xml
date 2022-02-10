@@ -2,7 +2,7 @@
 	<id>eu.andret.ats.companion.idea</id>
 	<!--suppress PluginXmlCapitalization -->
 	<name>atsCompanion</name>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<vendor email="andret2344@gmail.com" url="https://andret.eu/">Andret2344</vendor>
 
 	<description>
@@ -166,6 +166,16 @@
 			<className>eu.andret.ats.companion.idea.generator.FallbackMethodGenerator</className>
 			<category>Suggestions for the "Andret Tools System"</category>
 		</intentionAction>
+		<localInspection
+				language="JAVA"
+				displayName="Invalid constructor arguments"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.companion.idea.inspection.ConstructorParametersInspection"
+		/>
 	</extensions>
 
 	<application-components>
