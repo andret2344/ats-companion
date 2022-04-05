@@ -45,12 +45,12 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 					return;
 				}
 				Arrays.stream(method.getParameterList().getParameters())
-						.filter(x -> !(x.getType() instanceof PsiPrimitiveType))
-						.forEach(x -> {
+						.filter(psiParameter -> !(psiParameter.getType() instanceof PsiPrimitiveType))
+						.forEach(psiParameter -> {
 							final boolean rNull = isNull(expression.getROperand());
 							final boolean lNull = isNull(expression.getLOperand());
-							final boolean rMatches = is(expression.getROperand(), x);
-							final boolean lMatches = is(expression.getLOperand(), x);
+							final boolean rMatches = is(expression.getROperand(), psiParameter);
+							final boolean lMatches = is(expression.getLOperand(), psiParameter);
 							if ((!lMatches || !rNull) && (!rMatches || !lNull)) {
 								return;
 							}
@@ -96,11 +96,11 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 						.map(ProblemDescriptor::getPsiElement)
 						.map(PsiElement::getParent)
 						.map(PsiIfStatement.class::cast)
-						.ifPresent(x -> {
-							if (x.getThenBranch() != null) {
-								x.replace(x.getThenBranch());
+						.ifPresent(psiIfStatement -> {
+							if (psiIfStatement.getThenBranch() != null) {
+								psiIfStatement.replace(psiIfStatement.getThenBranch());
 							} else {
-								x.delete();
+								psiIfStatement.delete();
 							}
 						});
 			} catch (final IncorrectOperationException e) {
@@ -130,11 +130,11 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 						.map(ProblemDescriptor::getPsiElement)
 						.map(PsiElement::getParent)
 						.map(PsiIfStatement.class::cast)
-						.ifPresent(x -> {
-							if (x.getElseBranch() != null) {
-								x.replace(x.getElseBranch());
+						.ifPresent(psiIfStatement -> {
+							if (psiIfStatement.getElseBranch() != null) {
+								psiIfStatement.replace(psiIfStatement.getElseBranch());
 							} else {
-								x.delete();
+								psiIfStatement.delete();
 							}
 						});
 			} catch (final IncorrectOperationException e) {

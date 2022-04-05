@@ -50,7 +50,6 @@ public class TypeFallbackMethodGenerator extends PsiElementBaseIntentionAction i
 
 	@Override
 	public void invoke(@NotNull final Project project, final Editor editor, @NotNull final PsiElement element) {
-		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 		final PsiParameter psiParameter = Util.ancestorOf(element, PsiParameter.class, 4);
 		if (psiParameter == null) {
 			return;
@@ -62,6 +61,7 @@ public class TypeFallbackMethodGenerator extends PsiElementBaseIntentionAction i
 
 		final String value = psiParameter.getName();
 		final String type = psiParameter.getType().getPresentableText();
+		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 		final PsiMethod factoryMethod = factory.createMethodFromText(
 				String.format(
 						"@TypeFallback(%s.class)\n\tpublic String %sFallback(String %s) {\n\t\treturn null;\n\t}",
