@@ -1,15 +1,39 @@
 package eu.andret.ats.companion.idea.utilities;
 
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.UnaryOperator;
 
 public class Util {
-	public static <E extends PsiElement> E ancestorOf(final PsiElement psiElement, final Class<E> target) {
+	@Nullable
+	public static <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,
+													  @NotNull final Class<E> target) {
 		PsiElement copy = psiElement;
 		do {
 			copy = copy.getParent();
 		} while (!target.isInstance(copy));
+		if (!target.isInstance(copy)) {
+			return null;
+		}
+		return target.cast(copy);
+	}
+
+	@Nullable
+	public static <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,
+													  @NotNull final Class<E> target, final int limit) {
+		PsiElement copy = psiElement;
+		int x = 0;
+		do {
+			if (copy == null) {
+				return null;
+			}
+			copy = copy.getParent();
+		} while (!target.isInstance(copy) && ++x <= limit);
+		if (!target.isInstance(copy)) {
+			return null;
+		}
 		return target.cast(copy);
 	}
 

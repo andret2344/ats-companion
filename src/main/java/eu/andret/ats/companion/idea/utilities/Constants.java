@@ -10,6 +10,8 @@ public class Constants {
 
 	public static final String ANNOTATION_BASE_COMMAND = ARGUMENTS_ANNOTATION + ".BaseCommand";
 	public static final String ANNOTATION_ARGUMENT = ARGUMENTS_ANNOTATION + ".Argument";
-	public static final String ANNOTATION_FALLBACK = ARGUMENTS_ANNOTATION + ".Fallback";
+	public static final String ANNOTATION_ARGUMENT_FALLBACK = ARGUMENTS_ANNOTATION + ".ArgumentFallback";
+	public static final String ANNOTATION_TYPE_FALLBACK = ARGUMENTS_ANNOTATION + ".TypeFallback";
+	public static final String MAPPER_ARGUMENT = ARGUMENTS_ANNOTATION + ".Mapper";
 	public static final String CLASS_ANNOTATED_COMMAND_EXECUTOR = ARGUMENTS_MAIN + ".AnnotatedCommandExecutor";
 }

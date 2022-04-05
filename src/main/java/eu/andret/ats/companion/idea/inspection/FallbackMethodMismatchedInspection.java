@@ -97,7 +97,7 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.map(PsiElement::getParent)
 						.map(PsiMethod.class::cast)
 						.ifPresent(method -> {
-							final PsiAnnotation annotation = method.getAnnotation(Constants.ANNOTATION_FALLBACK);
+							final PsiAnnotation annotation = method.getAnnotation(Constants.ANNOTATION_ARGUMENT_FALLBACK);
 							if (annotation != null) {
 								annotation.delete();
 								final PsiElementFactory factory = JavaPsiFacade.getInstance(project)
@@ -174,7 +174,7 @@ public class FallbackMethodMismatchedInspection extends AbstractBaseJavaLocalIns
 						.map(ProblemDescriptor::getPsiElement)
 						.map(PsiElement::getParent)
 						.map(PsiMethod.class::cast)
-						.map(method -> method.getAnnotation(Constants.ANNOTATION_FALLBACK))
+						.map(method -> method.getAnnotation(Constants.ANNOTATION_ARGUMENT_FALLBACK))
 						.ifPresent(PsiElement::delete);
 			} catch (final IncorrectOperationException e) {
 				log.error(getClass().getName(), e);
