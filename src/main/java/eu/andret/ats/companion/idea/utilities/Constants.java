@@ -1,6 +1,7 @@
 package eu.andret.ats.companion.idea.utilities;
 
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class Constants {
@@ -14,4 +15,9 @@ public class Constants {
 	public static final String ANNOTATION_TYPE_FALLBACK = ARGUMENTS_ANNOTATION + ".TypeFallback";
 	public static final String MAPPER_ARGUMENT = ARGUMENTS_ANNOTATION + ".Mapper";
 	public static final String CLASS_ANNOTATED_COMMAND_EXECUTOR = ARGUMENTS_MAIN + ".AnnotatedCommandExecutor";
+
+	@NotNull
+	public String[] getMethodAnnotations() {
+		return new String[]{ANNOTATION_ARGUMENT, ANNOTATION_ARGUMENT_FALLBACK, ANNOTATION_TYPE_FALLBACK};
+	}
 }

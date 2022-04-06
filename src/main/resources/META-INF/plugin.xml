@@ -194,6 +194,7 @@
 			<className>eu.andret.ats.companion.idea.generator.TypeFallbackMethodGenerator</className>
 			<category>ATS</category>
 		</intentionAction>
+		<implicitUsageProvider implementation="eu.andret.ats.companion.idea.ArgumentMethodImplicitUsageProvider"/>
 	</extensions>
 
 	<application-components>
