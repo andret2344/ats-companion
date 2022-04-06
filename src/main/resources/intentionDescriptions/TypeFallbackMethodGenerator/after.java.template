@@ -3,8 +3,8 @@ public class FooCommand {
 	public void fooArgument(Foo foo, int bar) {
 	}
 
-  <spot>@Fallback
-	public void fooArgument(String foo, int bar) {
-
+    <spot>@TypeFallback(Foo.class)
+	public String fooFallback(String foo) {
+		return null;
 	}</spot>
 }

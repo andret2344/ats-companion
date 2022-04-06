@@ -5,6 +5,8 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -18,7 +20,10 @@ public class Verifier {
 				.isPresent();
 	}
 
-	public static boolean verifyArgumentMethod(final PsiMethod psiMethod) {
+	public static boolean verifyArgumentMethod(@Nullable final PsiMethod psiMethod) {
+		if (psiMethod == null) {
+			return false;
+		}
 		if (!verifyClass(psiMethod.getContainingClass())) {
 			return false;
 		}
@@ -26,11 +31,12 @@ public class Verifier {
 	}
 
 	public static boolean verifyArgumentMethodIdentifier(final PsiIdentifier psiIdentifier) {
-		final PsiElement parent = psiIdentifier.getParent();
-		if (!(parent instanceof PsiMethod)) {
-			return false;
-		}
-		return verifyArgumentMethod(((PsiMethod) parent));
+		return Optional.of(psiIdentifier)
+				.map(PsiElement::getParent)
+				.filter(PsiMethod.class::isInstance)
+				.map(PsiMethod.class::cast)
+				.map(Verifier::verifyArgumentMethod)
+				.orElse(false);
 	}
 
 	public static boolean verifyArgumentAnnotation(final PsiAnnotation psiAnnotation) {
@@ -40,20 +46,21 @@ public class Verifier {
 				.isPresent();
 	}
 
-	public static boolean verifyArgumentElement(final PsiElement psiElement) {
-		if (psiElement == null) {
+	public static boolean verifyParameter(@Nullable final PsiParameter psiParameter) {
+		if (psiParameter == null) {
 			return false;
 		}
-		if (psiElement instanceof PsiAnnotation) {
-			return Verifier.verifyArgumentAnnotation((PsiAnnotation) psiElement);
+		final PsiAnnotation annotation = psiParameter.getAnnotation(Constants.MAPPER_ARGUMENT);
+		if (annotation == null) {
+			return false;
 		}
-		if (psiElement instanceof PsiIdentifier) {
-			return Verifier.verifyArgumentMethodIdentifier((PsiIdentifier) psiElement);
-		}
-		if (psiElement instanceof PsiMethod) {
-			return Verifier.verifyArgumentMethod((PsiMethod) psiElement);
-		}
-		return false;
+		return Optional.of(psiParameter)
+				.map(PsiElement::getParent)
+				.map(PsiElement::getParent)
+				.filter(PsiMethod.class::isInstance)
+				.map(PsiMethod.class::cast)
+				.map(Verifier::verifyArgumentMethod)
+				.orElse(false);
 	}
 
 	private Verifier() {

@@ -2,21 +2,38 @@
 	<id>eu.andret.ats.companion.idea</id>
 	<!--suppress PluginXmlCapitalization -->
 	<name>atsCompanion</name>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<vendor email="andret2344@gmail.com" url="https://andret.eu/">Andret2344</vendor>
 
 	<description>
-        <![CDATA[
+		<![CDATA[
 		<p>
 			<span>Utility for</span>
 			<a href='https://gitlab.com/andret-tools-system/ats-arguments'>atsArguments</a>
 			<span>library, that adds a lot of inspections and a few more cool stuff.</span>
 		</p>
 		]]>
-    </description>
+	</description>
 	<change-notes>
-        <![CDATA[
-		<h2>atsIdea v0.0.1 - Initial release</h2>
+		<![CDATA[
+		<h2>atsCompanion v0.1.0 - Initial release</h2>
+		<p>
+			<span>atsArguments compatibility version:</span>
+			<strong>0.1.3</strong>
+		</p>
+		<h3>Inspections changed</h3>
+		<ul>
+			<li>Null comparison inspection when using ExecutorType.</li>
+		</ul>
+		<h3>Intentions added</h3>
+		<ul>
+			<li>Type fallback method generation.</li>
+		</ul>
+		<h3>Intentions changed</h3>
+		<ul>
+			<li>Argument fallback method generation.</li>
+		</ul>
+		<h2>atsCompanion v0.0.1 - Initial release</h2>
 		<p>
 			<span>atsArguments compatibility version:</span>
 			<strong>0.1.1.2</strong>
@@ -43,10 +60,7 @@
 			<li>The position parameter in @Argument annotation</li>
 		</ul>
 		]]>
-    </change-notes>
-
-	<!-- https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges -->
-	<idea-version since-build="162"/>
+	</change-notes>
 
 	<!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
 		 on how to target different products -->
@@ -162,9 +176,23 @@
 				level="ERROR"
 				implementationClass="eu.andret.ats.companion.idea.inspection.InvalidVisibilityInspection"
 		/>
+		<localInspection
+				language="JAVA"
+				displayName="Null comparison"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="WARNING"
+				implementationClass="eu.andret.ats.companion.idea.inspection.NullComparisonInspection"
+		/>
 		<intentionAction>
-			<className>eu.andret.ats.companion.idea.generator.FallbackMethodGenerator</className>
-			<category>Suggestions for the "Andret Tools System"</category>
+			<className>eu.andret.ats.companion.idea.generator.ArgumentFallbackMethodGenerator</className>
+			<category>ATS</category>
+		</intentionAction>
+		<intentionAction>
+			<className>eu.andret.ats.companion.idea.generator.TypeFallbackMethodGenerator</className>
+			<category>ATS</category>
 		</intentionAction>
 	</extensions>
 

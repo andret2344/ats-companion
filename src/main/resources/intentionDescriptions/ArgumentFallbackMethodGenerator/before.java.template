@@ -1,0 +1,5 @@
+public class FooCommand {
+	@Argument
+	public void fooArgument(<spot>@Mapper("foo") Foo foo</spot>, int bar) {
+	}
+}

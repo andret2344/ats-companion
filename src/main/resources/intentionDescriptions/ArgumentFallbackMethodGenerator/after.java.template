@@ -1,0 +1,10 @@
+public class FooCommand {
+	@Argument
+	public void fooArgument(@Mapper("foo") Foo foo, int bar) {
+	}
+
+    <spot>@ArgumentFallback("foo")
+	public String fooFallback(String foo) {
+		return null;
+	}</spot>
+}
