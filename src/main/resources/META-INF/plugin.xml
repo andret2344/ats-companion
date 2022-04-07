@@ -202,6 +202,7 @@
 				language="JAVA"
 				implementationClass="eu.andret.ats.companion.idea.linemarker.ArgumentFallbackLineMarkerProvider"
 		/>
+		<implicitUsageProvider implementation="eu.andret.ats.companion.idea.ArgumentMethodImplicitUsageProvider"/>
 	</extensions>
 
 	<application-components>
