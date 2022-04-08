@@ -20,8 +20,7 @@ import java.util.function.UnaryOperator;
 
 @UtilityClass
 public class Util {
-
-	public static final String VALUE = "value";
+	private static final String VALUE = "value";
 
 	@Nullable
 	public <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,

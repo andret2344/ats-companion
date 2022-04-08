@@ -54,8 +54,8 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 						.flatMap(Util::getTypeFallbackValue)
 						.map(PsiType::getPresentableText)
 						.map(Util::toCamelCase)
-						.ifPresent(s -> holder.registerProblem(method.getParameterList(), DESCRIPTION_TEMPLATE,
-								ProblemHighlightType.GENERIC_ERROR, new ChangeParametersQuickFix(s)));
+						.ifPresent(annotationValue -> holder.registerProblem(method.getParameterList(), DESCRIPTION_TEMPLATE,
+								ProblemHighlightType.GENERIC_ERROR, new ChangeParametersQuickFix(annotationValue)));
 			}
 		};
 	}

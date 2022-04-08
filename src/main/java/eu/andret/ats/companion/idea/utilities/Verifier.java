@@ -31,10 +31,7 @@ public class Verifier {
 	}
 
 	public static boolean verifyFallbackMethod(@Nullable final PsiMethod psiMethod) {
-		if (psiMethod == null) {
-			return false;
-		}
-		if (!verifyClass(psiMethod.getContainingClass())) {
+		if (psiMethod == null || !verifyClass(psiMethod.getContainingClass())) {
 			return false;
 		}
 		return psiMethod.hasAnnotation(Constants.ANNOTATION_TYPE_FALLBACK)
