@@ -195,6 +195,7 @@
 			<category>ATS</category>
 		</intentionAction>
 		<implicitUsageProvider implementation="eu.andret.ats.companion.idea.ArgumentMethodImplicitUsageProvider"/>
+		<defaultLiveTemplates file="/liveTemplates/ATS.xml"/>
 	</extensions>
 
 	<application-components>
