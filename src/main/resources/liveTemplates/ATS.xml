@@ -1,0 +1,25 @@
+<templateSet group="ATS">
+	<template name="fba"
+			  value="@ArgumentFallback(&quot;$MAPPER$&quot;)&#10;public String $MAPPER$Fallback(String $MAPPER$) {&#10;&#9;$END$&#10;    return $RESULT$;&#10;}"
+			  description="Creates the @ArgumentFallback method"
+			  toReformat="true"
+			  toShortenFQNames="true">
+		<variable name="MAPPER" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="RESULT" expression="" defaultValue="&quot;null&quot;" alwaysStopAt="true"/>
+		<context>
+			<option name="JAVA_DECLARATION" value="true"/>
+		</context>
+	</template>
+	<template name="fbt"
+			  value="@TypeFallback($CLASS$.class)&#10;public String $MAPPER$Fallback(String $MAPPER$) {&#10;&#9;$END$&#10;    return $RESULT$;&#10;}"
+			  description="Creates the @TypeFallback method"
+			  toReformat="false"
+			  toShortenFQNames="true">
+		<variable name="CLASS" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="MAPPER" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="RESULT" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="JAVA_DECLARATION" value="true"/>
+		</context>
+	</template>
+</templateSet>
