@@ -73,13 +73,13 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<localInspection
 				language="JAVA"
-				displayName="Invalid usage of @Fallback annotation"
+				displayName="Wrong parameters in fallback method"
 				groupPath="ATS"
 				groupBundle="messages.InspectionsBundle"
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.companion.idea.inspection.FallbackMethodMismatchedInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.FallbackArgumentsInspection"
 		/>
 		<localInspection
 				language="JAVA"

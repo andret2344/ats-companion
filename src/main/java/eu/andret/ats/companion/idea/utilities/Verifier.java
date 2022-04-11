@@ -30,6 +30,14 @@ public class Verifier {
 		return psiMethod.hasAnnotation(Constants.ANNOTATION_ARGUMENT);
 	}
 
+	public static boolean verifyFallbackMethod(@Nullable final PsiMethod psiMethod) {
+		if (psiMethod == null || !verifyClass(psiMethod.getContainingClass())) {
+			return false;
+		}
+		return psiMethod.hasAnnotation(Constants.ANNOTATION_TYPE_FALLBACK)
+				|| psiMethod.hasAnnotation(Constants.ANNOTATION_ARGUMENT_FALLBACK);
+	}
+
 	public static boolean verifyArgumentMethodIdentifier(final PsiIdentifier psiIdentifier) {
 		return Optional.of(psiIdentifier)
 				.map(PsiElement::getParent)
