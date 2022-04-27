@@ -32,6 +32,7 @@ repositories {
 }
 
 dependencies {
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
 	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
 }
@@ -40,6 +41,7 @@ jar {
 	from {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	}
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 publishPlugin {
@@ -51,4 +53,10 @@ signPlugin {
 	certificateChain = System.getenv("CERTIFICATE_CHAIN")
 	privateKey = System.getenv("PRIVATE_KEY")
 	password = System.getenv("PRIVATE_KEY_PASSWORD")
+}
+
+test {
+	// Set idea.home.path to the absolute path to the intellij-community source
+	// on your local machine.
+	systemProperty("idea.home.path", "/Users/jhake/Documents/source/comm")
 }
