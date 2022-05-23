@@ -13,6 +13,7 @@ intellij {
 	version = '2022.1'
 	plugins = ['com.intellij.java']
 	updateSinceUntilBuild = false
+	pluginName = 'atsCompanion-0.1.0'
 }
 
 buildSearchableOptions {
