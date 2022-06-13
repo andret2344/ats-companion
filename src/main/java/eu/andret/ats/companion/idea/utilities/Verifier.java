@@ -16,7 +16,7 @@ public class Verifier {
 				.filter(aClass -> aClass.hasAnnotation(Constants.ANNOTATION_BASE_COMMAND))
 				.map(PsiClass::getSuperClass)
 				.map(PsiClass::getQualifiedName)
-				.filter(name -> name.equals(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR))
+//				.filter(name -> name.equals(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR))
 				.isPresent();
 	}
 

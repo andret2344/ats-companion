@@ -63,7 +63,7 @@ signPlugin {
 test {
 	// Set idea.home.path to the absolute path to the intellij-community source
 	// on your local machine.
-	systemProperty("idea.home.path", "/Users/Andret/IdeaProjects/intellij-community")
+	systemProperty("idea.home.path", "/Users/maksy/Downloads/intellij-community")
 }
 
 allprojects {

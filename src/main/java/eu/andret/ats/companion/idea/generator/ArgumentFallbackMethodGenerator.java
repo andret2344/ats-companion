@@ -4,16 +4,9 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiAnnotationMemberValue;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameter;
+import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.intellij.psi.impl.source.PsiImportStatementImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
@@ -69,20 +62,24 @@ public class ArgumentFallbackMethodGenerator extends PsiElementBaseIntentionActi
 
 		final PsiMethod factoryMethod = factory.createMethodFromText(
 				String.format(
-						"@ArgumentFallback(\"%s\")\n\tpublic String %sFallback(String %s) {\n\t\treturn null;\n\t}",
+						"@ArgumentFallback(\"%s\") public String %sFallback(String %s) {return null;}",
 						value, value, value),
 				method.getContext());
-		final PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(Constants.ANNOTATION_ARGUMENT_FALLBACK,
-				GlobalSearchScope.allScope(project));
-		if (psiClass == null) {
-			return;
-		}
+//		final PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(Constants.ANNOTATION_ARGUMENT_FALLBACK,
+//				GlobalSearchScope.allScope(project));
+//		if (psiClass == null) {
+//			return;
+//		}
 		final PsiClass containingClass = method.getContainingClass();
 		if (containingClass == null) {
 			return;
 		}
 		containingClass.addAfter(factoryMethod, method);
-		JavaCodeStyleManager.getInstance(project).addImport((PsiJavaFile) method.getContainingFile(), psiClass);
+
+		PsiImportStatement importStatement = factory.createImportStatementOnDemand(Constants.ANNOTATION_ARGUMENT_FALLBACK);
+		JavaCodeStyleManager.getInstance(project).shortenClassReferences(importStatement);
+//		factoryMethod.
+//		.addImport((PsiJavaFile) method.getContainingFile(), psiClass);
 	}
 
 	@Override
