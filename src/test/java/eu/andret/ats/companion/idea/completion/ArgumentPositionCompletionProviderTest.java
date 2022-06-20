@@ -1,10 +1,10 @@
-package eu.andret.ats.companion.idea.generator;
+package eu.andret.ats.companion.idea.completion;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.junit.Test;
 
-public class ArgumentFallbackMethodGeneratorTest extends LightJavaCodeInsightFixtureTestCase {
+public class ArgumentPositionCompletionProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	/**
 	 * Defines path to files used for running tests.
@@ -19,6 +19,8 @@ public class ArgumentFallbackMethodGeneratorTest extends LightJavaCodeInsightFix
 
 	protected void doTest(final String testName, final String hint) {
 		myFixture.configureByFile(testName + ".java");
+		myFixture.completeBasic();
+		myFixture.getLookupElementStrings();
 		final IntentionAction action = myFixture.findSingleIntention(hint);
 		myFixture.launchAction(action);
 		myFixture.checkResultByFile(testName + ".after.java");
@@ -26,6 +28,6 @@ public class ArgumentFallbackMethodGeneratorTest extends LightJavaCodeInsightFix
 
 	@Test
 	public void testIntention() {
-		doTest("argument.fallback", "ATS: Generate argument fallback method");
+		doTest("completion", "ATS: Generate argument fallback method");
 	}
 }

@@ -27,6 +27,9 @@ public class Util {
 											   @NotNull final Class<E> target) {
 		PsiElement copy = psiElement;
 		do {
+			if (copy == null) {
+				return null;
+			}
 			copy = copy.getParent();
 		} while (!target.isInstance(copy));
 		if (!target.isInstance(copy)) {
