@@ -53,7 +53,7 @@ public class ArgumentFallbackMethodGenerator extends PsiElementBaseIntentionActi
 		if (psiParameter == null) {
 			return;
 		}
-		final PsiAnnotation annotation = psiParameter.getAnnotation(Constants.MAPPER_ARGUMENT);
+		final PsiAnnotation annotation = psiParameter.getAnnotation(Constants.ANNOTATION_MAPPER);
 		if (annotation == null) {
 			return;
 		}

@@ -58,7 +58,7 @@ public class Verifier {
 		if (psiParameter == null) {
 			return false;
 		}
-		final PsiAnnotation annotation = psiParameter.getAnnotation(Constants.MAPPER_ARGUMENT);
+		final PsiAnnotation annotation = psiParameter.getAnnotation(Constants.ANNOTATION_MAPPER);
 		if (annotation == null) {
 			return false;
 		}
