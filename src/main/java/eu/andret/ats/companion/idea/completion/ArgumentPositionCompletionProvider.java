@@ -18,8 +18,8 @@ public class ArgumentPositionCompletionProvider extends CompletionProvider<Compl
 	public void addCompletions(@NotNull final CompletionParameters parameters, @NotNull final ProcessingContext context,
 							   @NotNull final CompletionResultSet result) {
 		final PsiMethod method = Util.ancestorOf(parameters.getPosition(), PsiMethod.class);
-		Stream.iterate(1, i -> i + 1)
-				.limit(Optional.ofNullable(method)
+		Stream.iterate(0, i -> i + 1)
+				.limit(1L + Optional.ofNullable(method)
 						.map(PsiMethod::getParameterList)
 						.map(PsiParameterList::getParametersCount)
 						.orElse(0))
