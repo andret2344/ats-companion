@@ -1,4 +1,8 @@
-package eu.andret.ats.companion.idea.generator;
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
+package eu.andret.ats.companion.idea.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
@@ -21,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @NonNls
-public class TypeFallbackMethodGenerator extends PsiElementBaseIntentionAction implements IntentionAction {
+public class TypeFallbackMethodIntention extends PsiElementBaseIntentionAction implements IntentionAction {
 	@Override
 	@NotNull
 	public String getText() {

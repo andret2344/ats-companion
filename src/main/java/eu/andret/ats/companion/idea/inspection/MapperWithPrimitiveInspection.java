@@ -24,19 +24,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION = "Cannot annotate primitive parameter";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "Cannot annotate primitive parameter";
-
 			@Override
 			public void visitParameter(final PsiParameter parameter) {
 				Optional.of(parameter)
 						.filter(psiParameter -> psiParameter.getType() instanceof PsiPrimitiveType)
 						.map(psiParameter -> psiParameter.getAnnotation(Constants.ANNOTATION_MAPPER))
-						.ifPresent(psiAnnotation -> holder.registerProblem(psiAnnotation, DESCRIPTION_TEMPLATE,
+						.ifPresent(psiAnnotation -> holder.registerProblem(psiAnnotation, DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, new RemoveAnnotationQuickFix()));
 			}
 		};
@@ -44,10 +44,12 @@ public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspecti
 
 	@Slf4j
 	public static class RemoveAnnotationQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove annotation";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Remove annotation";
+			return NAME;
 		}
 
 		@Override

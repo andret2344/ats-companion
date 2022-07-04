@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -21,14 +25,13 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	public static final String DESCRIPTION = "Method annotated with @Argument annotation cannot use static qualifier";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE
-					= "Method annotated with @Argument annotation cannot use static qualifier";
-
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
 				if (!Verifier.verifyArgumentMethod(method)) {
@@ -39,7 +42,7 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 						.map(PsiKeyword.class::cast)
 						.filter(keyword -> keyword.textMatches(PsiKeyword.STATIC))
 						.findAny()
-						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION_TEMPLATE,
+						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, new RemoveQualifierQuickFix()));
 			}
 		};
@@ -47,10 +50,12 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 
 	@Slf4j
 	public static class RemoveQualifierQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove qualifier";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Remove qualifier";
+			return NAME;
 		}
 
 		@Override

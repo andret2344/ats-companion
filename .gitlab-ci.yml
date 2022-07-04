@@ -1,7 +1,7 @@
 #
-# Copyright Andret (c) 2018-2021. Copying and modifying allowed only keeping git link reference.
+# Copyright Andret (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
 #
-image: gradle:jdk16
+image: gradle:jdk17
 
 cache:
   paths:
@@ -15,6 +15,7 @@ before_script:
 stages:
   - prepare
   - build
+  - test
 
 wrapper:
   stage: prepare
@@ -31,3 +32,14 @@ compile:
     paths:
       - build/classes/**
       - build/libs/*.jar
+
+junit:
+  stage: test
+  dependencies:
+    - wrapper
+  script:
+    - ./gradlew clean test
+  artifacts:
+    reports:
+      junit:
+        - build/test-results/test/*.xml

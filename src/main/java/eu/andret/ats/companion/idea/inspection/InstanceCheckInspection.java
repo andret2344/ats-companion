@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -28,10 +32,10 @@ import java.util.Optional;
 
 public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION_TEMPLATE_UNUSED = "Executor type is already defined in an annotation";
+	private static final String DESCRIPTION_UNUSED = "Executor type is already defined in an annotation";
 
 	@NonNls
-	private static final String DESCRIPTION_TEMPLATE_PROBLEM = "Executor type in an annotation is contradictory";
+	private static final String DESCRIPTION_PROBLEM = "Executor type in an annotation is contradictory";
 
 	@NotNull
 	@Override
@@ -81,18 +85,18 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 								  final PsiType type, @NotNull final String executorType) {
 		if (executorType.equals("PLAYER")) {
 			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED,
+				holder.registerProblem(expression, DESCRIPTION_UNUSED,
 						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
 			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
+				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			}
 		} else if (executorType.equals("CONSOLE")) {
 			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
+				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED,
+				holder.registerProblem(expression, DESCRIPTION_UNUSED,
 						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
 			}
 		}
@@ -100,10 +104,12 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 
 	@Slf4j
 	public static class RemoveExpressionQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove statement";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Remove statement";
+			return NAME;
 		}
 
 		@Override

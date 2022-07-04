@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -27,13 +31,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	public static final String DESCRIPTION = "Method probably shouldn't return a primitive";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "Method probably shouldn't return a primitive";
-
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
 				if (!Verifier.verifyClass(method.getContainingClass())) {
@@ -54,8 +58,7 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 					return;
 				}
 				if (returnType instanceof PsiPrimitiveType) {
-					holder.registerProblem(returnTypeElement, DESCRIPTION_TEMPLATE,
-							ProblemHighlightType.WARNING, new ChangeToStringQuickFix());
+					holder.registerProblem(returnTypeElement, DESCRIPTION, ProblemHighlightType.WARNING, new ChangeToStringQuickFix());
 				}
 			}
 		};
@@ -63,10 +66,12 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 
 	@Slf4j
 	public static class ChangeToStringQuickFix implements LocalQuickFix {
+		public static final String NAME = "Change to String";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Change to String";
+			return NAME;
 		}
 
 		@Override

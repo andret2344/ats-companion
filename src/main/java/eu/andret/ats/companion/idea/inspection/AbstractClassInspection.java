@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -22,13 +26,13 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION = "@BaseCommand class cannot be abstract";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "@BaseCommand class cannot be abstract";
-
 			@Override
 			public void visitClass(final PsiClass aClass) {
 				Optional.of(aClass)
@@ -41,7 +45,7 @@ public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool
 						.map(PsiKeyword.class::cast)
 						.filter(keyword -> keyword.getText().equals(PsiKeyword.ABSTRACT))
 						.findAny()
-						.ifPresent(identifier -> holder.registerProblem(identifier, DESCRIPTION_TEMPLATE,
+						.ifPresent(identifier -> holder.registerProblem(identifier, DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, new RemoveModifierQuickFix()));
 			}
 		};
@@ -49,10 +53,12 @@ public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool
 
 	@Slf4j
 	public static class RemoveModifierQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove modifier";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Remove modifier";
+			return NAME;
 		}
 
 		@Override

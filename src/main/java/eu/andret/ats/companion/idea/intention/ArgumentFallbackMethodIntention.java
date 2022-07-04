@@ -1,4 +1,8 @@
-package eu.andret.ats.companion.idea.generator;
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
+package eu.andret.ats.companion.idea.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
@@ -28,17 +32,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 @NonNls
-public class ArgumentFallbackMethodGenerator extends PsiElementBaseIntentionAction implements IntentionAction {
+public class ArgumentFallbackMethodIntention extends PsiElementBaseIntentionAction implements IntentionAction {
+	public static final String TEXT = "ATS: Generate argument fallback method";
+	public static final String FAMILY_NAME = "Generate @ArgumentFallback method";
+
 	@Override
 	@NotNull
 	public String getText() {
-		return "ATS: Generate argument fallback method";
+		return TEXT;
 	}
 
 	@Override
 	@NotNull
 	public String getFamilyName() {
-		return "Generate @ArgumentFallback method";
+		return FAMILY_NAME;
 	}
 
 	@Override

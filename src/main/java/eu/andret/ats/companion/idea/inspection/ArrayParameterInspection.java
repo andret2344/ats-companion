@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -26,13 +30,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION = "Array is not a valid type, use vararg instead";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "Array is not a valid type, use vararg instead";
-
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
 				if (!Verifier.verifyArgumentMethod(method)) {
@@ -44,7 +48,7 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 						.filter(parameter -> !parameter.isVarArgs())
 						.map(PsiParameter::getTypeElement)
 						.filter(Objects::nonNull)
-						.forEach(typeElement -> holder.registerProblem(typeElement, DESCRIPTION_TEMPLATE,
+						.forEach(typeElement -> holder.registerProblem(typeElement, DESCRIPTION,
 								ProblemHighlightType.ERROR, getFixes()));
 			}
 
@@ -60,10 +64,12 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 
 	@Slf4j
 	public static class ChangeToVarargQuickFix implements LocalQuickFix {
+		public static final String NAME = "Change to vararg";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Change to vararg";
+			return NAME;
 		}
 
 		@Override
@@ -94,10 +100,12 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 
 	@Slf4j
 	public static class ConvertToSimpleVariableQuickFix implements LocalQuickFix {
+		public static final String NAME = "Convert to simple variable";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Convert to simple variable";
+			return NAME;
 		}
 
 		@Override

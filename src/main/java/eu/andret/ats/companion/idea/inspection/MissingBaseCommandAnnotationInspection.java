@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -25,13 +29,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION = "Missing @BaseCommand annotation";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "Missing @BaseCommand annotation";
-
 			@Override
 			public void visitClass(final PsiClass aClass) {
 				Optional.of(aClass)
@@ -41,7 +45,7 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 						.map(PsiClass::getQualifiedName)
 						.filter(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR::equals)
 						.map(name -> aClass.getNameIdentifier())
-						.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION_TEMPLATE,
+						.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, getFixes()));
 			}
 
@@ -56,10 +60,12 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 
 	@Slf4j
 	public static class AddMissingAnnotationQuickFix implements LocalQuickFix {
+		public static final String NAME = "Add @BaseCommand annotation";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Add @BaseCommand annotation";
+			return NAME;
 		}
 
 		@Override

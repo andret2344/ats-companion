@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -26,13 +30,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION = "Method parameters don't meet requirements.";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "Method parameters don't meet requirements.";
-
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
 				if (!Verifier.verifyFallbackMethod(method)) {
@@ -47,14 +51,14 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 						.map(psiMethod -> psiMethod.getAnnotation(Constants.ANNOTATION_ARGUMENT_FALLBACK))
 						.flatMap(Util::getArgumentFallbackValue)
 						.map(Util::toCamelCase)
-						.ifPresent(annotationValue -> holder.registerProblem(method.getParameterList(), DESCRIPTION_TEMPLATE,
+						.ifPresent(annotationValue -> holder.registerProblem(method.getParameterList(), DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, new ChangeParametersQuickFix(annotationValue)));
 				Optional.of(method)
 						.map(psiMethod -> psiMethod.getAnnotation(Constants.ANNOTATION_TYPE_FALLBACK))
 						.flatMap(Util::getTypeFallbackValue)
 						.map(PsiType::getPresentableText)
 						.map(Util::toCamelCase)
-						.ifPresent(annotationValue -> holder.registerProblem(method.getParameterList(), DESCRIPTION_TEMPLATE,
+						.ifPresent(annotationValue -> holder.registerProblem(method.getParameterList(), DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, new ChangeParametersQuickFix(annotationValue)));
 			}
 		};

@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -27,13 +31,13 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION = "The parameter is never null";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "The parameter is never null";
-
 			@Override
 			public void visitBinaryExpression(final PsiBinaryExpression expression) {
 				final PsiElement context = expression.getContext();
@@ -55,11 +59,11 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 								return;
 							}
 							if (expression.getOperationTokenType().equals(JavaTokenType.EQEQ)) {
-								holder.registerProblem(expression, DESCRIPTION_TEMPLATE,
+								holder.registerProblem(expression, DESCRIPTION,
 										ProblemHighlightType.LIKE_UNUSED_SYMBOL, new UnwrapQuickFix());
 							}
 							if (expression.getOperationTokenType().equals(JavaTokenType.NE)) {
-								holder.registerProblem(expression, DESCRIPTION_TEMPLATE,
+								holder.registerProblem(expression, DESCRIPTION,
 										ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveQuickFix());
 							}
 						});
@@ -83,10 +87,12 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 
 	@Slf4j
 	public static class UnwrapQuickFix implements LocalQuickFix {
+		public static final String NAME = "Unwrap";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Unwrap";
+			return NAME;
 		}
 
 		@Override
@@ -117,10 +123,12 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 
 	@Slf4j
 	public static class RemoveQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove unreachable code";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Remove unreachable code";
+			return NAME;
 		}
 
 		@Override

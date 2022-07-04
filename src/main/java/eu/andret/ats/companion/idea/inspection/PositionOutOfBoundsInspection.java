@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -23,14 +27,13 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION = "Position must be positive number not greater than method's parameters count";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE
-					= "Position must be positive number not greater than method's parameters count";
-
 			@Override
 			public void visitMethod(@NotNull final PsiMethod psiMethod) {
 				if (!Verifier.verifyArgumentMethod(psiMethod)) {
@@ -51,7 +54,7 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 							try {
 								final int intPosition = Integer.parseInt(nameValuePair.getValue().getText());
 								if (intPosition < 0 || intPosition > args) {
-									holder.registerProblem(nameValuePair.getValue(), DESCRIPTION_TEMPLATE,
+									holder.registerProblem(nameValuePair.getValue(), DESCRIPTION,
 											ProblemHighlightType.ERROR, new RemoveParameterQuickFix());
 								}
 							} catch (final NumberFormatException e) {
@@ -64,10 +67,12 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 
 	@Slf4j
 	public static class RemoveParameterQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove parameter";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Remove parameter";
+			return NAME;
 		}
 
 		@Override

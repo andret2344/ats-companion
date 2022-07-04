@@ -1,0 +1,14 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
+@eu.andret.arguments.api.annotation.BaseCommand("test")
+public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandExecutor<JavaPlugin> {
+	public LocalCommandExecutor(final CommandSender sender, final JavaPlugin plugin) {
+		super(sender, plugin);
+	}
+
+	@eu.andret.arguments.api.annotation.Argument(executorType = ExecutorType.PLAYER, permission = "ats.explosivepotion.get")
+	public void get(@eu.andret.arguments.api.annotation.Mapper("test") final <caret>ExplosivePotion explosivePotion) {
+	}
+}

@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+  -->
+
 <idea-plugin>
 	<id>eu.andret.ats.companion.idea</id>
 	<!--suppress PluginXmlCapitalization -->
@@ -197,14 +201,14 @@
 				implementationClass="eu.andret.ats.companion.idea.inspection.MapperWithPrimitiveInspection"
 		/>
 		<intentionAction>
-			<className>eu.andret.ats.companion.idea.generator.ArgumentFallbackMethodGenerator</className>
+			<className>eu.andret.ats.companion.idea.intention.ArgumentFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>
 		<intentionAction>
-			<className>eu.andret.ats.companion.idea.generator.TypeFallbackMethodGenerator</className>
+			<className>eu.andret.ats.companion.idea.intention.TypeFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>
-		<implicitUsageProvider implementation="eu.andret.ats.companion.idea.ArgumentMethodImplicitUsageProvider"/>
+		<implicitUsageProvider implementation="eu.andret.ats.companion.idea.implicitusage.ArgumentMethodImplicitUsageProvider"/>
 		<defaultLiveTemplates file="/liveTemplates/ATS.xml"/>
 	</extensions>
 

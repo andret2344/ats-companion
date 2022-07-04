@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -27,14 +31,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION = "Method annotated with @Argument annotation must be public";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE
-					= "Method annotated with @Argument annotation must be public";
-
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
 				if (!Verifier.verifyArgumentMethod(method)) {
@@ -53,7 +56,7 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 				}
 				Optional.of(method)
 						.map(PsiNameIdentifierOwner::getIdentifyingElement)
-						.ifPresent(element -> holder.registerProblem(element, DESCRIPTION_TEMPLATE,
+						.ifPresent(element -> holder.registerProblem(element, DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, new AddPublicQuickFix()));
 			}
 
@@ -61,7 +64,7 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 				keywords.stream()
 						.filter(kw -> Stream.of(PsiKeyword.PRIVATE, PsiKeyword.PROTECTED).anyMatch(kw::textMatches))
 						.findAny()
-						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION_TEMPLATE,
+						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, new ChangeToPublicQuickFix()));
 			}
 
@@ -82,10 +85,12 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 
 	@Slf4j
 	public static class ChangeToPublicQuickFix implements LocalQuickFix {
+		public static final String NAME = "Change visibility to public";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Change visibility to public";
+			return NAME;
 		}
 
 		@Override
@@ -111,10 +116,12 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 
 	@Slf4j
 	public static class AddPublicQuickFix implements LocalQuickFix {
+		public static final String NAME = "Add visibility modifier";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Add visibility modifier";
+			return NAME;
 		}
 
 		@Override

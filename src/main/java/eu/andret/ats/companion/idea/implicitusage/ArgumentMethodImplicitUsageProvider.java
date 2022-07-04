@@ -1,4 +1,8 @@
-package eu.andret.ats.companion.idea;
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
+package eu.andret.ats.companion.idea.implicitusage;
 
 import com.intellij.codeInsight.daemon.ImplicitUsageProvider;
 import com.intellij.psi.PsiElement;
