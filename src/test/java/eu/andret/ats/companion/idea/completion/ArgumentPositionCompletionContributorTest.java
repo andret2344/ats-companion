@@ -21,11 +21,11 @@ public class ArgumentPositionCompletionContributorTest extends LightJavaCodeInsi
     protected void doTest(final String testName) {
         myFixture.configureByFile(testName + ".java");
         myFixture.completeBasic();
-        assertEquals(myFixture.getLookupElementStrings(), List.of("0", "1", "2", "3"));
+        assertEquals(List.of("0", "1", "2", "3"), myFixture.getLookupElementStrings());
     }
 
     @Test
-    public void testIntention() {
+    public void testCompletion() {
         doTest("completion");
     }
 }
