@@ -1,7 +1,3 @@
-/*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
- */
-
 import eu.andret.arguments.api.annotation.ArgumentFallback;
 
 @eu.andret.arguments.api.annotation.BaseCommand("test")

@@ -1,7 +1,3 @@
-/*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
- */
-
 @eu.andret.arguments.api.annotation.BaseCommand("test")
 public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandExecutor<JavaPlugin> {
 	public LocalCommandExecutor(final CommandSender sender, final JavaPlugin plugin) {
@@ -9,7 +5,7 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
 	}
 
 	@eu.andret.arguments.api.annotation.Argument
-	public <caret> int get() {
+	public <caret>int get() {
 		return 1;
 	}
 }

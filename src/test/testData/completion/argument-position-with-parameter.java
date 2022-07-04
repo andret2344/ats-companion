@@ -8,7 +8,7 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
         super(sender, plugin);
     }
 
-    @eu.andret.arguments.api.annotation.Argument(position =<caret>)
+    @eu.andret.arguments.api.annotation.Argument(position = <caret>)
     public String test(String test, String rtfmdeswhg, int sadar) {
         return test;
     }
