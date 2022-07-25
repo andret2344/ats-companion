@@ -76,21 +76,17 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiElement::getParent)
-						.map(PsiMethod.class::cast)
-						.map(PsiMethod::getReturnTypeElement)
-						.ifPresent(typeElement -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiClassType classType = factory.createTypeByFQClassName("String");
-							typeElement.replace(factory.createTypeElement(classType));
-							JavaCodeStyleManager.getInstance(project).shortenClassReferences(typeElement);
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiElement::getParent)
+					.map(PsiMethod.class::cast)
+					.map(PsiMethod::getReturnTypeElement)
+					.ifPresent(typeElement -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						final PsiClassType classType = factory.createTypeByFQClassName("String");
+						typeElement.replace(factory.createTypeElement(classType));
+						JavaCodeStyleManager.getInstance(project).shortenClassReferences(typeElement);
+					});
 		}
 
 		@Override

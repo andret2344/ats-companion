@@ -60,13 +60,9 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.ifPresent(PsiElement::delete);
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.ifPresent(PsiElement::delete);
 		}
 
 		@Override

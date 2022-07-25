@@ -28,7 +28,7 @@ import java.util.Optional;
 
 public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "Position must be positive number not greater than method's parameters count";
+	public static final String DESCRIPTION = "Position must be positive number not greater than method's parameters count";
 
 	@NotNull
 	@Override
@@ -77,14 +77,10 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiElement::getParent)
-						.ifPresent(PsiElement::delete);
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiElement::getParent)
+					.ifPresent(PsiElement::delete);
 		}
 
 		@Override

@@ -31,7 +31,7 @@ import java.util.Optional;
 
 public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "Method parameters don't meet requirements.";
+	public static final String DESCRIPTION = "Method parameters don't meet requirements.";
 
 	@NotNull
 	@Override
@@ -78,20 +78,16 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiParameterList.class::cast)
-						.ifPresent(psiParameterList -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiType stringType = Util.createStringType(project);
-							final PsiParameterList parameterList = factory
-									.createParameterList(new String[]{paramName}, new PsiType[]{stringType});
-							psiParameterList.replace(parameterList);
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiParameterList.class::cast)
+					.ifPresent(psiParameterList -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						final PsiType stringType = Util.createStringType(project);
+						final PsiParameterList parameterList = factory
+								.createParameterList(new String[]{paramName}, new PsiType[]{stringType});
+						psiParameterList.replace(parameterList);
+					});
 		}
 
 		@Override
