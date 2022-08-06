@@ -23,7 +23,7 @@ public class InvalidArgumentMapperInspection extends AbstractBaseJavaLocalInspec
 
 			@Override
 			public void visitParameter(@NotNull final PsiParameter parameter) {
-				final PsiAnnotation annotation = parameter.getAnnotation(Constants.MAPPER_ARGUMENT);
+				final PsiAnnotation annotation = parameter.getAnnotation(Constants.ANNOTATION_MAPPER);
 				if (annotation != null) {
 					Util.getArgumentFallbackValue(annotation)
 							.ifPresent(x -> {
