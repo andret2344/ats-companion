@@ -1,7 +1,7 @@
 #
 # Copyright Andret (c) 2018-2021. Copying and modifying allowed only keeping git link reference.
 #
-image: gradle:jdk16
+image: gradle:jdk17
 
 cache:
   paths:
