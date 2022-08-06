@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -17,7 +21,6 @@ import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
@@ -71,21 +74,17 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiElement::getParent)
-						.map(PsiMethod.class::cast)
-						.map(PsiMethod::getReturnTypeElement)
-						.ifPresent(typeElement -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiClassType classType = factory.createTypeByFQClassName("String");
-							typeElement.replace(factory.createTypeElement(classType));
-							JavaCodeStyleManager.getInstance(project).shortenClassReferences(typeElement);
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiElement::getParent)
+					.map(PsiMethod.class::cast)
+					.map(PsiMethod::getReturnTypeElement)
+					.ifPresent(typeElement -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						final PsiClassType classType = factory.createTypeByFQClassName("String");
+						typeElement.replace(factory.createTypeElement(classType));
+						JavaCodeStyleManager.getInstance(project).shortenClassReferences(typeElement);
+					});
 		}
 
 		@Override
