@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea;
 
 import com.intellij.codeInsight.daemon.ImplicitUsageProvider;
@@ -30,11 +34,11 @@ public class ArgumentMethodImplicitUsageProvider implements ImplicitUsageProvide
 
 	@Nullable
 	private PsiMethod getMethod(@NotNull final PsiElement element) {
-		if (element instanceof PsiMethod) {
-			return (PsiMethod) element;
+		if (element instanceof final PsiMethod psiMethod) {
+			return psiMethod;
 		}
-		if (element instanceof PsiParameter) {
-			return Util.ancestorOf(element, PsiMethod.class, 2);
+		if (element instanceof final PsiParameter psiParameter) {
+			return Util.ancestorOf(psiParameter, PsiMethod.class, 2);
 		}
 		return null;
 	}

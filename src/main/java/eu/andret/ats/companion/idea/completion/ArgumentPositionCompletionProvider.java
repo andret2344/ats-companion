@@ -5,10 +5,12 @@ import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameterList;
 import com.intellij.util.ProcessingContext;
 import eu.andret.ats.companion.idea.utilities.Util;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ArgumentPositionCompletionProvider extends CompletionProvider<CompletionParameters> {
@@ -17,7 +19,10 @@ public class ArgumentPositionCompletionProvider extends CompletionProvider<Compl
 							   @NotNull final CompletionResultSet result) {
 		final PsiMethod method = Util.ancestorOf(parameters.getPosition(), PsiMethod.class);
 		Stream.iterate(0, i -> i + 1)
-				.limit(method.getParameterList().getParametersCount() + 1L)
+				.limit(1L + Optional.ofNullable(method)
+						.map(PsiMethod::getParameterList)
+						.map(PsiParameterList::getParametersCount)
+						.orElse(0))
 				.map(LookupElementBuilder::create)
 				.forEach(result::addElement);
 		result.stopHere();
