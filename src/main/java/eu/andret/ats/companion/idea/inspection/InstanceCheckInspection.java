@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -15,7 +19,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
-import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
@@ -68,7 +71,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 						.map(PsiField.class::cast)
 						.ifPresent(field -> {
 							final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
-							if (!(resolve instanceof PsiField) || !((PsiField) resolve).getName().equals("sender")) {
+							if (!(resolve instanceof final PsiField psiField) || !psiField.getName().equals("sender")) {
 								return;
 							}
 							analyzeAndReport(holder, expression, type, field.getName());
@@ -108,19 +111,15 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				final PsiElement context = descriptor.getPsiElement().getContext();
-				if (context == null) {
-					return;
-				}
-				final PsiElement parent = context.getParent();
-				final PsiElement[] children = Util.repeat(context, 2, PsiElement::getLastChild).getChildren();
-				final PsiElement[] psiElements = Arrays.copyOfRange(children, 2, children.length - 2);
-				Arrays.stream(psiElements).forEach(element -> parent.addAfter(element, context));
-				context.delete();
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
+			final PsiElement context = descriptor.getPsiElement().getContext();
+			if (context == null) {
+				return;
 			}
+			final PsiElement parent = context.getParent();
+			final PsiElement[] children = Util.repeat(context, 2, PsiElement::getLastChild).getChildren();
+			final PsiElement[] psiElements = Arrays.copyOfRange(children, 2, children.length - 2);
+			Arrays.stream(psiElements).forEach(element -> parent.addAfter(element, context));
+			context.delete();
 		}
 
 		@Override

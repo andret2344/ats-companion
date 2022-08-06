@@ -11,6 +11,10 @@
         <module name="atsCompanion.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="11">
+      <module name="atsCompanion" target="17" />
+      <module name="atsCompanion.main" target="17" />
+      <module name="atsCompanion.test" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
