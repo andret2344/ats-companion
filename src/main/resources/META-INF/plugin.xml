@@ -73,13 +73,13 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<localInspection
 				language="JAVA"
-				displayName="Invalid usage of @Fallback annotation"
+				displayName="Wrong parameters in fallback method"
 				groupPath="ATS"
 				groupBundle="messages.InspectionsBundle"
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
 				level="ERROR"
-				implementationClass="eu.andret.ats.companion.idea.inspection.FallbackMethodMismatchedInspection"
+				implementationClass="eu.andret.ats.companion.idea.inspection.FallbackArgumentsInspection"
 		/>
 		<localInspection
 				language="JAVA"
@@ -186,6 +186,16 @@
 				level="WARNING"
 				implementationClass="eu.andret.ats.companion.idea.inspection.NullComparisonInspection"
 		/>
+		<localInspection
+				language="JAVA"
+				displayName="Mapper with primitive"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.companion.idea.inspection.MapperWithPrimitiveInspection"
+		/>
 		<intentionAction>
 			<className>eu.andret.ats.companion.idea.generator.ArgumentFallbackMethodGenerator</className>
 			<category>ATS</category>
@@ -203,6 +213,7 @@
 				implementationClass="eu.andret.ats.companion.idea.linemarker.ArgumentFallbackLineMarkerProvider"
 		/>
 		<implicitUsageProvider implementation="eu.andret.ats.companion.idea.ArgumentMethodImplicitUsageProvider"/>
+		<defaultLiveTemplates file="/liveTemplates/ATS.xml"/>
 	</extensions>
 
 	<application-components>
