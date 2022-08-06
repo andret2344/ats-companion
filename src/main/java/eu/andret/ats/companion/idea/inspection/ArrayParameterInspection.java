@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -15,7 +19,6 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
-import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
@@ -68,21 +71,17 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiElement::getParent)
-						.map(PsiParameter.class::cast)
-						.ifPresent(parameter -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiArrayType type = (PsiArrayType) parameter.getType();
-							final String newType = type.getComponentType().getCanonicalText() + "...";
-							final PsiClassType classType = factory.createTypeByFQClassName(newType);
-							parameter.replace(factory.createParameter(parameter.getName(), classType));
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiElement::getParent)
+					.map(PsiParameter.class::cast)
+					.ifPresent(parameter -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						final PsiArrayType type = (PsiArrayType) parameter.getType();
+						final String newType = type.getComponentType().getCanonicalText() + "...";
+						final PsiClassType classType = factory.createTypeByFQClassName(newType);
+						parameter.replace(factory.createParameter(parameter.getName(), classType));
+					});
 		}
 
 		@Override
@@ -102,21 +101,17 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiElement::getParent)
-						.map(PsiParameter.class::cast)
-						.ifPresent(psiParameter -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiArrayType type = (PsiArrayType) psiParameter.getType();
-							final String newType = type.getComponentType().getCanonicalText();
-							final PsiClassType classType = factory.createTypeByFQClassName(newType);
-							psiParameter.replace(factory.createParameter(psiParameter.getName(), classType));
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiElement::getParent)
+					.map(PsiParameter.class::cast)
+					.ifPresent(psiParameter -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						final PsiArrayType type = (PsiArrayType) psiParameter.getType();
+						final String newType = type.getComponentType().getCanonicalText();
+						final PsiClassType classType = factory.createTypeByFQClassName(newType);
+						psiParameter.replace(factory.createParameter(psiParameter.getName(), classType));
+					});
 		}
 
 		@Override
