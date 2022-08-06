@@ -1,9 +1,6 @@
 /libraries/
-/shelf/
-/httpRequests/
-/dataSources/
-/dataSources.local.xml
 /modules/
+/shelf/
 /sonarlint/
 
 /discord.xml
@@ -11,6 +8,7 @@
 /intellij-javadocs-4.0.1.xml
 /jarRepositories.xml
 /modules.xml
+/sonarlint.xml
 /sonarlint-state.xml
 /uiDesigner.xml
 /workspace.xml

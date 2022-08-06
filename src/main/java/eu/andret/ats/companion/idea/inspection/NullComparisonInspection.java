@@ -18,9 +18,9 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiIfStatement;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
-import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
@@ -50,14 +50,8 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 				}
 				Arrays.stream(method.getParameterList().getParameters())
 						.filter(psiParameter -> !(psiParameter.getType() instanceof PsiPrimitiveType))
+						.filter(psiParameter -> validateParameter(psiParameter, expression))
 						.forEach(psiParameter -> {
-							final boolean rNull = isNull(expression.getROperand());
-							final boolean lNull = isNull(expression.getLOperand());
-							final boolean rMatches = is(expression.getROperand(), psiParameter);
-							final boolean lMatches = is(expression.getLOperand(), psiParameter);
-							if ((!lMatches || !rNull) && (!rMatches || !lNull)) {
-								return;
-							}
 							if (expression.getOperationTokenType().equals(JavaTokenType.EQEQ)) {
 								holder.registerProblem(expression, DESCRIPTION,
 										ProblemHighlightType.LIKE_UNUSED_SYMBOL, new UnwrapQuickFix());
@@ -69,14 +63,22 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 						});
 			}
 
-			public boolean isNull(final PsiExpression expression) {
+			private boolean validateParameter(final PsiParameter psiParameter, final PsiBinaryExpression expression) {
+				final boolean rNull = isNull(expression.getROperand());
+				final boolean lNull = isNull(expression.getLOperand());
+				final boolean rMatches = is(expression.getROperand(), psiParameter);
+				final boolean lMatches = is(expression.getLOperand(), psiParameter);
+				return (lMatches && rNull) || (rMatches && lNull);
+			}
+
+			private boolean isNull(final PsiExpression expression) {
 				return Optional.of(expression)
 						.map(PsiExpression::getType)
 						.map(PsiType.NULL::equals)
 						.orElse(false);
 			}
 
-			public boolean is(final PsiExpression expression, final PsiElement element) {
+			private boolean is(final PsiExpression expression, final PsiElement element) {
 				return Optional.of(expression)
 						.map(PsiExpression::getReference)
 						.map(reference -> reference.isReferenceTo(element))
@@ -97,21 +99,17 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiElement::getParent)
-						.map(PsiIfStatement.class::cast)
-						.ifPresent(psiIfStatement -> {
-							if (psiIfStatement.getThenBranch() != null) {
-								psiIfStatement.replace(psiIfStatement.getThenBranch());
-							} else {
-								psiIfStatement.delete();
-							}
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiElement::getParent)
+					.map(PsiIfStatement.class::cast)
+					.ifPresent(psiIfStatement -> {
+						if (psiIfStatement.getThenBranch() != null) {
+							psiIfStatement.replace(psiIfStatement.getThenBranch());
+						} else {
+							psiIfStatement.delete();
+						}
+					});
 		}
 
 		@Override
@@ -133,21 +131,17 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiElement::getParent)
-						.map(PsiIfStatement.class::cast)
-						.ifPresent(psiIfStatement -> {
-							if (psiIfStatement.getElseBranch() != null) {
-								psiIfStatement.replace(psiIfStatement.getElseBranch());
-							} else {
-								psiIfStatement.delete();
-							}
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiElement::getParent)
+					.map(PsiIfStatement.class::cast)
+					.ifPresent(psiIfStatement -> {
+						if (psiIfStatement.getElseBranch() != null) {
+							psiIfStatement.replace(psiIfStatement.getElseBranch());
+						} else {
+							psiIfStatement.delete();
+						}
+					});
 		}
 
 		@Override
