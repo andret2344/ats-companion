@@ -1,5 +1,5 @@
 plugins {
-	id 'org.jetbrains.intellij' version '1.1.4'
+	id 'org.jetbrains.intellij' version '1.8.0'
 }
 
 apply plugin: 'java'
@@ -10,8 +10,9 @@ targetCompatibility = JavaVersion.VERSION_11
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version = '2021.3.2'
+	version = '2022.2'
 	plugins = ['com.intellij.java']
+	updateSinceUntilBuild = false
 }
 
 buildSearchableOptions {
@@ -31,23 +32,15 @@ repositories {
 }
 
 dependencies {
-	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
-	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+
+	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+	testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 }
 
 jar {
 	from {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	}
-}
-
-publishPlugin {
-	channels = ['alpha']
-	token = System.getenv("PUBLISH_TOKEN")
-}
-
-signPlugin {
-	certificateChain = System.getenv("CERTIFICATE_CHAIN")
-	privateKey = System.getenv("PRIVATE_KEY")
-	password = System.getenv("PRIVATE_KEY_PASSWORD")
 }
