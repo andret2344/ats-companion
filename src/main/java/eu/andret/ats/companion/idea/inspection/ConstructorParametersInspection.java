@@ -227,10 +227,7 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 							final PsiClassType type = factory.createTypeByFQClassName(qualifiedType);
 							final PsiTypeElement typeElement = factory.createTypeElement(type);
-							System.out.println(psiParameter.getTypeElement());
-							System.out.println(psiParameter.getType());
-							System.out.println(psiParameter.getModifierList());
-							System.out.println(psiParameter.getAnnotations()[0].getQualifiedName());
+							type.annotate(psiParameter.getType().getAnnotationProvider());
 							if (psiParameter.getTypeElement() != null) {
 								psiParameter.getTypeElement().replace(typeElement);
 							}
