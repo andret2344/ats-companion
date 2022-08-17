@@ -95,6 +95,5 @@ public class Util {
 	public PsiType createStringType(@NotNull final Project project) {
 		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 		return factory.createTypeByFQClassName("java.lang.String");
-
 	}
 }
