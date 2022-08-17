@@ -20,6 +20,11 @@ public class Constants {
 	public static final String ANNOTATION_MAPPER = ARGUMENTS_ANNOTATION + ".Mapper";
 	public static final String CLASS_ANNOTATED_COMMAND_EXECUTOR = ARGUMENTS_MAIN + ".AnnotatedCommandExecutor";
 
+	public static final String BUKKIT_JAVA_PLUGIN = "org.bukkit.plugin.java.JavaPlugin";
+	public static final String BUKKIT_COMMAND_SENDER = "org.bukkit.command.CommandSender";
+	public static final String BUKKIT_CONSOLE_COMMAND_SENDER = "org.bukkit.command.ConsoleCommandSender";
+	public static final String BUKKIT_PLAYER = "org.bukkit.entity.Player";
+
 	@NotNull
 	public String[] getMethodAnnotations() {
 		return new String[]{ANNOTATION_ARGUMENT, ANNOTATION_ARGUMENT_FALLBACK, ANNOTATION_TYPE_FALLBACK};
