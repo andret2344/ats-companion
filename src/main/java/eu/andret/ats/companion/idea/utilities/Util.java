@@ -13,10 +13,7 @@ import com.intellij.psi.impl.source.PsiImmediateClassType;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.PsiType;
-import lombok.experimental.UtilityClass;
 
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
@@ -99,11 +96,5 @@ public class Util {
 		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 		return factory.createTypeByFQClassName("java.lang.String");
 
-	}
-
-	public boolean isDescendant(@NotNull final PsiType type, final String qualifiedName) {
-		return Arrays.stream(type.getSuperTypes())
-				.map(PsiType::getCanonicalText)
-				.anyMatch(qualifiedName::equals);
 	}
 }

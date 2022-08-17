@@ -33,17 +33,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	public static final String DESCRIPTION = "Wrong constructor types used";
 
-	public static final String PLUGIN = "plugin";
-	public static final String SENDER = "sender";
+	private static final String PLUGIN = "plugin";
+	private static final String SENDER = "sender";
 
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE = "Wrong constructor types used";
-
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
 				if (!Verifier.verifyClass(method.getContainingClass())) {
@@ -55,20 +54,20 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 				final PsiParameterList parameterList = method.getParameterList();
 				final PsiParameter[] parameters = parameterList.getParameters();
 				if (parameters.length == 0) {
-					holder.registerProblem(parameterList, DESCRIPTION_TEMPLATE,
+					holder.registerProblem(parameterList, DESCRIPTION,
 							ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new ChangeParametersToQuickFix());
 					return;
 				}
 				final String param1TypeText = parameters[0].getType().getCanonicalText();
 				if (parameters.length == 1) {
 					if (param1TypeText.equals(Constants.BUKKIT_COMMAND_SENDER)) {
-						holder.registerProblem(parameterList, DESCRIPTION_TEMPLATE,
+						holder.registerProblem(parameterList, DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new InsertSecondParametersQuickFix());
 					} else if (param1TypeText.equals(Constants.BUKKIT_JAVA_PLUGIN)) {
-						holder.registerProblem(parameterList, DESCRIPTION_TEMPLATE,
+						holder.registerProblem(parameterList, DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new InsertFirstParametersQuickFix());
 					} else {
-						holder.registerProblem(parameterList, DESCRIPTION_TEMPLATE,
+						holder.registerProblem(parameterList, DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new ChangeParametersToQuickFix());
 					}
 					return;
@@ -87,19 +86,19 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 						.orElse(false);
 
 				if (!param1Correct && !param2Correct) {
-					holder.registerProblem(parameterList, DESCRIPTION_TEMPLATE,
+					holder.registerProblem(parameterList, DESCRIPTION,
 							ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new ChangeParametersToQuickFix());
 				}
 				if (!param1Correct) {
 					holder.registerProblem(Objects.requireNonNull(parameterList.getParameter(0)),
-							DESCRIPTION_TEMPLATE,
+							DESCRIPTION,
 							ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
 							new ChangeParameterQuickFix(Constants.BUKKIT_COMMAND_SENDER));
 				}
 				if (!param2Correct) {
 					genericType.ifPresent(type ->
 							holder.registerProblem(Objects.requireNonNull(parameterList.getParameter(1)),
-									DESCRIPTION_TEMPLATE,
+									DESCRIPTION,
 									ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
 									new ChangeParameterQuickFix(type.getCanonicalText())));
 				}
@@ -109,10 +108,12 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 
 	@Slf4j
 	public static class ChangeParametersToQuickFix implements LocalQuickFix {
+		public static final String NAME = "Change parameter list to match '(CommandSender, JavaPlugin)'";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Change parameter list to match '(CommandSender, JavaPlugin)'";
+			return NAME;
 		}
 
 		@Override
@@ -145,10 +146,12 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 
 	@Slf4j
 	public static class InsertSecondParametersQuickFix implements LocalQuickFix {
+		public static final String NAME = "Insert 2nd parameter";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Insert 2nd parameter";
+			return NAME;
 		}
 
 		@Override
@@ -177,10 +180,12 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 
 	@Slf4j
 	public static class InsertFirstParametersQuickFix implements LocalQuickFix {
+		public static final String NAME = "Insert 1st parameter";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Insert 1st parameter";
+			return NAME;
 		}
 
 		@Override
@@ -210,12 +215,14 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 	@Slf4j
 	@Value
 	public static class ChangeParameterQuickFix implements LocalQuickFix {
+		public static final String NAME = "Change parameter's type to ";
+
 		String qualifiedType;
 
 		@NotNull
 		@Override
 		public String getName() {
-			return "Change parameter's type to " + qualifiedType;
+			return NAME + qualifiedType;
 		}
 
 		@Override
