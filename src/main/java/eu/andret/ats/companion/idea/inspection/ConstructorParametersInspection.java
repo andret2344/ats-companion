@@ -14,6 +14,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
@@ -227,9 +228,11 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 							final PsiClassType type = factory.createTypeByFQClassName(qualifiedType);
 							final PsiTypeElement typeElement = factory.createTypeElement(type);
-							type.annotate(psiParameter.getType().getAnnotationProvider());
-							if (psiParameter.getTypeElement() != null) {
+							final PsiModifierList modifierList = psiParameter.getModifierList();
+							if (psiParameter.getTypeElement() != null && modifierList != null) {
+								final PsiElement modifiers = modifierList.copy();
 								psiParameter.getTypeElement().replace(typeElement);
+								modifierList.replace(modifiers);
 							}
 						});
 			} catch (final IncorrectOperationException e) {
