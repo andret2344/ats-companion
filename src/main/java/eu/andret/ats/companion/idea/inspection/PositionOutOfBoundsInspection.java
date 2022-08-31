@@ -31,10 +31,15 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 	// I'm sure pattern is correct
 	private static final Pattern INTEGER_REGEX = Pattern.compile("-?\\d+");
 
+	@NonNls
+	public static final String DESCRIPTION
+			= "Position must be positive number not greater than method's parameters count";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
+
 			@Override
 			public void visitMethod(@NotNull final PsiMethod psiMethod) {
 				if (!Verifier.verifyArgumentMethod(psiMethod)) {
