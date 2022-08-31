@@ -6,7 +6,6 @@
 	<id>eu.andret.ats.companion.idea</id>
 	<!--suppress PluginXmlCapitalization -->
 	<name>atsCompanion</name>
-	<version>0.1.0</version>
 	<vendor email="andret2344@gmail.com" url="https://andret.eu/">Andret2344</vendor>
 
 	<description>
@@ -218,7 +217,8 @@
 			<className>eu.andret.ats.companion.idea.intention.TypeFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>
-		<implicitUsageProvider implementation="eu.andret.ats.companion.idea.implicitusage.ArgumentMethodImplicitUsageProvider"/>
+		<implicitUsageProvider
+				implementation="eu.andret.ats.companion.idea.implicitusage.ArgumentMethodImplicitUsageProvider"/>
 		<defaultLiveTemplates file="/liveTemplates/ATS.xml"/>
 	</extensions>
 
