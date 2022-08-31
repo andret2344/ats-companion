@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.utilities;
 
 import lombok.experimental.UtilityClass;
@@ -15,6 +19,11 @@ public class Constants {
 	public static final String ANNOTATION_TYPE_FALLBACK = ARGUMENTS_ANNOTATION + ".TypeFallback";
 	public static final String ANNOTATION_MAPPER = ARGUMENTS_ANNOTATION + ".Mapper";
 	public static final String CLASS_ANNOTATED_COMMAND_EXECUTOR = ARGUMENTS_MAIN + ".AnnotatedCommandExecutor";
+
+	public static final String BUKKIT_JAVA_PLUGIN = "org.bukkit.plugin.java.JavaPlugin";
+	public static final String BUKKIT_COMMAND_SENDER = "org.bukkit.command.CommandSender";
+	public static final String BUKKIT_CONSOLE_COMMAND_SENDER = "org.bukkit.command.ConsoleCommandSender";
+	public static final String BUKKIT_PLAYER = "org.bukkit.entity.Player";
 
 	@NotNull
 	public String[] getMethodAnnotations() {

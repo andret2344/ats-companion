@@ -16,7 +16,7 @@ import com.intellij.psi.PsiAnnotationParameterList;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
-import com.intellij.util.IncorrectOperationException;
+import com.intellij.psi.PsiNameValuePair;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +25,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspectionTool {
-	@NonNls
-	public static final String DESCRIPTION = "Position must be positive number not greater than method's parameters count";
+	// I'm sure pattern is correct
+	private static final Pattern INTEGER_REGEX = Pattern.compile("-?\\d+");
 
 	@NotNull
 	@Override
@@ -50,15 +51,13 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 						.findFirst()
 						.filter(nameValuePair -> nameValuePair.getValue() != null)
 						.filter(PsiElement::isValid)
-						.ifPresent(nameValuePair -> {
-							try {
-								final int intPosition = Integer.parseInt(nameValuePair.getValue().getText());
-								if (intPosition < 0 || intPosition > args) {
-									holder.registerProblem(nameValuePair.getValue(), DESCRIPTION,
-											ProblemHighlightType.ERROR, new RemoveParameterQuickFix());
-								}
-							} catch (final NumberFormatException e) {
-								// Do nothing
+						.map(PsiNameValuePair::getValue)
+						.filter(value -> value.getText().matches(INTEGER_REGEX.pattern()))
+						.ifPresent(value -> {
+							final int intPosition = Integer.parseInt(value.getText());
+							if (intPosition < 0 || intPosition > args) {
+								holder.registerProblem(value, DESCRIPTION,
+										ProblemHighlightType.ERROR, new RemoveParameterQuickFix());
 							}
 						});
 			}

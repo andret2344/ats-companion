@@ -1,16 +1,16 @@
 plugins {
-	id 'org.jetbrains.intellij' version '1.6.0'
+	id 'org.jetbrains.intellij' version '1.8.0'
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version = '2022.1.3'
+	version = '2022.2'
 	plugins = ['com.intellij.java']
 	updateSinceUntilBuild = false
 	pluginName = 'atsCompanion-0.1.0'
@@ -22,7 +22,7 @@ buildSearchableOptions {
 
 patchPluginXml {
 	version = project.version
-	sinceBuild = '193'
+	setSinceBuild '202'
 }
 
 group project.group
@@ -47,17 +47,6 @@ jar {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	}
 	duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-
-publishPlugin {
-	channels = ['alpha']
-	token = System.getenv("PUBLISH_TOKEN")
-}
-
-signPlugin {
-	certificateChain = System.getenv("CERTIFICATE_CHAIN")
-	privateKey = System.getenv("PRIVATE_KEY")
-	password = System.getenv("PRIVATE_KEY_PASSWORD")
 }
 
 test {

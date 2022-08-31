@@ -18,7 +18,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
-import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;

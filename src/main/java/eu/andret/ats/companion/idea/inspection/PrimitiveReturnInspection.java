@@ -21,7 +21,6 @@ import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;

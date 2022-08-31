@@ -19,7 +19,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
-import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
@@ -72,7 +71,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 						.map(PsiField.class::cast)
 						.ifPresent(field -> {
 							final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
-							if (!(resolve instanceof PsiField) || !((PsiField) resolve).getName().equals("sender")) {
+							if (!(resolve instanceof final PsiField psiField) || !psiField.getName().equals("sender")) {
 								return;
 							}
 							analyzeAndReport(holder, expression, type, field.getName());
@@ -84,18 +83,18 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 	private void analyzeAndReport(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
 								  final PsiType type, @NotNull final String executorType) {
 		if (executorType.equals("PLAYER")) {
-			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
+			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
 				holder.registerProblem(expression, DESCRIPTION_UNUSED,
 						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
-			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
+			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
 				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			}
 		} else if (executorType.equals("CONSOLE")) {
-			if (type.getCanonicalText().equals("org.bukkit.entity.Player")) {
+			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
 				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
-			} else if (type.getCanonicalText().equals("org.bukkit.command.ConsoleCommandSender")) {
+			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
 				holder.registerProblem(expression, DESCRIPTION_UNUSED,
 						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
 			}
@@ -114,19 +113,15 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				final PsiElement context = descriptor.getPsiElement().getContext();
-				if (context == null) {
-					return;
-				}
-				final PsiElement parent = context.getParent();
-				final PsiElement[] children = Util.repeat(context, 2, PsiElement::getLastChild).getChildren();
-				final PsiElement[] psiElements = Arrays.copyOfRange(children, 2, children.length - 2);
-				Arrays.stream(psiElements).forEach(element -> parent.addAfter(element, context));
-				context.delete();
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
+			final PsiElement context = descriptor.getPsiElement().getContext();
+			if (context == null) {
+				return;
 			}
+			final PsiElement parent = context.getParent();
+			final PsiElement[] children = Util.repeat(context, 2, PsiElement::getLastChild).getChildren();
+			final PsiElement[] psiElements = Arrays.copyOfRange(children, 2, children.length - 2);
+			Arrays.stream(psiElements).forEach(element -> parent.addAfter(element, context));
+			context.delete();
 		}
 
 		@Override

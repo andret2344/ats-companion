@@ -18,7 +18,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
@@ -27,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspectionTool {
@@ -78,7 +76,7 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 				return Arrays.stream(children)
 						.filter(PsiKeyword.class::isInstance)
 						.map(PsiKeyword.class::cast)
-						.collect(Collectors.toList());
+						.toList();
 			}
 		};
 	}
@@ -95,16 +93,12 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.ifPresent(psiElement -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							psiElement.replace(factory.createKeyword("public"));
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.ifPresent(psiElement -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						psiElement.replace(factory.createKeyword("public"));
+					});
 		}
 
 		@Override
@@ -126,18 +120,14 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiElement::getParent)
-						.map(PsiMethod.class::cast)
-						.ifPresent(psiElement -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							psiElement.getModifierList().add(factory.createKeyword("public"));
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiElement::getParent)
+					.map(PsiMethod.class::cast)
+					.ifPresent(psiElement -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						psiElement.getModifierList().add(factory.createKeyword("public"));
+					});
 		}
 
 		@Override

@@ -200,6 +200,16 @@
 				level="ERROR"
 				implementationClass="eu.andret.ats.companion.idea.inspection.MapperWithPrimitiveInspection"
 		/>
+		<localInspection
+				language="JAVA"
+				displayName="Invalid constructor arguments"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.companion.idea.inspection.ConstructorParametersInspection"
+		/>
 		<intentionAction>
 			<className>eu.andret.ats.companion.idea.intention.ArgumentFallbackMethodIntention</className>
 			<category>ATS</category>
