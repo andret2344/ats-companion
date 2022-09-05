@@ -1,7 +1,3 @@
-/*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
- */
-
 public class FooCommand {
 	@Argument
 	public void fooArgument(Foo foo, int bar) {
