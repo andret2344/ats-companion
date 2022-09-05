@@ -16,7 +16,7 @@ stages:
   - prepare
   - build
   - test
-  - deplot
+  - deploy
 
 wrapper:
   stage: prepare
