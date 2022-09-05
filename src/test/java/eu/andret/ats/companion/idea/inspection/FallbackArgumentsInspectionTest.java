@@ -27,14 +27,14 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 
 	@Test
 	public void testArgumentFallbackWrongParameters() {
-		//given
+		// given
 		getFixture().configureByFile("argument-fallback-wrong-parameters.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());
 
-		//when
+		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-		//then
+		// then
 		assertFalse(highlightInfos.isEmpty());
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
@@ -48,14 +48,14 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	@Test
 	@Ignore("not passing")
 	public void testTypeFallbackWrongParameters() {
-		//given
+		// given
 		getFixture().configureByFile("type-fallback-wrong-parameters.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());
 
-		//when
+		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-		//then
+		// then
 		assertFalse(highlightInfos.isEmpty());
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
@@ -69,14 +69,14 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	@Test
 	@Ignore("not passing")
 	public void testTextInPosition() {
-		//given
+		// given
 		getFixture().configureByFile("argument-with-text-in-position.java");
 		getFixture().enableInspections(new PositionOutOfBoundsInspection());
 
-		//when
+		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-		//then
+		// then
 		assertFalse(highlightInfos.isEmpty());
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
@@ -88,16 +88,16 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	@Test
 	@Ignore("not passing")
 	public void testRemoveParameterQuickFix() {
-		//given
+		// given
 		getFixture().configureByFile("argument-with-negative-position.java");
 		getFixture().enableInspections(new PositionOutOfBoundsInspection());
 		final IntentionAction action = getFixture().findSingleIntention(PositionOutOfBoundsInspection.RemoveParameterQuickFix.NAME);
 		assertNotNull(action);
 
-		//when
+		// when
 		getFixture().launchAction(action);
 
-		//then
+		// then
 		getFixture().checkResultByFile("argument-with-negative-position.after.java");
 	}
 }

@@ -26,14 +26,14 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 
 	@Test
 	public void testArgumentMethodStaticHighlight() {
-		//given
+		// given
 		getFixture().configureByFile("argument-method-static.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
 
-		//when
+		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-		//then
+		// then
 		assertFalse(highlightInfos.isEmpty());
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
@@ -46,29 +46,29 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 
 	@Test
 	public void testArgumentMethodStaticFixRemoveQualifier() {
-		//given
+		// given
 		getFixture().configureByFile("argument-method-static.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
 		final IntentionAction action = getFixture().findSingleIntention(ArgumentMethodStaticInspection.RemoveQualifierQuickFix.NAME);
 		assertNotNull(action);
 
-		//when
+		// when
 		getFixture().launchAction(action);
 
-		//then
+		// then
 		getFixture().checkResultByFile("argument-method-static.after.java");
 	}
 
 	@Test
 	public void testRegularMethodStaticHighlight() {
-		//given
+		// given
 		getFixture().configureByFile("regular-method-static.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
 
-		//when
+		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-		//then
+		// then
 		assertFalse(highlightInfos.isEmpty());
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->

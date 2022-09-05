@@ -26,14 +26,14 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 
 	@Test
 	public void testPrimitiveReturnHighlight() {
-		//given
+		// given
 		getFixture().configureByFile("primitive-return.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());
 
-		//when
+		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-		//then
+		// then
 		assertFalse(highlightInfos.isEmpty());
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
@@ -46,16 +46,16 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 
 	@Test
 	public void testPrimitiveReturnFixChangeToString() {
-		//given
+		// given
 		getFixture().configureByFile("primitive-return.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());
 		final IntentionAction action = getFixture().findSingleIntention(PrimitiveReturnInspection.ChangeToStringQuickFix.NAME);
 		assertNotNull(action);
 
-		//when
+		// when
 		getFixture().launchAction(action);
 
-		//then
+		// then
 		getFixture().checkResultByFile("primitive-return.after.java");
 	}
 }

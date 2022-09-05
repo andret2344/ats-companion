@@ -14,101 +14,104 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PositionOutOfBoundsInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
-    public PositionOutOfBoundsInspectionTest() {
-        super(null, "src/test/testData/inspection");
-    }
+	public PositionOutOfBoundsInspectionTest() {
+		super(null, "src/test/testData/inspection");
+	}
 
-    @Test
-    public void testExceededPosition() {
-        //given
-        getFixture().configureByFile("argument-with-exceeded-position.java");
-        getFixture().enableInspections(new PositionOutOfBoundsInspection());
+	@Test
+	public void testExceededPosition() {
+		// given
+		getFixture().configureByFile("argument-with-exceeded-position.java");
+		getFixture().enableInspections(new PositionOutOfBoundsInspection());
 
-        //when
-        final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-        //then
-        assertFalse(highlightInfos.isEmpty());
-        final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-                .filter(element ->
-                        Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
-                .findAny();
-        assertTrue(optionalHighlightInfo.isPresent());
-        final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-        assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
-    }
+		// then
+		assertFalse(highlightInfos.isEmpty());
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
+				.findAny();
+		assertTrue(optionalHighlightInfo.isPresent());
+		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
+		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
+	}
 
-    @Test
-    public void testNegativePosition() {
-        //given
-        getFixture().configureByFile("argument-with-negative-position.java");
-        getFixture().enableInspections(new PositionOutOfBoundsInspection());
+	@Test
+	public void testNegativePosition() {
+		// given
+		getFixture().configureByFile("argument-with-negative-position.java");
+		getFixture().enableInspections(new PositionOutOfBoundsInspection());
 
-        //when
-        final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-        //then
-        assertFalse(highlightInfos.isEmpty());
-        final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-                .filter(element ->
-                        Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
-                .findAny();
-        assertTrue(optionalHighlightInfo.isPresent());
-        final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-        assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
-    }
+		// then
+		assertFalse(highlightInfos.isEmpty());
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
+				.findAny();
+		assertTrue(optionalHighlightInfo.isPresent());
+		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
+		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
+	}
 
-    @Test
-    public void testCorrectPosition() {
-        //given
-        getFixture().configureByFile("argument-with-correct-position.java");
-        getFixture().enableInspections(new PositionOutOfBoundsInspection());
+	@Test
+	public void testCorrectPosition() {
+		// given
+		getFixture().configureByFile("argument-with-correct-position.java");
+		getFixture().enableInspections(new PositionOutOfBoundsInspection());
 
-        //when
-        final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-        //then
-        assertFalse(highlightInfos.isEmpty());
-        final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-                .filter(element ->
-                        Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
-                .findAny();
-        assertTrue(optionalHighlightInfo.isEmpty());
-    }
+		// then
+		assertFalse(highlightInfos.isEmpty());
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
+				.findAny();
+		assertTrue(optionalHighlightInfo.isEmpty());
+	}
 
-    @Test
-    public void testTextInPosition() {
-        //given
-        getFixture().configureByFile("argument-with-text-in-position.java");
-        getFixture().enableInspections(new PositionOutOfBoundsInspection());
+	@Test
+	public void testTextInPosition() {
+		// given
+		getFixture().configureByFile("argument-with-text-in-position.java");
+		getFixture().enableInspections(new PositionOutOfBoundsInspection());
 
-        //when
-        final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
-        //then
-        assertFalse(highlightInfos.isEmpty());
-        final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-                .filter(element ->
-                        Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
-                .findAny();
-        assertTrue(optionalHighlightInfo.isEmpty());
-    }
+		// then
+		assertFalse(highlightInfos.isEmpty());
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
+				.findAny();
+		assertTrue(optionalHighlightInfo.isEmpty());
+	}
 
-    @Test
-    public void testRemoveParameterQuickFix() {
-        //given
-        getFixture().configureByFile("argument-with-negative-position.java");
-        getFixture().enableInspections(new PositionOutOfBoundsInspection());
-        final IntentionAction action = getFixture().findSingleIntention(PositionOutOfBoundsInspection.RemoveParameterQuickFix.NAME);
-        assertNotNull(action);
+	@Test
+	public void testRemoveParameterQuickFix() {
+		// given
+		getFixture().configureByFile("argument-with-negative-position.java");
+		getFixture().enableInspections(new PositionOutOfBoundsInspection());
+		final IntentionAction action = getFixture().findSingleIntention(PositionOutOfBoundsInspection.RemoveParameterQuickFix.NAME);
+		assertNotNull(action);
 
-        //when
-        getFixture().launchAction(action);
+		// when
+		getFixture().launchAction(action);
 
-        //then
-        getFixture().checkResultByFile("argument-with-negative-position.after.java");
-    }
+		// then
+		getFixture().checkResultByFile("argument-with-negative-position.after.java");
+	}
 }
