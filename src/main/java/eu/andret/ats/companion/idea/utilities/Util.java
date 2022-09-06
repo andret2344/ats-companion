@@ -4,12 +4,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClassObjectAccessExpression;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiLiteralValue;
 import com.intellij.psi.PsiType;
-import com.intellij.psi.impl.source.PsiImmediateClassType;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,8 +86,8 @@ public class Util {
 				.filter(PsiClassObjectAccessExpression.class::isInstance)
 				.map(PsiClassObjectAccessExpression.class::cast)
 				.map(PsiClassObjectAccessExpression::getType)
-				.map(PsiImmediateClassType.class::cast)
-				.map(PsiImmediateClassType::getParameters)
+				.map(PsiClassType.class::cast)
+				.map(PsiClassType::getParameters)
 				.map(psiTypes -> psiTypes[0]);
 	}
 

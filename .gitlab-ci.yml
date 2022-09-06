@@ -15,6 +15,8 @@ before_script:
 stages:
   - prepare
   - build
+  - test
+  - deploy
 
 wrapper:
   stage: prepare
@@ -29,5 +31,31 @@ compile:
     - ./gradlew assemble
   artifacts:
     paths:
-      - build/classes/**
       - build/libs/*.jar
+
+junit:
+  stage: test
+  dependencies:
+    - wrapper
+  script:
+    - ./gradlew clean test
+  coverage: '/^Coverage:\s(\d+\.\d+%)/'
+  artifacts:
+    reports:
+      junit:
+        - build/test-results/test/*.xml
+    paths:
+      - build/reports/jacoco/test/html/**
+
+pages:
+  stage: deploy
+  dependencies:
+    - junit
+  script:
+    - mv build/reports/jacoco/test/html/ public/
+  artifacts:
+    paths:
+      - public/**
+  only:
+    - master
+  when: manual

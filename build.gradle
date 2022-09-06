@@ -1,9 +1,11 @@
 plugins {
 	id 'org.jetbrains.intellij' version '1.8.0'
+	id 'de.jansauer.printcoverage' version '2.0.0'
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'jacoco'
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
@@ -13,6 +15,7 @@ intellij {
 	version = '2022.2'
 	plugins = ['com.intellij.java']
 	updateSinceUntilBuild = false
+	pluginName = 'atsCompanion-0.1.0'
 }
 
 buildSearchableOptions {
@@ -36,11 +39,40 @@ dependencies {
 	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 
 	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.2'
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.2'
 	testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 }
 
 jar {
 	from {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+test {
+	systemProperty("idea.force.use.core.classloader", "true")
+	finalizedBy jacocoTestCoverageVerification, printCoverage
+}
+
+jacocoTestReport {
+	reports.xml.required = true
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.2
+			}
+		}
+	}
+}
+
+allprojects {
+	test {
+		scanForTestClasses false
+		include "**/*Test.class"
 	}
 }

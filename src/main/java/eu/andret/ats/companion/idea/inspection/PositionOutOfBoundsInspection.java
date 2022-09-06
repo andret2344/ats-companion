@@ -31,14 +31,13 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 	// I'm sure pattern is correct
 	private static final Pattern INTEGER_REGEX = Pattern.compile("-?\\d+");
 
+	@NonNls
+	public static final String DESCRIPTION = "Position must be a positive number not greater than method's parameters count";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE
-					= "Position must be positive number not greater than method's parameters count";
-
 			@Override
 			public void visitMethod(@NotNull final PsiMethod psiMethod) {
 				if (!Verifier.verifyArgumentMethod(psiMethod)) {
@@ -60,7 +59,7 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 						.ifPresent(value -> {
 							final int intPosition = Integer.parseInt(value.getText());
 							if (intPosition < 0 || intPosition > args) {
-								holder.registerProblem(value, DESCRIPTION_TEMPLATE,
+								holder.registerProblem(value, DESCRIPTION,
 										ProblemHighlightType.ERROR, new RemoveParameterQuickFix());
 							}
 						});
@@ -70,10 +69,12 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 
 	@Slf4j
 	public static class RemoveParameterQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove parameter";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Remove parameter";
+			return NAME;
 		}
 
 		@Override

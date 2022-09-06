@@ -19,14 +19,13 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspectionTool {
+	@NonNls
+	private static final String DESCRIPTION = "@BaseCommand class does not extend AnnotatedCommandExecutor";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
-			@NonNls
-			private static final String DESCRIPTION_TEMPLATE
-					= "@BaseCommand class not extends AnnotatedCommandExecutor";
-
 			@Override
 			public void visitClass(final PsiClass aClass) {
 				if (!Verifier.verifyClass(aClass)) {
@@ -40,7 +39,7 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 						.filter(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR::equals)
 						.findAny();
 				if (superClass.isEmpty()) {
-					holder.registerProblem(aClass.getNameIdentifier(), DESCRIPTION_TEMPLATE,
+					holder.registerProblem(aClass.getNameIdentifier(), DESCRIPTION,
 							ProblemHighlightType.GENERIC_ERROR);
 				}
 			}
