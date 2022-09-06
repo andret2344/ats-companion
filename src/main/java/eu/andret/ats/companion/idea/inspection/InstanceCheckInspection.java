@@ -31,10 +31,10 @@ import java.util.Optional;
 
 public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION_UNUSED = "Executor type is already defined in an annotation";
+	private static final String DESCRIPTION_UNUSED = "Executor type is already defined in the annotation";
 
 	@NonNls
-	private static final String DESCRIPTION_PROBLEM = "Executor type in an annotation is contradictory";
+	private static final String DESCRIPTION_PROBLEM = "Executor type defined in the annotation is contradictory";
 
 	@NotNull
 	@Override

@@ -29,7 +29,7 @@ import java.util.Optional;
 
 public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "Missing @BaseCommand annotation";
+	private static final String DESCRIPTION = "Missing the @BaseCommand annotation";
 
 	@NotNull
 	@Override

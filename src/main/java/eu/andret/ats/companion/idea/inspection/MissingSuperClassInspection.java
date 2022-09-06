@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "@BaseCommand class not extends AnnotatedCommandExecutor";
+	private static final String DESCRIPTION = "@BaseCommand class doesn not extends AnnotatedCommandExecutor";
 
 	@NotNull
 	@Override

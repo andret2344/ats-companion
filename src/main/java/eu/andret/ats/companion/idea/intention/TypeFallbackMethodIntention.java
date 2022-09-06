@@ -26,16 +26,19 @@ import org.jetbrains.annotations.Nullable;
 
 @NonNls
 public class TypeFallbackMethodIntention extends PsiElementBaseIntentionAction implements IntentionAction {
+	public static final String NAME = "ATS: Generate type fallback method";
+	public static final String FAMILY_NAME = "Generate @TypeFallback method";
+
 	@Override
 	@NotNull
 	public String getText() {
-		return "ATS: Generate type fallback method";
+		return NAME;
 	}
 
 	@Override
 	@NotNull
 	public String getFamilyName() {
-		return "Generate @TypeFallback method";
+		return FAMILY_NAME;
 	}
 
 	@Override

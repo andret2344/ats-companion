@@ -25,7 +25,7 @@ import java.util.Optional;
 
 public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	public static final String DESCRIPTION = "Method annotated with @Argument annotation cannot use static qualifier";
+	public static final String DESCRIPTION = "Method annotated with @Argument cannot be static";
 
 	@NotNull
 	@Override

@@ -32,7 +32,7 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 	private static final Pattern INTEGER_REGEX = Pattern.compile("-?\\d+");
 
 	@NonNls
-	public static final String DESCRIPTION = "Position must be positive number not greater than method's parameters count";
+	public static final String DESCRIPTION = "Position must be a positive number not greater than method's parameters count";
 
 	@NotNull
 	@Override
