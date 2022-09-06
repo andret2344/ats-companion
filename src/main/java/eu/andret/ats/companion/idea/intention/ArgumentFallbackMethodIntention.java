@@ -2,10 +2,11 @@
  * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
  */
 
-package eu.andret.ats.companion.idea.generator;
+package eu.andret.ats.companion.idea.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -14,11 +15,13 @@ import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.PsiImportList;
+import com.intellij.psi.PsiImportStatement;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
-import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.codeStyle.CodeStyleManager;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
@@ -26,18 +29,23 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 @NonNls
-public class ArgumentFallbackMethodGenerator extends PsiElementBaseIntentionAction implements IntentionAction {
+public class ArgumentFallbackMethodIntention extends PsiElementBaseIntentionAction implements IntentionAction {
+	public static final String TEXT = "ATS: Generate argument fallback method";
+	public static final String FAMILY_NAME = "Generate @ArgumentFallback method";
+
 	@Override
 	@NotNull
 	public String getText() {
-		return "ATS: Generate argument fallback method";
+		return TEXT;
 	}
 
 	@Override
 	@NotNull
 	public String getFamilyName() {
-		return "Generate @ArgumentFallback method";
+		return FAMILY_NAME;
 	}
 
 	@Override
@@ -71,22 +79,36 @@ public class ArgumentFallbackMethodGenerator extends PsiElementBaseIntentionActi
 			return;
 		}
 
-		final PsiMethod factoryMethod = factory.createMethodFromText(
+		final PsiMethod psiMethod = factory.createMethodFromText(
 				String.format(
-						"@ArgumentFallback(\"%s\")\n\tpublic String %sFallback(String %s) {\n\t\treturn null;\n\t}",
+						"@ArgumentFallback(\"%s\") public String %sFallback(String %s) {return null;}",
 						value, value, value),
 				method.getContext());
-		final PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(Constants.ANNOTATION_ARGUMENT_FALLBACK,
-				GlobalSearchScope.allScope(project));
-		if (psiClass == null) {
-			return;
-		}
 		final PsiClass containingClass = method.getContainingClass();
 		if (containingClass == null) {
 			return;
 		}
-		containingClass.addAfter(factoryMethod, method);
-		JavaCodeStyleManager.getInstance(project).addImport((PsiJavaFile) method.getContainingFile(), psiClass);
+		containingClass.addAfter(psiMethod, method);
+		final PsiImportStatement importStatement = createImportStatement(project);
+		final PsiImportList importList = ((PsiJavaFile) containingClass.getParent()).getImportList();
+		if (importStatement == null || importList == null) {
+			return;
+		}
+		importList.add(importStatement);
+	}
+
+	@Nullable
+	private PsiImportStatement createImportStatement(@NotNull final Project project) {
+		final PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
+		final CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
+		final PsiJavaFile aFile = (PsiJavaFile) fileFactory.createFileFromText("_Dummy_.java", JavaFileType.INSTANCE, "import " + Constants.ANNOTATION_ARGUMENT_FALLBACK + ";");
+		return Optional.of(aFile)
+				.map(PsiJavaFile::getImportList)
+				.map(PsiImportList::getImportStatements)
+				.map(statements -> statements[0])
+				.map(codeStyleManager::reformat)
+				.map(PsiImportStatement.class::cast)
+				.orElse(null);
 	}
 
 	@Override

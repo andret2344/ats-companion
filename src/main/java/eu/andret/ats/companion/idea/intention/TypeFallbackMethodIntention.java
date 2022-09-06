@@ -2,7 +2,7 @@
  * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
  */
 
-package eu.andret.ats.companion.idea.generator;
+package eu.andret.ats.companion.idea.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
@@ -25,17 +25,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @NonNls
-public class TypeFallbackMethodGenerator extends PsiElementBaseIntentionAction implements IntentionAction {
+public class TypeFallbackMethodIntention extends PsiElementBaseIntentionAction implements IntentionAction {
+	public static final String NAME = "ATS: Generate type fallback method";
+	public static final String FAMILY_NAME = "Generate @TypeFallback method";
+
 	@Override
 	@NotNull
 	public String getText() {
-		return "ATS: Generate type fallback method";
+		return NAME;
 	}
 
 	@Override
 	@NotNull
 	public String getFamilyName() {
-		return "Generate @TypeFallback method";
+		return FAMILY_NAME;
 	}
 
 	@Override

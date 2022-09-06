@@ -31,10 +31,10 @@ import java.util.Optional;
 
 public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION_TEMPLATE_UNUSED = "Executor type is already defined in an annotation";
+	private static final String DESCRIPTION_UNUSED = "Executor type is already defined in the annotation";
 
 	@NonNls
-	private static final String DESCRIPTION_TEMPLATE_PROBLEM = "Executor type in an annotation is contradictory";
+	private static final String DESCRIPTION_PROBLEM = "Executor type defined in the annotation is contradictory";
 
 	@NotNull
 	@Override
@@ -84,18 +84,18 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 								  final PsiType type, @NotNull final String executorType) {
 		if (executorType.equals("PLAYER")) {
 			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED,
+				holder.registerProblem(expression, DESCRIPTION_UNUSED,
 						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
 			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
+				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			}
 		} else if (executorType.equals("CONSOLE")) {
 			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_PROBLEM,
+				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
 						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
 			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
-				holder.registerProblem(expression, DESCRIPTION_TEMPLATE_UNUSED,
+				holder.registerProblem(expression, DESCRIPTION_UNUSED,
 						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
 			}
 		}
@@ -103,10 +103,12 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 
 	@Slf4j
 	public static class RemoveExpressionQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove statement";
+
 		@NotNull
 		@Override
 		public String getName() {
-			return "Remove statement";
+			return NAME;
 		}
 
 		@Override
