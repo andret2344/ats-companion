@@ -7,5 +7,5 @@ import javax.swing.Icon;
 
 @UtilityClass
 public class IconProvider {
-	public static final Icon FALLBACK = IconLoader.getIcon("/icons/jar-gray.png", IconProvider.class);
+	public static final Icon FALLBACK = IconLoader.getIcon("/icons/gutter-fallback.svg", IconProvider.class);
 }
