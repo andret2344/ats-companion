@@ -19,6 +19,19 @@
 	</description>
 	<change-notes>
 		<![CDATA[
+		<h2>atsCompanion v0.2.0</h2>
+		<p>
+			<span>atsArguments compatibility version:</span>
+			<strong>0.1.3</strong>
+		</p>
+		<h3>Added</h3>
+		<ul>
+			<li>Implicit usage provider, now methods annotated with @Argument won't be unused anymore.</li>
+			<li>Fallback method verifier, now those methods are needed to have exactly one String parameter.</li>
+			<li>Inspection on @Mapper with primitive or complex type with no @Mapper</li>
+			<li>Basic gutter navigation. The icon is kinda ok!</li>
+			<li>Constructor verifier.</li>
+		</ul>
 		<h2>atsCompanion v0.1.0 - Initial release</h2>
 		<p>
 			<span>atsArguments compatibility version:</span>
