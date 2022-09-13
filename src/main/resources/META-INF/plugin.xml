@@ -217,6 +217,14 @@
 			<className>eu.andret.ats.companion.idea.intention.TypeFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>
+		<codeInsight.lineMarkerProvider
+				language="JAVA"
+				implementationClass="eu.andret.ats.companion.idea.linemarker.TypeFallbackLineMarkerProvider"
+		/>
+		<codeInsight.lineMarkerProvider
+				language="JAVA"
+				implementationClass="eu.andret.ats.companion.idea.linemarker.ArgumentFallbackLineMarkerProvider"
+		/>
 		<implicitUsageProvider
 				implementation="eu.andret.ats.companion.idea.implicitusage.ArgumentMethodImplicitUsageProvider"/>
 		<defaultLiveTemplates file="/liveTemplates/ATS.xml"/>
