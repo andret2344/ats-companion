@@ -4,25 +4,36 @@
 
 package eu.andret.ats.companion.idea.linemarker;
 
+import com.google.common.collect.Iterables;
 import com.intellij.codeInsight.daemon.GutterMark;
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
+import com.intellij.codeInsight.daemon.LineMarkerInfo;
+import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
+import com.intellij.navigation.GotoRelatedItem;
+import com.intellij.psi.PsiElement;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.junit.Test;
 
 import java.util.List;
 
-public class ArgumentFallbackLineMarkerProviderTest extends LightJavaCodeInsightFixtureTestCase4 {
-	public ArgumentFallbackLineMarkerProviderTest() {
-		super(null, "src/test/testData/linemarker");
+public class ArgumentFallbackLineMarkerProviderTest extends LightJavaCodeInsightFixtureTestCase {
+
+	@Override
+	protected String getTestDataPath() {
+		return "src/test/testData/linemarker";
 	}
 
 	@Test
 	public void test() {
 		//given
-		getFixture().configureByFile("argument-fallback-line-marker.java");
-		getFixture().addClass("package org.bukkit.player; public class Player {}");
+		myFixture.configureByFile("argument-fallback-line-marker.java");
+		myFixture.addClass("package org.bukkit.player; public class Player {}");
 		//when
-		List<GutterMark> allGutters = getFixture().findAllGutters();
+		List<GutterMark> allGutters = myFixture.findAllGutters();
 		//then
-		System.out.println("dupa");
+		LineMarkerInfo.LineMarkerGutterIconRenderer gutter = (LineMarkerInfo.LineMarkerGutterIconRenderer) Iterables.getOnlyElement(allGutters);
+//		assert
+		RelatedItemLineMarkerInfo<PsiElement> lineMarkerInfo = (RelatedItemLineMarkerInfo<PsiElement>) (gutter.getLineMarkerInfo());
+		lineMarkerInfo.createGotoRelatedItems().stream().findFirst().map(GotoRelatedItem.class::cast).ifPresent(o -> System.out.println(o.getElement()));
+//		((RelatedItemLineMarkerGutterIconRenderer) (allGutters.get(0))).getLineMarkerInfo().createGotoRelatedItems().get(0).getElement()
 	}
 }
