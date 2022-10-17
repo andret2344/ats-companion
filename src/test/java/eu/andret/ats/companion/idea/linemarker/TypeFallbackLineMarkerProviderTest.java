@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-public class ArgumentFallbackLineMarkerProviderTest extends LightJavaCodeInsightFixtureTestCase {
+public class TypeFallbackLineMarkerProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	@Override
 	protected String getTestDataPath() {
@@ -27,12 +27,15 @@ public class ArgumentFallbackLineMarkerProviderTest extends LightJavaCodeInsight
 
 	public void testArgumentFallbackLineMarkerProvider() {
 		//given
-		myFixture.configureByFile("argument-fallback-line-marker.java");
+		myFixture.configureByFile("type-fallback-line-marker.java");
+		myFixture.addClass("package org.bukkit.player; public class Player {}");
+		myFixture.addClass("package org.bukkit.command; public class CommandSender {}");
+		myFixture.addClass("package org.bukkit.plugin.java; public class JavaPlugin {}");
 		//when
-		@Nullable GutterMark gutterMark = myFixture.findGutter("argument-fallback-line-marker.java");
+		@Nullable GutterMark gutterMark = myFixture.findGutter("type-fallback-line-marker.java");
 		//then
 		assertNotNull(gutterMark);
-		assertEquals("Find @ArgumentFallback method", gutterMark.getTooltipText());
+		assertEquals("Find @TypeFallback method", gutterMark.getTooltipText());
 		assertEquals(IconProvider.FALLBACK, gutterMark.getIcon());
 
 		final Collection<PsiElement> targetElements;
