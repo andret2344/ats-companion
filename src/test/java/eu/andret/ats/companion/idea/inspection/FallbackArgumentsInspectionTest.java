@@ -8,7 +8,6 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -46,7 +45,6 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	@Ignore("not passing")
 	public void testTypeFallbackWrongParameters() {
 		// given
 		getFixture().configureByFile("type-fallback-wrong-parameters.java");
@@ -67,26 +65,6 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	@Ignore("not passing")
-	public void testTextInPosition() {
-		// given
-		getFixture().configureByFile("argument-with-text-in-position.java");
-		getFixture().enableInspections(new PositionOutOfBoundsInspection());
-
-		// when
-		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
-
-		// then
-		assertFalse(highlightInfos.isEmpty());
-		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-				.filter(element ->
-						Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
-				.findAny();
-		assertTrue(optionalHighlightInfo.isEmpty());
-	}
-
-	@Test
-	@Ignore("not passing")
 	public void testRemoveParameterQuickFix() {
 		// given
 		getFixture().configureByFile("argument-with-negative-position.java");

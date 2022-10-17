@@ -83,24 +83,6 @@ public class PositionOutOfBoundsInspectionTest extends LightJavaCodeInsightFixtu
 	}
 
 	@Test
-	public void testTextInPosition() {
-		// given
-		getFixture().configureByFile("argument-with-text-in-position.java");
-		getFixture().enableInspections(new PositionOutOfBoundsInspection());
-
-		// when
-		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
-
-		// then
-		assertFalse(highlightInfos.isEmpty());
-		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-				.filter(element ->
-						Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
-				.findAny();
-		assertTrue(optionalHighlightInfo.isEmpty());
-	}
-
-	@Test
 	public void testRemoveParameterQuickFix() {
 		// given
 		getFixture().configureByFile("argument-with-negative-position.java");

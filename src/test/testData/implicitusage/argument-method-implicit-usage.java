@@ -5,5 +5,5 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
 	}
 
 	@eu.andret.arguments.api.annotation.Argument
-	public void unusedMethod() {}
+	public void <caret>unusedMethod() {}
 }

@@ -21,7 +21,7 @@ public class ArgumentFallbackLineMarkerProvider extends RelatedItemLineMarkerPro
 	@Override
 	protected void collectNavigationMarkers(@NotNull final PsiElement element,
 											@NotNull final Collection<? super RelatedItemLineMarkerInfo<?>> result) {
-		if (!(element instanceof PsiParameter psiParameter)) {
+		if (!(element instanceof final PsiParameter psiParameter)) {
 			return;
 		}
 

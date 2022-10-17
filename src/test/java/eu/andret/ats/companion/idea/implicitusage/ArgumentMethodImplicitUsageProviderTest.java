@@ -16,37 +16,41 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ArgumentMethodImplicitUsageProviderTest  extends LightJavaCodeInsightFixtureTestCase4 {
+public class ArgumentMethodImplicitUsageProviderTest extends LightJavaCodeInsightFixtureTestCase4 {
+	private static final String DESCRIPTION = "Method 'unusedMethod()' is never used";
+
 	public ArgumentMethodImplicitUsageProviderTest() {
 		super(null, "src/test/testData/implicitusage");
 	}
 
 	@Test
 	public void testImplicitUsage() {
-		//given
+		// given
 		getFixture().configureByFile("argument-method-implicit-usage.java");
 		getFixture().enableInspections(new UnusedDeclarationInspectionBase(true));
-		//when
+
+		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
-		//then
+
+		// then
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-				.filter(element ->
-						Objects.equals(element.getDescription(), "Method 'unusedMethod()' is never used"))
+				.filter(element -> Objects.equals(element.getDescription(), DESCRIPTION))
 				.findAny();
 		assertFalse(optionalHighlightInfo.isPresent());
 	}
 
 	@Test
 	public void testImplicitUsageWithoutAnnotation() {
-		//given
+		// given
 		getFixture().configureByFile("argument-method-implicit-usage-no-annotation.java");
 		getFixture().enableInspections(new UnusedDeclarationInspectionBase(true));
-		//when
+
+		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
-		//then
+
+		// then
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-				.filter(element ->
-						Objects.equals(element.getDescription(), "Method 'unusedMethod()' is never used"))
+				.filter(element -> Objects.equals(element.getDescription(), DESCRIPTION))
 				.findAny();
 		assertTrue(optionalHighlightInfo.isPresent());
 	}
