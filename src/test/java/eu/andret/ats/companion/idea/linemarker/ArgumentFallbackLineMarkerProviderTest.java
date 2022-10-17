@@ -8,52 +8,43 @@ import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.GutterMark;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.navigation.NavigationGutterIconRenderer;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.containers.ContainerUtil;
 import eu.andret.ats.companion.idea.utilities.IconProvider;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
 
 public class ArgumentFallbackLineMarkerProviderTest extends LightJavaCodeInsightFixtureTestCase {
-
 	@Override
 	protected String getTestDataPath() {
 		return "src/test/testData/linemarker";
 	}
 
 	public void testArgumentFallbackLineMarkerProvider() {
-		//given
+		// given
 		myFixture.configureByFile("argument-fallback-line-marker.java");
-		//when
-		@Nullable GutterMark gutterMark = myFixture.findGutter("argument-fallback-line-marker.java");
-		//then
+
+		// when
+		final GutterMark gutterMark = myFixture.findGutter("argument-fallback-line-marker.java");
+
+		// then
 		assertNotNull(gutterMark);
 		assertEquals("Find @ArgumentFallback method", gutterMark.getTooltipText());
 		assertEquals(IconProvider.FALLBACK, gutterMark.getIcon());
 
-		final Collection<PsiElement> targetElements;
-		if (gutterMark instanceof LineMarkerInfo.LineMarkerGutterIconRenderer) {
-			final LineMarkerInfo.LineMarkerGutterIconRenderer<?> renderer =
-					UsefulTestCase.assertInstanceOf(gutterMark, LineMarkerInfo.LineMarkerGutterIconRenderer.class);
-			final LineMarkerInfo<?> lineMarkerInfo = renderer.getLineMarkerInfo();
-			GutterIconNavigationHandler<?> handler = lineMarkerInfo.getNavigationHandler();
-
-			if (handler instanceof NavigationGutterIconRenderer) {
-				targetElements = ((NavigationGutterIconRenderer)handler).getTargetElements();
-			}
-			else {
-				throw new IllegalArgumentException(handler + ": handler not supported");
-			}
-		}
-		else {
+		if (!(gutterMark instanceof LineMarkerInfo.LineMarkerGutterIconRenderer)) {
 			throw new IllegalArgumentException(gutterMark.getClass() + ": gutter not supported");
 		}
+		final LineMarkerInfo.LineMarkerGutterIconRenderer<?> renderer =
+				UsefulTestCase.assertInstanceOf(gutterMark, LineMarkerInfo.LineMarkerGutterIconRenderer.class);
+		final LineMarkerInfo<?> lineMarkerInfo = renderer.getLineMarkerInfo();
+		final GutterIconNavigationHandler<?> handler = lineMarkerInfo.getNavigationHandler();
 
-		UsefulTestCase.assertSameElements(ContainerUtil.map(targetElements,
-				SymbolPresentationUtil::getSymbolPresentableText), "method2(String)");
+		if (!(handler instanceof final NavigationGutterIconRenderer iconRenderer)) {
+			throw new IllegalArgumentException(handler + ": handler not supported");
+		}
+		UsefulTestCase.assertSameElements(
+				ContainerUtil.map(iconRenderer.getTargetElements(), SymbolPresentationUtil::getSymbolPresentableText),
+				"method2(String)");
 	}
 }

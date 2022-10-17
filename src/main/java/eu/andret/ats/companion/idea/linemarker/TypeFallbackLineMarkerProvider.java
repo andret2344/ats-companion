@@ -9,6 +9,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJvmMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiTypeElement;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.IconProvider;
 import eu.andret.ats.companion.idea.utilities.Util;
@@ -26,9 +28,8 @@ public class TypeFallbackLineMarkerProvider extends RelatedItemLineMarkerProvide
 			return;
 		}
 
-		final PsiMethod psiMethod = Util.ancestorOf(element, PsiMethod.class, 2);
-
-		Optional.ofNullable(psiMethod)
+		Optional.of(element)
+				.map(psiElement -> Util.ancestorOf(psiElement, PsiMethod.class, 2))
 				.map(PsiJvmMember::getContainingClass)
 				.map(PsiClass::getMethods)
 				.stream()
@@ -37,26 +38,14 @@ public class TypeFallbackLineMarkerProvider extends RelatedItemLineMarkerProvide
 						.map(psiAnnotation -> psiAnnotation.getAnnotation(Constants.ANNOTATION_TYPE_FALLBACK))
 						.map(psiAnnotationMemberValue -> psiAnnotationMemberValue.findAttributeValue("value"))
 						.map(PsiClassObjectAccessExpression.class::cast)
-//						.filter(psiClassObjectAccessExpression -> {
-//							return psiClassObjectAccessExpression.getType().isValid();
-//						})
-						.filter(psiClassObjectAccessExpression -> ((PsiParameter) element).getType().equals(psiClassObjectAccessExpression.getOperand().getType()))
-//						.filter(((PsiParameter) element).getType()::equals)
-
-//						.map(dupa -> {
-//							System.out.println(dupa.getClass());
-//							return (PsiImmediateClassType) dupa;
-////							PsiImmediateClassType.class::cast
-//						})
-//						.map(PsiImmediateClassType::getParameters)
-//						.map(psiTypes -> psiTypes[0])
-//						.filter(((PsiParameter) element).getType()::equals)
+						.map(PsiClassObjectAccessExpression::getOperand)
+						.map(PsiTypeElement::getType)
+						.filter(PsiType::isValid)
+						.filter(((PsiParameter) element).getType()::equals)
 						.map(psiType -> NavigationGutterIconBuilder.create(IconProvider.FALLBACK)
 								.setTarget(method)
 								.setTooltipText("Find @TypeFallback method")
 								.createLineMarkerInfo(element.getLastChild()))
 						.ifPresent(result::add));
 	}
-
-
 }
