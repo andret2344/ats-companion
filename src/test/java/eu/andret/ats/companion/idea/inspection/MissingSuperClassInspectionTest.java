@@ -1,0 +1,66 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
+package eu.andret.ats.companion.idea.inspection;
+
+import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
+	public MissingSuperClassInspectionTest() {
+		super(null, "src/test/testData/inspection");
+	}
+
+	@Ignore("he be mad yo")
+	@Test
+	public void testSuperClassPresentHighlight() {
+		// given
+		getFixture().configureByFile("super-class-present.java");
+		getFixture().enableInspections(new MissingSuperClassInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertFalse(highlightInfos.isEmpty());
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), MissingSuperClassInspection.DESCRIPTION))
+				.findAny();
+		assertFalse(optionalHighlightInfo.isPresent());
+//		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
+//		assertEquals(HighlightSeverity.WARNING, highlightInfo.getSeverity());
+	}
+
+	@Test
+	public void testSuperClassMissingHighlight() {
+		// given
+		getFixture().configureByFile("super-class-missing.java");
+		getFixture().enableInspections(new MissingSuperClassInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertFalse(highlightInfos.isEmpty());
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), MissingSuperClassInspection.DESCRIPTION))
+				.findAny();
+		assertTrue(optionalHighlightInfo.isPresent());
+		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
+		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
+	}
+}

@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "Cannot annotate a primitive parameter";
+	public static final String DESCRIPTION = "Cannot annotate a primitive parameter";
 
 	@NotNull
 	@Override

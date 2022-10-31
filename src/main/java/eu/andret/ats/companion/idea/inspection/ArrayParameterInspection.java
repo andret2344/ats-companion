@@ -30,7 +30,7 @@ import java.util.Optional;
 
 public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "Array is not a valid type, use vararg instead";
+	public static final String DESCRIPTION = "Array is not a valid type, use vararg instead";
 
 	@NotNull
 	@Override

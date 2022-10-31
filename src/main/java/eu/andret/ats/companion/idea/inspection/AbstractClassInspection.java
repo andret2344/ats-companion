@@ -26,7 +26,7 @@ import java.util.Optional;
 
 public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "@BaseCommand class cannot be abstract";
+	public static final String DESCRIPTION = "@BaseCommand class cannot be abstract";
 
 	@NotNull
 	@Override

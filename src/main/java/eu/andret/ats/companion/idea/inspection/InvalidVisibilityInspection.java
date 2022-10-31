@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "Method annotated with @Argument must be public";
+	public static final String DESCRIPTION = "Method annotated with @Argument must be public";
 
 	@NotNull
 	@Override

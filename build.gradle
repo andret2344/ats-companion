@@ -24,7 +24,7 @@ buildSearchableOptions {
 
 patchPluginXml {
 	version = project.version
-	setSinceBuild '202'
+	setSinceBuild '222'
 }
 
 group project.group
@@ -64,7 +64,7 @@ jacocoTestCoverageVerification {
 	violationRules {
 		rule {
 			limit {
-				minimum = 0.3
+				minimum = 0.5
 			}
 		}
 	}
