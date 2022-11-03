@@ -31,10 +31,10 @@ import java.util.Optional;
 
 public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION_UNUSED = "Executor type is already defined in the annotation";
+	public static final String DESCRIPTION_UNUSED = "Executor type is already defined in the annotation";
 
 	@NonNls
-	private static final String DESCRIPTION_PROBLEM = "Executor type defined in the annotation is contradictory";
+	public static final String DESCRIPTION_PROBLEM = "Executor type defined in the annotation is contradictory";
 
 	@NotNull
 	@Override
@@ -66,15 +66,14 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				Optional.of(psiMethod)
 						.map(method -> method.getAnnotation(Constants.ANNOTATION_ARGUMENT))
 						.map(annotation -> annotation.findAttributeValue("executorType"))
-						.map(PsiElement::getReference)
-						.map(PsiReference::resolve)
-						.map(PsiField.class::cast)
+						.map(PsiElement::getLastChild)
+						.map(PsiElement::getText)
 						.ifPresent(field -> {
 							final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
 							if (!(resolve instanceof final PsiField psiField) || !psiField.getName().equals("sender")) {
 								return;
 							}
-							analyzeAndReport(holder, expression, type, field.getName());
+							analyzeAndReport(holder, expression, type, field);
 						});
 			}
 		};
