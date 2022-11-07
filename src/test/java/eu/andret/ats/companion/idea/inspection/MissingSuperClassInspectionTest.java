@@ -7,7 +7,6 @@ package eu.andret.ats.companion.idea.inspection;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -23,11 +22,11 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 		super(null, "src/test/testData/inspection");
 	}
 
-	@Ignore("he be mad yo")
 	@Test
 	public void testSuperClassPresentHighlight() {
 		// given
 		getFixture().configureByFile("super-class-present.java");
+		getFixture().addClass("package eu.andret.arguments; public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
 		getFixture().enableInspections(new MissingSuperClassInspection());
 
 		// when
