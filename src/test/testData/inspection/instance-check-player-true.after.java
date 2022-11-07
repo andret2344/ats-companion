@@ -6,6 +6,6 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
 
 	@eu.andret.arguments.api.annotation.Argument(executorType = ExecutorType.PLAYER)
 	public void get() {
-		alwaysTrue();
-	}
+        alwaysTrue();
+    }
 }

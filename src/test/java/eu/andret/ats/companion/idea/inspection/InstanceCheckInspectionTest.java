@@ -28,6 +28,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	public void testInstanceCheckPlayerTrue() {
 		// given
 		getFixture().configureByFile("instance-check-player-true.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
 		getFixture().enableInspections(new InstanceCheckInspection());
 
 		// when
@@ -48,6 +49,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	public void testInstanceCheckPlayerTrueFix() {
 		// given
 		getFixture().configureByFile("instance-check-player-true.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
 		getFixture().enableInspections(new InstanceCheckInspection());
 		final IntentionAction action = getFixture().findSingleIntention(InstanceCheckInspection.RemoveExpressionQuickFix.NAME);
 		assertNotNull(action);
