@@ -7,10 +7,8 @@ package eu.andret.ats.companion.idea.inspection;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.testFramework.Parameterized;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +16,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public InvalidVisibilityInspectionTest() {
 		super(null, "src/test/testData/inspection");
