@@ -14,10 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public InstanceCheckInspectionTest() {
@@ -35,14 +32,14 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), InstanceCheckInspection.DESCRIPTION_UNUSED))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.WARNING, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.WARNING);
 	}
 
 	@Test
@@ -51,8 +48,8 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 		getFixture().configureByFile("instance-check-player-true.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
 		getFixture().enableInspections(new InstanceCheckInspection());
-		final IntentionAction action = getFixture().findSingleIntention(InstanceCheckInspection.RemoveExpressionQuickFix.NAME);
-		assertNotNull(action);
+		final IntentionAction action = getFixture().findSingleIntention(InstanceCheckInspection.UnWrapIfStatementQuickFix.NAME);
+		assertThat(action).isNotNull();
 
 		// when
 		getFixture().launchAction(action);

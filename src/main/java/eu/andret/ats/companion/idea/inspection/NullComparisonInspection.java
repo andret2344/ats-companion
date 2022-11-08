@@ -23,7 +23,6 @@ import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -87,7 +86,6 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 		};
 	}
 
-	@Slf4j
 	public static class UnwrapQuickFix implements LocalQuickFix {
 		public static final String NAME = "Unwrap";
 
@@ -119,7 +117,6 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 		}
 	}
 
-	@Slf4j
 	public static class RemoveQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove unreachable code";
 

@@ -7,18 +7,18 @@ package eu.andret.ats.companion.idea.inspection;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.testFramework.Parameterized;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(Parameterized.class)
 public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public InvalidVisibilityInspectionTest() {
 		super(null, "src/test/testData/inspection");
@@ -34,12 +34,12 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), InvalidVisibilityInspection.DESCRIPTION))
 				.findAny();
-		assertFalse(optionalHighlightInfo.isPresent());
+		assertThat(optionalHighlightInfo).isEmpty();
 	}
 
 	@Test
@@ -52,14 +52,14 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), InvalidVisibilityInspection.DESCRIPTION))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.ERROR);
 	}
 
 	@Test
@@ -72,14 +72,14 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), InvalidVisibilityInspection.DESCRIPTION))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.ERROR);
 	}
 
 	@Test
@@ -92,14 +92,14 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), InvalidVisibilityInspection.DESCRIPTION))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.ERROR);
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 		getFixture().configureByFile("argument-private-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());
 		final IntentionAction action = getFixture().findSingleIntention(InvalidVisibilityInspection.ChangeToPublicQuickFix.NAME);
-		assertNotNull(action);
+		assertThat(action).isNotNull();
 
 		// when
 		getFixture().launchAction(action);
@@ -123,7 +123,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 		getFixture().configureByFile("argument-package-private-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());
 		final IntentionAction action = getFixture().findSingleIntention(InvalidVisibilityInspection.AddPublicQuickFix.NAME);
-		assertNotNull(action);
+		assertThat(action).isNotNull();
 
 		// when
 		getFixture().launchAction(action);
@@ -138,7 +138,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 		getFixture().configureByFile("argument-protected-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());
 		final IntentionAction action = getFixture().findSingleIntention(InvalidVisibilityInspection.ChangeToPublicQuickFix.NAME);
-		assertNotNull(action);
+		assertThat(action).isNotNull();
 
 		// when
 		getFixture().launchAction(action);

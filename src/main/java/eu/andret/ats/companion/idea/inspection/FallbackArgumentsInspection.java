@@ -21,8 +21,6 @@ import com.intellij.psi.PsiType;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,11 +61,13 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 		};
 	}
 
-	@Slf4j
-	@AllArgsConstructor
 	public static class ChangeParametersQuickFix implements LocalQuickFix {
 		@NotNull
 		private final String paramName;
+
+		public ChangeParametersQuickFix(@NotNull final String paramName) {
+			this.paramName = paramName;
+		}
 
 		@NotNull
 		@Override

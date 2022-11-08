@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public MissingSuperClassInspectionTest() {
@@ -33,14 +31,12 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), MissingSuperClassInspection.DESCRIPTION))
 				.findAny();
-		assertFalse(optionalHighlightInfo.isPresent());
-//		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-//		assertEquals(HighlightSeverity.WARNING, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo).isEmpty();
 	}
 
 	@Test
@@ -53,13 +49,13 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), MissingSuperClassInspection.DESCRIPTION))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.ERROR);
 	}
 }

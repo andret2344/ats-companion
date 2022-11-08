@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArgumentMethodImplicitUsageProviderTest extends LightJavaCodeInsightFixtureTestCase4 {
 	private static final String DESCRIPTION = "Method 'unusedMethod()' is never used";
@@ -36,7 +35,7 @@ public class ArgumentMethodImplicitUsageProviderTest extends LightJavaCodeInsigh
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element -> Objects.equals(element.getDescription(), DESCRIPTION))
 				.findAny();
-		assertFalse(optionalHighlightInfo.isPresent());
+		assertThat(optionalHighlightInfo).isEmpty();
 	}
 
 	@Test
@@ -52,6 +51,6 @@ public class ArgumentMethodImplicitUsageProviderTest extends LightJavaCodeInsigh
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element -> Objects.equals(element.getDescription(), DESCRIPTION))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
+		assertThat(optionalHighlightInfo).isPresent();
 	}
 }

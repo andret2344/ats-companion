@@ -20,7 +20,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +60,6 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 		};
 	}
 
-	@Slf4j
 	public static class ChangeToVarargQuickFix implements LocalQuickFix {
 		public static final String NAME = "Change to vararg";
 
@@ -93,7 +91,6 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 		}
 	}
 
-	@Slf4j
 	public static class ConvertToSimpleVariableQuickFix implements LocalQuickFix {
 		public static final String NAME = "Convert to simple variable";
 

@@ -12,6 +12,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
@@ -26,7 +27,6 @@ import com.intellij.psi.PsiTypeElement;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -87,26 +87,39 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		if (executorType.equals("PLAYER")) {
 			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
 				holder.registerProblem(expression, DESCRIPTION_UNUSED,
-						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix(new JavaIfUnwrapper()));
+						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new UnWrapIfStatementQuickFix());
 			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
 				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
-						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix(new JavaElseUnwrapper()));
+						ProblemHighlightType.WARNING, new UnWrapElseStatementQuickFix());
 			}
 		} else if (executorType.equals("CONSOLE")) {
 			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
 				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
-						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix(new JavaElseUnwrapper()));
+						ProblemHighlightType.WARNING, new UnWrapElseStatementQuickFix());
 			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
 				holder.registerProblem(expression, DESCRIPTION_UNUSED,
-						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix(new JavaIfUnwrapper()));
+						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new UnWrapIfStatementQuickFix());
 			}
 		}
 	}
 
-	@Slf4j
-	public static class RemoveExpressionQuickFix implements LocalQuickFix {
-		public static final String NAME = "Remove statement";
-		private final JavaUnwrapper unwrapper;
+	public abstract static class UnWrapStatementQuickFix implements LocalQuickFix {
+		@NotNull
+		public abstract JavaUnwrapper getUnWrapper();
+
+		@Override
+		public final void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			final PsiElement context = descriptor.getPsiElement().getContext();
+			final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+			if (editor == null || context == null) {
+				return;
+			}
+			getUnWrapper().unwrap(editor, context);
+		}
+	}
+
+	public static class UnWrapIfStatementQuickFix extends UnWrapStatementQuickFix {
+		public static final String NAME = "Unwrap if statement";
 
 		@NotNull
 		@Override
@@ -115,9 +128,29 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		}
 
 		@Override
-		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			final PsiElement context = descriptor.getPsiElement().getContext();
-			unwrapper.unwrap(FileEditorManager.getInstance(project).getSelectedTextEditor(), context);
+		public @NotNull JavaUnwrapper getUnWrapper() {
+			return new JavaIfUnwrapper();
+		}
+
+		@Override
+		@NotNull
+		public String getFamilyName() {
+			return getName();
+		}
+	}
+
+	public static class UnWrapElseStatementQuickFix extends UnWrapStatementQuickFix {
+		public static final String NAME = "Unwrap else statement";
+
+		@NotNull
+		@Override
+		public String getName() {
+			return NAME;
+		}
+
+		@Override
+		public @NotNull JavaUnwrapper getUnWrapper() {
+			return new JavaElseUnwrapper();
 		}
 
 		@Override

@@ -16,7 +16,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiPrimitiveType;
 import eu.andret.ats.companion.idea.utilities.Constants;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +40,6 @@ public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspecti
 		};
 	}
 
-	@Slf4j
 	public static class RemoveAnnotationQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove annotation";
 

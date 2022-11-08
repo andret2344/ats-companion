@@ -16,7 +16,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiMethod;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +46,6 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 		};
 	}
 
-	@Slf4j
 	public static class RemoveQualifierQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove qualifier";
 

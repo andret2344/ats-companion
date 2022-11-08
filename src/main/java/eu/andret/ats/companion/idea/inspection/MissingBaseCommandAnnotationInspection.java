@@ -21,7 +21,6 @@ import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.PsiTypeParameter;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import eu.andret.ats.companion.idea.utilities.Constants;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +56,6 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 		};
 	}
 
-	@Slf4j
 	public static class AddMissingAnnotationQuickFix implements LocalQuickFix {
 		public static final String NAME = "Add @BaseCommand annotation";
 

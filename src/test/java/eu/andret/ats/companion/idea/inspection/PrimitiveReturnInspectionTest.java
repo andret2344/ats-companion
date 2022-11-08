@@ -14,10 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public PrimitiveReturnInspectionTest() {
@@ -34,14 +31,14 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), PrimitiveReturnInspection.DESCRIPTION))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.WARNING, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.WARNING);
 	}
 
 	@Test
@@ -50,7 +47,7 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 		getFixture().configureByFile("primitive-return.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());
 		final IntentionAction action = getFixture().findSingleIntention(PrimitiveReturnInspection.ChangeToStringQuickFix.NAME);
-		assertNotNull(action);
+		assertThat(action).isNotNull();
 
 		// when
 		getFixture().launchAction(action);

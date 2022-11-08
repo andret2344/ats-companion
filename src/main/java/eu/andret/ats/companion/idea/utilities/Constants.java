@@ -4,10 +4,8 @@
 
 package eu.andret.ats.companion.idea.utilities;
 
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
-@UtilityClass
 public class Constants {
 	private static final String ARGUMENTS_MAIN = "eu.andret.arguments";
 	private static final String ARGUMENTS_API = ARGUMENTS_MAIN + ".api";
@@ -25,8 +23,11 @@ public class Constants {
 	public static final String BUKKIT_CONSOLE_COMMAND_SENDER = "org.bukkit.command.ConsoleCommandSender";
 	public static final String BUKKIT_PLAYER = "org.bukkit.entity.Player";
 
+	private Constants() {
+	}
+
 	@NotNull
-	public String[] getMethodAnnotations() {
+	public static String[] getMethodAnnotations() {
 		return new String[]{ANNOTATION_ARGUMENT, ANNOTATION_ARGUMENT_FALLBACK, ANNOTATION_TYPE_FALLBACK};
 	}
 }

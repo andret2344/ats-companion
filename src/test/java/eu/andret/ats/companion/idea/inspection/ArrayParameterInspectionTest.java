@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public ArrayParameterInspectionTest() {
@@ -31,12 +31,12 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), ArrayParameterInspection.DESCRIPTION))
 				.findAny();
-		assertFalse(optionalHighlightInfo.isPresent());
+		assertThat(optionalHighlightInfo).isEmpty();
 	}
 
 	@Test
@@ -49,14 +49,14 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), ArrayParameterInspection.DESCRIPTION))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.ERROR);
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 		getFixture().configureByFile("array-parameter-brackets.java");
 		getFixture().enableInspections(new ArrayParameterInspection());
 		final IntentionAction action = getFixture().findSingleIntention(ArrayParameterInspection.ChangeToVarargQuickFix.NAME);
-		assertNotNull(action);
+		assertThat(action).isNotNull();
 
 		// when
 		getFixture().launchAction(action);
@@ -80,7 +80,7 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 		getFixture().configureByFile("array-parameter-brackets.java");
 		getFixture().enableInspections(new ArrayParameterInspection());
 		final IntentionAction action = getFixture().findSingleIntention(ArrayParameterInspection.ConvertToSimpleVariableQuickFix.NAME);
-		assertNotNull(action);
+		assertThat(action).isNotNull();
 
 		// when
 		getFixture().launchAction(action);
