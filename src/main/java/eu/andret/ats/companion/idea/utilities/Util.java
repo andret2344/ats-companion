@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
 
 public final class Util {
 	private static final String VALUE = "value";
@@ -26,17 +25,7 @@ public final class Util {
 	@Nullable
 	public static <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,
 													  @NotNull final Class<E> target) {
-		PsiElement copy = psiElement;
-		do {
-			if (copy == null) {
-				return null;
-			}
-			copy = copy.getParent();
-		} while (!target.isInstance(copy));
-		if (!target.isInstance(copy)) {
-			return null;
-		}
-		return target.cast(copy);
+		return ancestorOf(psiElement, target, 1_000_000);
 	}
 
 	@Nullable
@@ -54,14 +43,6 @@ public final class Util {
 			return null;
 		}
 		return target.cast(copy);
-	}
-
-	public static PsiElement repeat(final PsiElement psiElement, final int count, final UnaryOperator<PsiElement> fn) {
-		PsiElement copy = psiElement;
-		for (int i = 0; i < count; i++) {
-			copy = fn.apply(copy);
-		}
-		return copy;
 	}
 
 	@NotNull
