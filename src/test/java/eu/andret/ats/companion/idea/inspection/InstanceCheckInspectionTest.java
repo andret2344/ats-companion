@@ -18,13 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public InstanceCheckInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/instance-check");
 	}
 
 	@Test
 	public void testInstanceCheckPlayerTrue() {
 		// given
-		getFixture().configureByFile("instance-check-player-true.java");
+		getFixture().configureByFile("player-true.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
 		getFixture().enableInspections(new InstanceCheckInspection());
 
@@ -43,9 +43,72 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
+	public void testInstanceCheckPlayerFalse() {
+		// given
+		getFixture().configureByFile("player-false.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new InstanceCheckInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), InstanceCheckInspection.DESCRIPTION_PROBLEM))
+				.findAny();
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.WARNING);
+	}
+
+	@Test
+	public void testInstanceCheckConsoleTrue() {
+		// given
+		getFixture().configureByFile("console-true.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new InstanceCheckInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), InstanceCheckInspection.DESCRIPTION_UNUSED))
+				.findAny();
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.WARNING);
+	}
+
+	@Test
+	public void testInstanceCheckConsoleFalse() {
+		// given
+		getFixture().configureByFile("console-false.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new InstanceCheckInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), InstanceCheckInspection.DESCRIPTION_PROBLEM))
+				.findAny();
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.WARNING);
+	}
+
+	@Test
 	public void testInstanceCheckPlayerTrueFix() {
 		// given
-		getFixture().configureByFile("instance-check-player-true.java");
+		getFixture().configureByFile("player-true.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
 		getFixture().enableInspections(new InstanceCheckInspection());
 		final IntentionAction action = getFixture().findSingleIntention(InstanceCheckInspection.UnWrapIfStatementQuickFix.NAME);
@@ -55,6 +118,54 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 		getFixture().launchAction(action);
 
 		// then
-		getFixture().checkResultByFile("instance-check-player-true.after.java");
+		getFixture().checkResultByFile("player-true.after.java");
+	}
+
+	@Test
+	public void testInstanceCheckPlayerFalseFix() {
+		// given
+		getFixture().configureByFile("player-false.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new InstanceCheckInspection());
+		final IntentionAction action = getFixture().findSingleIntention(InstanceCheckInspection.UnWrapElseStatementQuickFix.NAME);
+		assertThat(action).isNotNull();
+
+		// when
+		getFixture().launchAction(action);
+
+		// then
+		getFixture().checkResultByFile("player-false.after.java");
+	}
+
+	@Test
+	public void testInstanceCheckConsoleTrueFix() {
+		// given
+		getFixture().configureByFile("console-true.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new InstanceCheckInspection());
+		final IntentionAction action = getFixture().findSingleIntention(InstanceCheckInspection.UnWrapIfStatementQuickFix.NAME);
+		assertThat(action).isNotNull();
+
+		// when
+		getFixture().launchAction(action);
+
+		// then
+		getFixture().checkResultByFile("console-true.after.java");
+	}
+
+	@Test
+	public void testInstanceCheckConsoleFalseFix() {
+		// given
+		getFixture().configureByFile("console-false.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new InstanceCheckInspection());
+		final IntentionAction action = getFixture().findSingleIntention(InstanceCheckInspection.UnWrapElseStatementQuickFix.NAME);
+		assertThat(action).isNotNull();
+
+		// when
+		getFixture().launchAction(action);
+
+		// then
+		getFixture().checkResultByFile("console-false.after.java");
 	}
 }

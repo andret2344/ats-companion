@@ -19,6 +19,7 @@ import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiIfStatement;
 import com.intellij.psi.PsiInstanceOfExpression;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReference;
@@ -29,6 +30,7 @@ import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -109,13 +111,15 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 
 		@Override
 		public final void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			final PsiElement context = descriptor.getPsiElement().getContext();
+			final PsiElement element = getElement(descriptor);
 			final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-			if (editor == null || context == null) {
+			if (editor == null || element == null) {
 				return;
 			}
-			getUnWrapper().unwrap(editor, context);
+			getUnWrapper().unwrap(editor, element);
 		}
+
+		public abstract PsiElement getElement(@NotNull final ProblemDescriptor problemDescriptor);
 	}
 
 	public static class UnWrapIfStatementQuickFix extends UnWrapStatementQuickFix {
@@ -127,13 +131,20 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 			return NAME;
 		}
 
+		@NotNull
 		@Override
-		public @NotNull JavaUnwrapper getUnWrapper() {
+		public JavaUnwrapper getUnWrapper() {
 			return new JavaIfUnwrapper();
 		}
 
+		@Nullable
 		@Override
+		public PsiElement getElement(@NotNull final ProblemDescriptor problemDescriptor) {
+			return problemDescriptor.getPsiElement().getParent();
+		}
+
 		@NotNull
+		@Override
 		public String getFamilyName() {
 			return getName();
 		}
@@ -148,13 +159,20 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 			return NAME;
 		}
 
+		@NotNull
 		@Override
-		public @NotNull JavaUnwrapper getUnWrapper() {
+		public JavaUnwrapper getUnWrapper() {
 			return new JavaElseUnwrapper();
 		}
 
+		@Nullable
 		@Override
+		public PsiElement getElement(@NotNull final ProblemDescriptor problemDescriptor) {
+			return ((PsiIfStatement) problemDescriptor.getPsiElement().getParent()).getElseElement();
+		}
+
 		@NotNull
+		@Override
 		public String getFamilyName() {
 			return getName();
 		}

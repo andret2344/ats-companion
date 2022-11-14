@@ -5,18 +5,14 @@
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.JavaTokenType;
 import com.intellij.psi.PsiBinaryExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiIfStatement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiPrimitiveType;
@@ -31,7 +27,7 @@ import java.util.Optional;
 
 public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "The parameter is never null";
+	public static final String DESCRIPTION = "The parameter is never null";
 
 	@NotNull
 	@Override
@@ -53,11 +49,11 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 						.forEach(psiParameter -> {
 							if (expression.getOperationTokenType().equals(JavaTokenType.EQEQ)) {
 								holder.registerProblem(expression, DESCRIPTION,
-										ProblemHighlightType.LIKE_UNUSED_SYMBOL, new UnwrapQuickFix());
+										ProblemHighlightType.LIKE_UNUSED_SYMBOL, new InstanceCheckInspection.UnWrapIfStatementQuickFix());
 							}
 							if (expression.getOperationTokenType().equals(JavaTokenType.NE)) {
 								holder.registerProblem(expression, DESCRIPTION,
-										ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveQuickFix());
+										ProblemHighlightType.LIKE_UNUSED_SYMBOL, new InstanceCheckInspection.UnWrapElseStatementQuickFix());
 							}
 						});
 			}
@@ -84,67 +80,5 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 						.orElse(false);
 			}
 		};
-	}
-
-	public static class UnwrapQuickFix implements LocalQuickFix {
-		public static final String NAME = "Unwrap";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
-		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			Optional.of(descriptor)
-					.map(ProblemDescriptor::getPsiElement)
-					.map(PsiElement::getParent)
-					.map(PsiIfStatement.class::cast)
-					.ifPresent(psiIfStatement -> {
-						if (psiIfStatement.getThenBranch() != null) {
-							psiIfStatement.replace(psiIfStatement.getThenBranch());
-						} else {
-							psiIfStatement.delete();
-						}
-					});
-		}
-
-		@Override
-		@NotNull
-		public String getFamilyName() {
-			return getName();
-		}
-	}
-
-	public static class RemoveQuickFix implements LocalQuickFix {
-		public static final String NAME = "Remove unreachable code";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@Override
-		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			Optional.of(descriptor)
-					.map(ProblemDescriptor::getPsiElement)
-					.map(PsiElement::getParent)
-					.map(PsiIfStatement.class::cast)
-					.ifPresent(psiIfStatement -> {
-						if (psiIfStatement.getElseBranch() != null) {
-							psiIfStatement.replace(psiIfStatement.getElseBranch());
-						} else {
-							psiIfStatement.delete();
-						}
-					});
-		}
-
-		@Override
-		@NotNull
-		public String getFamilyName() {
-			return getName();
-		}
 	}
 }
