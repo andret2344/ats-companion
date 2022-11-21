@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractClassInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public AbstractClassInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/abstract-class");
 	}
 
 	@Test

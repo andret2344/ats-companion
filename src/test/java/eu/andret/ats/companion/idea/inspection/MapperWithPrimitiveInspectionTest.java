@@ -18,13 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MapperWithPrimitiveInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public MapperWithPrimitiveInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/primitive-parameter");
 	}
 
 	@Test
 	public void testPrimitiveParameterWithNoMapperHighlight() {
 		// given
-		getFixture().configureByFile("primitive-parameter-with-no-mapper.java");
+		getFixture().configureByFile("with-no-mapper.java");
 		getFixture().enableInspections(new MapperWithPrimitiveInspection());
 
 		// when
@@ -42,7 +42,7 @@ public class MapperWithPrimitiveInspectionTest extends LightJavaCodeInsightFixtu
 	@Test
 	public void testPrimitiveParameterWithMapperHighlight() {
 		// given
-		getFixture().configureByFile("primitive-parameter-with-mapper.java");
+		getFixture().configureByFile("with-mapper.java");
 		getFixture().enableInspections(new MapperWithPrimitiveInspection());
 
 		// when
@@ -62,7 +62,7 @@ public class MapperWithPrimitiveInspectionTest extends LightJavaCodeInsightFixtu
 	@Test
 	public void testPrimitiveParameterWithMapperFixRemoveMapper() {
 		// given
-		getFixture().configureByFile("primitive-parameter-with-mapper.java");
+		getFixture().configureByFile("with-mapper.java");
 		getFixture().enableInspections(new MapperWithPrimitiveInspection());
 		final IntentionAction action = getFixture().findSingleIntention(MapperWithPrimitiveInspection.RemoveAnnotationQuickFix.NAME);
 		assertThat(action).isNotNull();
@@ -71,6 +71,6 @@ public class MapperWithPrimitiveInspectionTest extends LightJavaCodeInsightFixtu
 		getFixture().launchAction(action);
 
 		// then
-		getFixture().checkResultByFile("primitive-parameter-with-no-mapper.java");
+		getFixture().checkResultByFile("with-no-mapper.java");
 	}
 }

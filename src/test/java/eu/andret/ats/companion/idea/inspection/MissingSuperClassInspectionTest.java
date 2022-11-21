@@ -17,13 +17,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public MissingSuperClassInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/missing-super-class");
 	}
 
 	@Test
 	public void testSuperClassPresentHighlight() {
 		// given
-		getFixture().configureByFile("super-class-present.java");
+		getFixture().configureByFile("super-present.java");
 		getFixture().addClass("package eu.andret.arguments; public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
 		getFixture().enableInspections(new MissingSuperClassInspection());
 
@@ -42,7 +42,7 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 	@Test
 	public void testSuperClassMissingHighlight() {
 		// given
-		getFixture().configureByFile("super-class-missing.java");
+		getFixture().configureByFile("super-missing.java");
 		getFixture().enableInspections(new MissingSuperClassInspection());
 
 		// when

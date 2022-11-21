@@ -18,13 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public ArrayParameterInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/array-parameter");
 	}
 
 	@Test
 	public void testArrayParameterVarArg() {
 		// given
-		getFixture().configureByFile("array-parameter-vararg.java");
+		getFixture().configureByFile("vararg.java");
 		getFixture().enableInspections(new ArrayParameterInspection());
 
 		// when
@@ -42,7 +42,7 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 	@Test
 	public void testArrayParameterNonVarArg() {
 		// given
-		getFixture().configureByFile("array-parameter-non-vararg.java");
+		getFixture().configureByFile("non-vararg.java");
 		getFixture().enableInspections(new ArrayParameterInspection());
 
 		// when
@@ -62,7 +62,7 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 	@Test
 	public void testArrayParameterFixToVarArg() {
 		// given
-		getFixture().configureByFile("array-parameter-brackets.java");
+		getFixture().configureByFile("brackets.java");
 		getFixture().enableInspections(new ArrayParameterInspection());
 		final IntentionAction action = getFixture().findSingleIntention(ArrayParameterInspection.ChangeToVarargQuickFix.NAME);
 		assertThat(action).isNotNull();
@@ -71,13 +71,13 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 		getFixture().launchAction(action);
 
 		// then
-		getFixture().checkResultByFile("array-parameter-fix-to-vararg.after.java");
+		getFixture().checkResultByFile("fix-to-vararg.after.java");
 	}
 
 	@Test
 	public void testArrayParameterFixToVariable() {
 		// given
-		getFixture().configureByFile("array-parameter-brackets.java");
+		getFixture().configureByFile("brackets.java");
 		getFixture().enableInspections(new ArrayParameterInspection());
 		final IntentionAction action = getFixture().findSingleIntention(ArrayParameterInspection.ConvertToSimpleVariableQuickFix.NAME);
 		assertThat(action).isNotNull();
@@ -86,6 +86,6 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 		getFixture().launchAction(action);
 
 		// then
-		getFixture().checkResultByFile("array-parameter-fix-to-variable.after.java");
+		getFixture().checkResultByFile("fix-to-variable.after.java");
 	}
 }

@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PositionOutOfBoundsInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public PositionOutOfBoundsInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/position-out-of-bounds");
 	}
 
 	@Test

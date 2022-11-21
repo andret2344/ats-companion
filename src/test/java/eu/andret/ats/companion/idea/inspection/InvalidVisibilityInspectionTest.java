@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public InvalidVisibilityInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/invalid-visibility");
 	}
 
 	@Test

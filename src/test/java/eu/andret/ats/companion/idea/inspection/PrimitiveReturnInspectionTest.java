@@ -18,13 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public PrimitiveReturnInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/primitive-return");
 	}
 
 	@Test
 	public void testPrimitiveReturnHighlight() {
 		// given
-		getFixture().configureByFile("primitive-return.java");
+		getFixture().configureByFile("sample.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());
 
 		// when
@@ -44,7 +44,7 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 	@Test
 	public void testPrimitiveReturnFixChangeToString() {
 		// given
-		getFixture().configureByFile("primitive-return.java");
+		getFixture().configureByFile("sample.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());
 		final IntentionAction action = getFixture().findSingleIntention(PrimitiveReturnInspection.ChangeToStringQuickFix.NAME);
 		assertThat(action).isNotNull();
@@ -53,6 +53,6 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 		getFixture().launchAction(action);
 
 		// then
-		getFixture().checkResultByFile("primitive-return.after.java");
+		getFixture().checkResultByFile("sample.after.java");
 	}
 }

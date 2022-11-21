@@ -18,13 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public ArgumentMethodStaticInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/argument-method-static");
 	}
 
 	@Test
 	public void testArgumentMethodStaticHighlight() {
 		// given
-		getFixture().configureByFile("argument-method-static.java");
+		getFixture().configureByFile("argument.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
 
 		// when
@@ -44,7 +44,7 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 	@Test
 	public void testArgumentMethodStaticFixRemoveQualifier() {
 		// given
-		getFixture().configureByFile("argument-method-static.java");
+		getFixture().configureByFile("argument.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
 		final IntentionAction action = getFixture().findSingleIntention(ArgumentMethodStaticInspection.RemoveQualifierQuickFix.NAME);
 		assertThat(action).isNotNull();
@@ -53,13 +53,13 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 		getFixture().launchAction(action);
 
 		// then
-		getFixture().checkResultByFile("argument-method-static.after.java");
+		getFixture().checkResultByFile("argument.after.java");
 	}
 
 	@Test
 	public void testRegularMethodStaticHighlight() {
 		// given
-		getFixture().configureByFile("regular-method-static.java");
+		getFixture().configureByFile("regular.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
 
 		// when
