@@ -52,12 +52,6 @@ public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool
 	public static class RemoveModifierQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove modifier";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -65,10 +59,10 @@ public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool
 					.ifPresent(PsiElement::delete);
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

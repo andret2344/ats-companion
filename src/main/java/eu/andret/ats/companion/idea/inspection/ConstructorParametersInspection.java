@@ -106,12 +106,6 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 	public static class ChangeParametersToQuickFix implements LocalQuickFix {
 		public static final String NAME = "Change parameter list to match '(CommandSender, JavaPlugin)'";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -129,21 +123,15 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
 	public static class InsertSecondParametersQuickFix implements LocalQuickFix {
 		public static final String NAME = "Insert 2nd parameter";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -158,21 +146,15 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
 	public static class InsertFirstParametersQuickFix implements LocalQuickFix {
 		public static final String NAME = "Insert 1st parameter";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -187,10 +169,10 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
@@ -202,12 +184,6 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 
 		public ChangeParameterQuickFix(@NotNull final String qualifiedType) {
 			this.qualifiedType = qualifiedType;
-		}
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME + qualifiedType;
 		}
 
 		@Override
@@ -228,10 +204,10 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME + qualifiedType;
 		}
 	}
 }

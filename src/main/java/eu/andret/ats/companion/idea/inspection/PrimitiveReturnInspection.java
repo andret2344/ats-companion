@@ -65,12 +65,6 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 	public static class ChangeToStringQuickFix implements LocalQuickFix {
 		public static final String NAME = "Change to String";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -86,10 +80,10 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

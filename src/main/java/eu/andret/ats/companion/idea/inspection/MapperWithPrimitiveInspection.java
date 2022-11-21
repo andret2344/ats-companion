@@ -43,12 +43,6 @@ public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspecti
 	public static class RemoveAnnotationQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove annotation";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -59,7 +53,7 @@ public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspecti
 		@Override
 		@NotNull
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

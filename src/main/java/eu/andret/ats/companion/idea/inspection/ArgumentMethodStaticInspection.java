@@ -49,12 +49,6 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 	public static class RemoveQualifierQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove qualifier";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -62,10 +56,10 @@ public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspect
 					.ifPresent(PsiElement::delete);
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

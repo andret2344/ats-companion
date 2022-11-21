@@ -127,12 +127,6 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 
 		@NotNull
 		@Override
-		public String getName() {
-			return NAME;
-		}
-
-		@NotNull
-		@Override
 		public JavaUnwrapper getUnWrapper() {
 			return new JavaIfUnwrapper();
 		}
@@ -146,18 +140,12 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		@NotNull
 		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
 	public static class UnWrapElseStatementQuickFix extends UnWrapStatementQuickFix {
 		public static final String NAME = "Unwrap else statement";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@NotNull
 		@Override
@@ -174,7 +162,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		@NotNull
 		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

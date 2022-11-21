@@ -83,12 +83,6 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 	public static class ChangeToPublicQuickFix implements LocalQuickFix {
 		public static final String NAME = "Change visibility to public";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -99,21 +93,15 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
 	public static class AddPublicQuickFix implements LocalQuickFix {
 		public static final String NAME = "Add visibility modifier";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -127,10 +115,10 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

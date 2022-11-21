@@ -69,12 +69,6 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 	public static class RemoveParameterQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove parameter";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -83,10 +77,10 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 					.ifPresent(PsiElement::delete);
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

@@ -69,12 +69,6 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 			this.paramName = paramName;
 		}
 
-		@NotNull
-		@Override
-		public String getName() {
-			return String.format("Change parameter list to (String %s)", paramName);
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -89,10 +83,10 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return String.format("Change parameter list to (String %s)", paramName);
 		}
 	}
 }

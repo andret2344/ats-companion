@@ -59,12 +59,6 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 	public static class AddMissingAnnotationQuickFix implements LocalQuickFix {
 		public static final String NAME = "Add @BaseCommand annotation";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -86,7 +80,7 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 		@Override
 		@NotNull
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

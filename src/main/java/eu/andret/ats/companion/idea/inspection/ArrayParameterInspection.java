@@ -63,12 +63,6 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 	public static class ChangeToVarargQuickFix implements LocalQuickFix {
 		public static final String NAME = "Change to vararg";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
 			Optional.of(descriptor)
@@ -84,21 +78,15 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
 	public static class ConvertToSimpleVariableQuickFix implements LocalQuickFix {
 		public static final String NAME = "Convert to simple variable";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -115,10 +103,10 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }
