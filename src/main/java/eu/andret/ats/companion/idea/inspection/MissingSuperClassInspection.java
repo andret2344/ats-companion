@@ -31,16 +31,16 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 				if (!Verifier.verifyClass(aClass)) {
 					return;
 				}
-				if (aClass.getNameIdentifier() == null) {
-					return;
-				}
 				final Optional<String> superClass = Arrays.stream(aClass.getSupers())
 						.map(PsiClass::getQualifiedName)
 						.filter(Constants.CLASS_ANNOTATED_COMMAND_EXECUTOR::equals)
 						.findAny();
 				if (superClass.isEmpty()) {
-					holder.registerProblem(aClass.getNameIdentifier(), DESCRIPTION,
-							ProblemHighlightType.GENERIC_ERROR);
+					Optional.of(aClass)
+							.map(PsiClass::getNameIdentifier)
+							.ifPresent(psiIdentifier -> holder.registerProblem(psiIdentifier, DESCRIPTION,
+									ProblemHighlightType.GENERIC_ERROR));
+
 				}
 			}
 		};

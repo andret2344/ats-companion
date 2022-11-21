@@ -5,6 +5,6 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
 	}
 
 	@eu.andret.arguments.api.annotation.ArgumentFallback("test")
-	public void testFallback(String x) {
+	public void testFallback(jav<caret>a.lang.String test) {
 	}
 }

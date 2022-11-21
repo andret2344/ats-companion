@@ -18,6 +18,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
@@ -62,6 +63,8 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 	}
 
 	public static class ChangeParametersQuickFix implements LocalQuickFix {
+		public static final String NAME = "Change parameter list to (String %s)";
+
 		@NotNull
 		private final String paramName;
 
@@ -80,13 +83,14 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 						final PsiParameterList parameterList = factory
 								.createParameterList(new String[]{paramName}, new PsiType[]{stringType});
 						psiParameterList.replace(parameterList);
+						JavaCodeStyleManager.getInstance(project).shortenClassReferences(parameterList);
 					});
 		}
 
 		@NotNull
 		@Override
 		public String getFamilyName() {
-			return String.format("Change parameter list to (String %s)", paramName);
+			return String.format(NAME, paramName);
 		}
 	}
 }
