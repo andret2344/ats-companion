@@ -13,12 +13,14 @@ import com.intellij.psi.PsiTypeElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.processing.Generated;
 import java.util.Locale;
 import java.util.Optional;
 
 public final class Util {
 	private static final String VALUE = "value";
 
+	@Generated("private-constructor")
 	private Util() {
 	}
 

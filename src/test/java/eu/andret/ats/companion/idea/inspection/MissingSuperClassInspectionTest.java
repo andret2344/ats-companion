@@ -21,7 +21,7 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testSuperClassPresentHighlight() {
+	public void testSuperClassPresent() {
 		// given
 		getFixture().configureByFile("super-present.java");
 		getFixture().addClass("package eu.andret.arguments; public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -40,7 +40,7 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testSuperClassMissingHighlight() {
+	public void testSuperClassMissing() {
 		// given
 		getFixture().configureByFile("super-missing.java");
 		getFixture().enableInspections(new MissingSuperClassInspection());
@@ -57,5 +57,23 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 		assertThat(optionalHighlightInfo)
 				.map(HighlightInfo::getSeverity)
 				.contains(HighlightSeverity.ERROR);
+	}
+
+	@Test
+	public void testNoBaseCommand() {
+		// given
+		getFixture().configureByFile("no-base-command.java");
+		getFixture().enableInspections(new MissingSuperClassInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), MissingSuperClassInspection.DESCRIPTION))
+				.findAny();
+		assertThat(optionalHighlightInfo).isEmpty();
 	}
 }

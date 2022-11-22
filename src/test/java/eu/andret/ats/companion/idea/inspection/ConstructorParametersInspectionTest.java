@@ -148,9 +148,30 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testTwoWrongArguments() {
+	public void testTwoArgumentsFirstWrong() {
 		// given
 		getFixture().configureByFile("two-args-first-wrong.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new ConstructorParametersInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), ConstructorParametersInspection.DESCRIPTION))
+				.findAny();
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.ERROR);
+	}
+
+	@Test
+	public void testTwoArgumentsBothWrong() {
+		// given
+		getFixture().configureByFile("two-args-both-wrong.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
 		getFixture().enableInspections(new ConstructorParametersInspection());
 
@@ -191,6 +212,25 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	public void testMultipleCorrectArguments() {
 		// given
 		getFixture().configureByFile("multiple-correct-args.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new ConstructorParametersInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), ConstructorParametersInspection.DESCRIPTION))
+				.findAny();
+		assertThat(optionalHighlightInfo).isEmpty();
+	}
+
+	@Test
+	public void testNoBaseCommand() {
+		// given
+		getFixture().configureByFile("no-base-command.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
 		getFixture().enableInspections(new ConstructorParametersInspection());
 
