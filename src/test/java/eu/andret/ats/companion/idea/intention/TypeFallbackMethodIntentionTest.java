@@ -8,21 +8,21 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
 import org.junit.Test;
 
-public class ArgumentFallbackMethodIntentionTest extends LightJavaCodeInsightFixtureTestCase4 {
-	public ArgumentFallbackMethodIntentionTest() {
+public class TypeFallbackMethodIntentionTest extends LightJavaCodeInsightFixtureTestCase4 {
+	public TypeFallbackMethodIntentionTest() {
 		super(null, "src/test/testData/intention");
 	}
 
 	@Test
 	public void testGenerateFallbackMethod() {
 		// given
-		getFixture().configureByFile("argument-fallback.java");
-		final IntentionAction action = getFixture().findSingleIntention(ArgumentFallbackMethodIntention.TEXT);
+		getFixture().configureByFile("type-fallback.java");
+		final IntentionAction action = getFixture().findSingleIntention(TypeFallbackMethodIntention.NAME);
 
 		// when
 		getFixture().launchAction(action);
 
 		// then
-		getFixture().checkResultByFile("argument-fallback.after.java");
+		getFixture().checkResultByFile("type-fallback.after.java");
 	}
 }

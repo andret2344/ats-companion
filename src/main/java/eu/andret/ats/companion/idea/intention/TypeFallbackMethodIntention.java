@@ -12,11 +12,11 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiImportList;
+import com.intellij.psi.PsiImportStatement;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
-import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.psi.search.GlobalSearchScope;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
@@ -69,22 +69,22 @@ public class TypeFallbackMethodIntention extends PsiElementBaseIntentionAction i
 		final String value = psiParameter.getName();
 		final String type = psiParameter.getType().getPresentableText();
 		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-		final PsiMethod factoryMethod = factory.createMethodFromText(
+		final PsiMethod psiMethod = factory.createMethodFromText(
 				String.format(
 						"@TypeFallback(%s.class)\n\tpublic String %sFallback(String %s) {\n\t\treturn null;\n\t}",
 						type, value, value),
 				method.getContext());
-		final PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(Constants.ANNOTATION_TYPE_FALLBACK,
-				GlobalSearchScope.allScope(project));
-		if (psiClass == null) {
-			return;
-		}
 		final PsiClass containingClass = method.getContainingClass();
 		if (containingClass == null) {
 			return;
 		}
-		containingClass.addAfter(factoryMethod, method);
-		JavaCodeStyleManager.getInstance(project).addImport((PsiJavaFile) method.getContainingFile(), psiClass);
+		containingClass.addAfter(psiMethod, method);
+		final PsiImportStatement importStatement = Util.createImportStatement(project, Constants.ANNOTATION_TYPE_FALLBACK);
+		final PsiImportList importList = ((PsiJavaFile) containingClass.getParent()).getImportList();
+		if (importStatement == null || importList == null) {
+			return;
+		}
+		importList.add(importStatement);
 	}
 
 	@Override

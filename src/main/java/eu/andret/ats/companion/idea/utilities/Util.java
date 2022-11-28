@@ -1,15 +1,21 @@
 package eu.andret.ats.companion.idea.utilities;
 
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.PsiImportList;
+import com.intellij.psi.PsiImportStatement;
+import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiLiteralValue;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
+import com.intellij.psi.codeStyle.CodeStyleManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,5 +83,19 @@ public final class Util {
 	public static PsiType createStringType(@NotNull final Project project) {
 		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 		return factory.createTypeByFQClassName("java.lang.String");
+	}
+
+	@Nullable
+	public static PsiImportStatement createImportStatement(@NotNull final Project project, @NotNull final String statement) {
+		final PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
+		final CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
+		final PsiJavaFile aFile = (PsiJavaFile) fileFactory.createFileFromText("_Dummy_.java", JavaFileType.INSTANCE, "import " + statement + ";");
+		return Optional.of(aFile)
+				.map(PsiJavaFile::getImportList)
+				.map(PsiImportList::getImportStatements)
+				.map(statements -> statements[0])
+				.map(codeStyleManager::reformat)
+				.map(PsiImportStatement.class::cast)
+				.orElse(null);
 	}
 }
