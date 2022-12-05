@@ -5,8 +5,8 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
 	}
 
 	@eu.andret.arguments.api.annotation.Argument
-	public void method(org.bukkit.player.<caret>Player player) {}
+	public void argumentTest(org.bukkit.player.<caret>Player player) {}
 
 	@eu.andret.arguments.api.annotation.TypeFallback(org.bukkit.player.Player.class)
-	public void method2(String string) {}
+	public void fallbackTest(String string) {}
 }

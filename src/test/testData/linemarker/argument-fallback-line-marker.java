@@ -5,8 +5,8 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
 	}
 
 	@eu.andret.arguments.api.annotation.Argument
-	public void method(@eu.andret.arguments.api.annotation<caret>.Mapper("text") org.bukkit.player.Player player) {}
+	public void argumentTest(@eu.andret.arguments.api.annotation<caret>.Mapper("text") org.bukkit.player.Player player) {}
 
 	@eu.andret.arguments.api.annotation.ArgumentFallback("text")
-	public void method2(String string) {}
+	public void fallbackTest(String string) {}
 }

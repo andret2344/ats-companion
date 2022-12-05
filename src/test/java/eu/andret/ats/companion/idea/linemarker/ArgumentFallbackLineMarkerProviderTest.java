@@ -45,6 +45,6 @@ public class ArgumentFallbackLineMarkerProviderTest extends LightJavaCodeInsight
 		}
 		UsefulTestCase.assertSameElements(
 				ContainerUtil.map(iconRenderer.getTargetElements(), SymbolPresentationUtil::getSymbolPresentableText),
-				"method2(String)");
+				"fallbackTest(String)");
 	}
 }

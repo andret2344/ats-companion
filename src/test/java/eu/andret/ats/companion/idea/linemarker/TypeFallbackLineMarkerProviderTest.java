@@ -48,6 +48,6 @@ public class TypeFallbackLineMarkerProviderTest extends LightJavaCodeInsightFixt
 		}
 		UsefulTestCase.assertSameElements(
 				ContainerUtil.map(iconRenderer.getTargetElements(), SymbolPresentationUtil::getSymbolPresentableText),
-				"method2(String)");
+				"fallbackTest(String)");
 	}
 }
