@@ -4,16 +4,22 @@
 
 package eu.andret.ats.companion.idea.inspection;
 
+import com.intellij.codeInsight.unwrap.JavaElseUnwrapper;
+import com.intellij.codeInsight.unwrap.JavaIfUnwrapper;
+import com.intellij.codeInsight.unwrap.JavaUnwrapper;
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiIfStatement;
 import com.intellij.psi.PsiInstanceOfExpression;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReference;
@@ -22,19 +28,18 @@ import com.intellij.psi.PsiTypeElement;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION_UNUSED = "Executor type is already defined in the annotation";
+	public static final String DESCRIPTION_UNUSED = "Executor type is already defined in the annotation";
 
 	@NonNls
-	private static final String DESCRIPTION_PROBLEM = "Executor type defined in the annotation is contradictory";
+	public static final String DESCRIPTION_PROBLEM = "Executor type defined in the annotation is contradictory";
 
 	@NotNull
 	@Override
@@ -66,15 +71,14 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 				Optional.of(psiMethod)
 						.map(method -> method.getAnnotation(Constants.ANNOTATION_ARGUMENT))
 						.map(annotation -> annotation.findAttributeValue("executorType"))
-						.map(PsiElement::getReference)
-						.map(PsiReference::resolve)
-						.map(PsiField.class::cast)
+						.map(PsiElement::getLastChild)
+						.map(PsiElement::getText)
 						.ifPresent(field -> {
 							final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
 							if (!(resolve instanceof final PsiField psiField) || !psiField.getName().equals("sender")) {
 								return;
 							}
-							analyzeAndReport(holder, expression, type, field.getName());
+							analyzeAndReport(holder, expression, type, field);
 						});
 			}
 		};
@@ -85,49 +89,80 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		if (executorType.equals("PLAYER")) {
 			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
 				holder.registerProblem(expression, DESCRIPTION_UNUSED,
-						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
+						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new UnWrapIfStatementQuickFix());
 			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
 				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
-						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
+						ProblemHighlightType.WARNING, new UnWrapElseStatementQuickFix());
 			}
 		} else if (executorType.equals("CONSOLE")) {
 			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {
 				holder.registerProblem(expression, DESCRIPTION_PROBLEM,
-						ProblemHighlightType.WARNING, new RemoveExpressionQuickFix());
+						ProblemHighlightType.WARNING, new UnWrapElseStatementQuickFix());
 			} else if (type.getCanonicalText().equals(Constants.BUKKIT_CONSOLE_COMMAND_SENDER)) {
 				holder.registerProblem(expression, DESCRIPTION_UNUSED,
-						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveExpressionQuickFix());
+						ProblemHighlightType.LIKE_UNUSED_SYMBOL, new UnWrapIfStatementQuickFix());
 			}
 		}
 	}
 
-	@Slf4j
-	public static class RemoveExpressionQuickFix implements LocalQuickFix {
-		public static final String NAME = "Remove statement";
-
+	public abstract static class UnWrapStatementQuickFix implements LocalQuickFix {
 		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
+		public abstract JavaUnwrapper getUnWrapper();
 
 		@Override
-		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			final PsiElement context = descriptor.getPsiElement().getContext();
-			if (context == null) {
+		public final void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			final PsiElement element = getElement(descriptor);
+			final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+			if (editor == null || element == null) {
 				return;
 			}
-			final PsiElement parent = context.getParent();
-			final PsiElement[] children = Util.repeat(context, 2, PsiElement::getLastChild).getChildren();
-			final PsiElement[] psiElements = Arrays.copyOfRange(children, 2, children.length - 2);
-			Arrays.stream(psiElements).forEach(element -> parent.addAfter(element, context));
-			context.delete();
+			getUnWrapper().unwrap(editor, element);
 		}
 
-		@Override
+		public abstract PsiElement getElement(@NotNull final ProblemDescriptor problemDescriptor);
+	}
+
+	public static class UnWrapIfStatementQuickFix extends UnWrapStatementQuickFix {
+		public static final String NAME = "Unwrap if statement";
+
 		@NotNull
+		@Override
+		public JavaUnwrapper getUnWrapper() {
+			return new JavaIfUnwrapper();
+		}
+
+		@Nullable
+		@Override
+		public PsiElement getElement(@NotNull final ProblemDescriptor problemDescriptor) {
+			return problemDescriptor.getPsiElement().getParent();
+		}
+
+		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
+		}
+	}
+
+	public static class UnWrapElseStatementQuickFix extends UnWrapStatementQuickFix {
+		public static final String NAME = "Unwrap else statement";
+
+		@NotNull
+		@Override
+		public JavaUnwrapper getUnWrapper() {
+			return new JavaElseUnwrapper();
+		}
+
+		@Nullable
+		@Override
+		public PsiElement getElement(@NotNull final ProblemDescriptor problemDescriptor) {
+			return ((PsiIfStatement) problemDescriptor.getPsiElement().getParent()).getElseElement();
+		}
+
+		@NotNull
+		@Override
+		public String getFamilyName() {
+			return NAME;
 		}
 	}
 }

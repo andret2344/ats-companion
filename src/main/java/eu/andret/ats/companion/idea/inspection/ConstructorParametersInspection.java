@@ -20,11 +20,8 @@ import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.util.IncorrectOperationException;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -106,151 +103,111 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 		};
 	}
 
-	@Slf4j
 	public static class ChangeParametersToQuickFix implements LocalQuickFix {
 		public static final String NAME = "Change parameter list to match '(CommandSender, JavaPlugin)'";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiParameterList.class::cast)
-						.ifPresent(psiParameterList -> {
-							Arrays.stream(psiParameterList.getParameters()).forEach(PsiElement::delete);
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiParameter class1Type = factory.createParameter(SENDER, factory.createTypeByFQClassName(Constants.BUKKIT_COMMAND_SENDER));
-							final PsiParameter class2Type = factory.createParameter(PLUGIN, factory.createTypeByFQClassName(Constants.BUKKIT_JAVA_PLUGIN));
-							psiParameterList.add(class1Type);
-							psiParameterList.add(class2Type);
-							JavaCodeStyleManager.getInstance(project).shortenClassReferences(class1Type);
-							JavaCodeStyleManager.getInstance(project).shortenClassReferences(class2Type);
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiParameterList.class::cast)
+					.ifPresent(psiParameterList -> {
+						Arrays.stream(psiParameterList.getParameters()).forEach(PsiElement::delete);
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						final PsiParameter class1Type = factory.createParameter(SENDER, factory.createTypeByFQClassName(Constants.BUKKIT_COMMAND_SENDER));
+						final PsiParameter class2Type = factory.createParameter(PLUGIN, factory.createTypeByFQClassName(Constants.BUKKIT_JAVA_PLUGIN));
+						psiParameterList.add(class1Type);
+						psiParameterList.add(class2Type);
+						JavaCodeStyleManager.getInstance(project).shortenClassReferences(class1Type);
+						JavaCodeStyleManager.getInstance(project).shortenClassReferences(class2Type);
+					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
-	@Slf4j
 	public static class InsertSecondParametersQuickFix implements LocalQuickFix {
 		public static final String NAME = "Insert 2nd parameter";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiParameterList.class::cast)
-						.ifPresent(psiParameterList -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiParameter type = factory.createParameter(PLUGIN, factory.createTypeByFQClassName(Constants.BUKKIT_JAVA_PLUGIN));
-							psiParameterList.addAfter(type, psiParameterList.getParameter(0));
-							JavaCodeStyleManager.getInstance(project).shortenClassReferences(type);
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiParameterList.class::cast)
+					.ifPresent(psiParameterList -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						final PsiParameter type = factory.createParameter(PLUGIN, factory.createTypeByFQClassName(Constants.BUKKIT_JAVA_PLUGIN));
+						psiParameterList.addAfter(type, psiParameterList.getParameter(0));
+						JavaCodeStyleManager.getInstance(project).shortenClassReferences(type);
+					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
-	@Slf4j
 	public static class InsertFirstParametersQuickFix implements LocalQuickFix {
 		public static final String NAME = "Insert 1st parameter";
 
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
-
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiParameterList.class::cast)
-						.ifPresent(psiParameterList -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiParameter type = factory.createParameter(SENDER, factory.createTypeByFQClassName(Constants.BUKKIT_COMMAND_SENDER));
-							psiParameterList.addBefore(type, psiParameterList.getParameter(0));
-							JavaCodeStyleManager.getInstance(project).shortenClassReferences(type);
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiParameterList.class::cast)
+					.ifPresent(psiParameterList -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						final PsiParameter type = factory.createParameter(SENDER, factory.createTypeByFQClassName(Constants.BUKKIT_COMMAND_SENDER));
+						psiParameterList.addBefore(type, psiParameterList.getParameter(0));
+						JavaCodeStyleManager.getInstance(project).shortenClassReferences(type);
+					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
-	@Slf4j
-	@Value
 	public static class ChangeParameterQuickFix implements LocalQuickFix {
 		public static final String NAME = "Change parameter's type to ";
 
-		String qualifiedType;
-
 		@NotNull
-		@Override
-		public String getName() {
-			return NAME + qualifiedType;
+		private final String qualifiedType;
+
+		public ChangeParameterQuickFix(@NotNull final String qualifiedType) {
+			this.qualifiedType = qualifiedType;
 		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			try {
-				Optional.of(descriptor)
-						.map(ProblemDescriptor::getPsiElement)
-						.map(PsiParameter.class::cast)
-						.ifPresent(psiParameter -> {
-							final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-							final PsiClassType type = factory.createTypeByFQClassName(qualifiedType);
-							final PsiTypeElement typeElement = factory.createTypeElement(type);
-							final PsiModifierList modifierList = psiParameter.getModifierList();
-							if (psiParameter.getTypeElement() != null && modifierList != null) {
-								final PsiElement modifiers = modifierList.copy();
-								psiParameter.getTypeElement().replace(typeElement);
-								modifierList.replace(modifiers);
-							}
-						});
-			} catch (final IncorrectOperationException e) {
-				log.error(getClass().getName(), e);
-			}
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.map(PsiParameter.class::cast)
+					.ifPresent(psiParameter -> {
+						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+						final PsiClassType type = factory.createTypeByFQClassName(qualifiedType);
+						final PsiTypeElement typeElement = factory.createTypeElement(type);
+						final PsiModifierList modifierList = psiParameter.getModifierList();
+						if (psiParameter.getTypeElement() != null && modifierList != null) {
+							final PsiElement modifiers = modifierList.copy();
+							psiParameter.getTypeElement().replace(typeElement);
+							modifierList.replace(modifiers);
+						}
+					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME + qualifiedType;
 		}
 	}
 }

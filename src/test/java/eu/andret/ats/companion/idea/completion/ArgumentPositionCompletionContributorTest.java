@@ -7,10 +7,7 @@ package eu.andret.ats.companion.idea.completion;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArgumentPositionCompletionContributorTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public ArgumentPositionCompletionContributorTest() {
@@ -26,7 +23,8 @@ public class ArgumentPositionCompletionContributorTest extends LightJavaCodeInsi
 		getFixture().completeBasic();
 
 		// then
-		assertEquals(List.of("0", "1", "2", "3"), getFixture().getLookupElementStrings());
+		assertThat(getFixture().getLookupElementStrings())
+				.containsExactly("0", "1", "2", "3");
 	}
 
 	@Test
@@ -38,6 +36,7 @@ public class ArgumentPositionCompletionContributorTest extends LightJavaCodeInsi
 		getFixture().completeBasic();
 
 		// then
-		assertEquals(Collections.singletonList("0"), getFixture().getLookupElementStrings());
+		assertThat(getFixture().getLookupElementStrings())
+				.containsExactly("0");
 	}
 }

@@ -1,46 +1,44 @@
 package eu.andret.ats.companion.idea.utilities;
 
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClassObjectAccessExpression;
-import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.PsiImportList;
+import com.intellij.psi.PsiImportStatement;
+import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiLiteralValue;
 import com.intellij.psi.PsiType;
-import lombok.experimental.UtilityClass;
+import com.intellij.psi.PsiTypeElement;
+import com.intellij.psi.codeStyle.CodeStyleManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.processing.Generated;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
 
-@UtilityClass
-public class Util {
+public final class Util {
 	private static final String VALUE = "value";
 
-	@Nullable
-	public <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,
-											   @NotNull final Class<E> target) {
-		PsiElement copy = psiElement;
-		do {
-			if (copy == null) {
-				return null;
-			}
-			copy = copy.getParent();
-		} while (!target.isInstance(copy));
-		if (!target.isInstance(copy)) {
-			return null;
-		}
-		return target.cast(copy);
+	@Generated("private-constructor")
+	private Util() {
 	}
 
 	@Nullable
-	public <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,
-											   @NotNull final Class<E> target, final int limit) {
+	public static <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,
+													  @NotNull final Class<E> target) {
+		return ancestorOf(psiElement, target, 1_000_000);
+	}
+
+	@Nullable
+	public static <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,
+													  @NotNull final Class<E> target, final int limit) {
 		PsiElement copy = psiElement;
 		int x = 0;
 		do {
@@ -55,21 +53,13 @@ public class Util {
 		return target.cast(copy);
 	}
 
-	public PsiElement repeat(final PsiElement psiElement, final int count, final UnaryOperator<PsiElement> fn) {
-		PsiElement copy = psiElement;
-		for (int i = 0; i < count; i++) {
-			copy = fn.apply(copy);
-		}
-		return copy;
-	}
-
 	@NotNull
-	public String toCamelCase(@NotNull final String input) {
+	public static String toCamelCase(@NotNull final String input) {
 		return String.format("%s%s", input.substring(0, 1).toLowerCase(Locale.ROOT), input.substring(1));
 	}
 
 	@NotNull
-	public Optional<String> getArgumentFallbackValue(@Nullable final PsiAnnotation argumentFallbackAnnotation) {
+	public static Optional<String> getArgumentFallbackValue(@Nullable final PsiAnnotation argumentFallbackAnnotation) {
 		return Optional.ofNullable(argumentFallbackAnnotation)
 				.map(psiAnnotation -> psiAnnotation.findAttributeValue(VALUE))
 				.filter(PsiLiteralExpression.class::isInstance)
@@ -80,20 +70,32 @@ public class Util {
 	}
 
 	@NotNull
-	public Optional<PsiType> getTypeFallbackValue(@Nullable final PsiAnnotation argumentFallbackAnnotation) {
+	public static Optional<PsiType> getTypeFallbackValue(@Nullable final PsiAnnotation argumentFallbackAnnotation) {
 		return Optional.ofNullable(argumentFallbackAnnotation)
 				.map(psiAnnotation -> psiAnnotation.findAttributeValue(VALUE))
 				.filter(PsiClassObjectAccessExpression.class::isInstance)
 				.map(PsiClassObjectAccessExpression.class::cast)
-				.map(PsiClassObjectAccessExpression::getType)
-				.map(PsiClassType.class::cast)
-				.map(PsiClassType::getParameters)
-				.map(psiTypes -> psiTypes[0]);
+				.map(PsiClassObjectAccessExpression::getOperand)
+				.map(PsiTypeElement::getType);
 	}
 
 	@NotNull
-	public PsiType createStringType(@NotNull final Project project) {
+	public static PsiType createStringType(@NotNull final Project project) {
 		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 		return factory.createTypeByFQClassName("java.lang.String");
+	}
+
+	@Nullable
+	public static PsiImportStatement createImportStatement(@NotNull final Project project, @NotNull final String statement) {
+		final PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
+		final CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
+		final PsiJavaFile aFile = (PsiJavaFile) fileFactory.createFileFromText("_Dummy_.java", JavaFileType.INSTANCE, "import " + statement + ";");
+		return Optional.of(aFile)
+				.map(PsiJavaFile::getImportList)
+				.map(PsiImportList::getImportStatements)
+				.map(statements -> statements[0])
+				.map(codeStyleManager::reformat)
+				.map(PsiImportStatement.class::cast)
+				.orElse(null);
 	}
 }

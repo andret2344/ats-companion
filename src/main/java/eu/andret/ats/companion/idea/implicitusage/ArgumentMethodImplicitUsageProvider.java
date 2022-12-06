@@ -19,12 +19,12 @@ import java.util.Optional;
 public class ArgumentMethodImplicitUsageProvider implements ImplicitUsageProvider {
 	@Override
 	public boolean isImplicitUsage(@NotNull final PsiElement element) {
-		return verifyElement(element);
+		return isImplicitRead(element);
 	}
 
 	@Override
 	public boolean isImplicitRead(@NotNull final PsiElement element) {
-		return verifyElement(element);
+		return isImplicitWrite(element);
 	}
 
 	@Override

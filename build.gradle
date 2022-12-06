@@ -24,7 +24,7 @@ buildSearchableOptions {
 
 patchPluginXml {
 	version = project.version
-	setSinceBuild '202'
+	setSinceBuild '222'
 }
 
 group project.group
@@ -35,13 +35,7 @@ repositories {
 }
 
 dependencies {
-	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-
-	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.2'
-	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.2'
-	testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+	testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.23.1'
 }
 
 jar {
@@ -64,7 +58,7 @@ jacocoTestCoverageVerification {
 	violationRules {
 		rule {
 			limit {
-				minimum = 0.2
+				minimum = 0.9
 			}
 		}
 	}

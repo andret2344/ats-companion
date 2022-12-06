@@ -8,96 +8,124 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public FallbackArgumentsInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/fallback-arguments");
 	}
 
 	@Test
 	public void testArgumentFallbackWrongParameters() {
 		// given
-		getFixture().configureByFile("argument-fallback-wrong-parameters.java");
+		getFixture().configureByFile("argument-wrong-parameters.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());
 
 		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), FallbackArgumentsInspection.DESCRIPTION))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.ERROR);
 	}
 
 	@Test
-	@Ignore("not passing")
-	public void testTypeFallbackWrongParameters() {
+	public void testArgumentFallbackWrongParametersFix() {
 		// given
-		getFixture().configureByFile("type-fallback-wrong-parameters.java");
+		getFixture().configureByFile("argument-wrong-parameters.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());
-
-		// when
-		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
-
-		// then
-		assertFalse(highlightInfos.isEmpty());
-		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-				.filter(element ->
-						Objects.equals(element.getDescription(), FallbackArgumentsInspection.DESCRIPTION))
-				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.ERROR, highlightInfo.getSeverity());
-	}
-
-	@Test
-	@Ignore("not passing")
-	public void testTextInPosition() {
-		// given
-		getFixture().configureByFile("argument-with-text-in-position.java");
-		getFixture().enableInspections(new PositionOutOfBoundsInspection());
-
-		// when
-		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
-
-		// then
-		assertFalse(highlightInfos.isEmpty());
-		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
-				.filter(element ->
-						Objects.equals(element.getDescription(), PositionOutOfBoundsInspection.DESCRIPTION))
-				.findAny();
-		assertTrue(optionalHighlightInfo.isEmpty());
-	}
-
-	@Test
-	@Ignore("not passing")
-	public void testRemoveParameterQuickFix() {
-		// given
-		getFixture().configureByFile("argument-with-negative-position.java");
-		getFixture().enableInspections(new PositionOutOfBoundsInspection());
-		final IntentionAction action = getFixture().findSingleIntention(PositionOutOfBoundsInspection.RemoveParameterQuickFix.NAME);
-		assertNotNull(action);
+		final IntentionAction action = getFixture()
+				.findSingleIntention(FallbackArgumentsInspection.ChangeParametersQuickFix.NAME.formatted("test"));
+		assertThat(action).isNotNull();
 
 		// when
 		getFixture().launchAction(action);
 
 		// then
-		getFixture().checkResultByFile("argument-with-negative-position.after.java");
+		getFixture().checkResultByFile("argument-wrong-parameters.after.java");
+	}
+
+	@Test
+	public void testArgumentFallbackCorrectParameters() {
+		// given
+		getFixture().configureByFile("argument-wrong-parameters.after.java");
+		getFixture().enableInspections(new FallbackArgumentsInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), FallbackArgumentsInspection.DESCRIPTION))
+				.findAny();
+		assertThat(optionalHighlightInfo).isEmpty();
+	}
+
+	@Test
+	public void testTypeFallbackWrongParameters() {
+		// given
+		getFixture().configureByFile("type-wrong-parameters.java");
+		getFixture().enableInspections(new FallbackArgumentsInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), FallbackArgumentsInspection.DESCRIPTION))
+				.findAny();
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.ERROR);
+	}
+
+	@Test
+	public void testTypeFallbackWrongParametersFix() {
+		// given
+		getFixture().configureByFile("type-wrong-parameters.java");
+		getFixture().enableInspections(new FallbackArgumentsInspection());
+		final IntentionAction action = getFixture()
+				.findSingleIntention(FallbackArgumentsInspection.ChangeParametersQuickFix.NAME.formatted("world"));
+		assertThat(action).isNotNull();
+
+		// when
+		getFixture().launchAction(action);
+
+		// then
+		getFixture().checkResultByFile("type-wrong-parameters.after.java");
+	}
+
+	@Test
+	public void testTypeFallbackCorrectParameters() {
+		// given
+		getFixture().configureByFile("type-wrong-parameters.after.java");
+		getFixture().enableInspections(new FallbackArgumentsInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), FallbackArgumentsInspection.DESCRIPTION))
+				.findAny();
+		assertThat(optionalHighlightInfo).isEmpty();
 	}
 }

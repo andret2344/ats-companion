@@ -4,7 +4,12 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
 		super(sender, plugin);
 	}
 
-	@eu.andret.arguments.api.annotation.TypeFallback(java.lang.Object.class)
-	public void testFallback(int<caret> x) {
+	@eu.andret.arguments.api.annotation.Argument(executorType = ExecutorType.CONSOLE)
+	public void get() {
+		if (sender <caret>instanceof org.bukkit.command.ConsoleCommandSender) {
+			alwaysTrue();
+		} else {
+			alwaysFalse();
+		}
 	}
 }

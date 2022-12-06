@@ -14,48 +14,45 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public PrimitiveReturnInspectionTest() {
-		super(null, "src/test/testData/inspection");
+		super(null, "src/test/testData/inspection/primitive-return");
 	}
 
 	@Test
 	public void testPrimitiveReturnHighlight() {
 		// given
-		getFixture().configureByFile("primitive-return.java");
+		getFixture().configureByFile("sample.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());
 
 		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
 
 		// then
-		assertFalse(highlightInfos.isEmpty());
+		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
 						Objects.equals(element.getDescription(), PrimitiveReturnInspection.DESCRIPTION))
 				.findAny();
-		assertTrue(optionalHighlightInfo.isPresent());
-		final HighlightInfo highlightInfo = optionalHighlightInfo.get();
-		assertEquals(HighlightSeverity.WARNING, highlightInfo.getSeverity());
+		assertThat(optionalHighlightInfo)
+				.map(HighlightInfo::getSeverity)
+				.contains(HighlightSeverity.WARNING);
 	}
 
 	@Test
 	public void testPrimitiveReturnFixChangeToString() {
 		// given
-		getFixture().configureByFile("primitive-return.java");
+		getFixture().configureByFile("sample.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());
 		final IntentionAction action = getFixture().findSingleIntention(PrimitiveReturnInspection.ChangeToStringQuickFix.NAME);
-		assertNotNull(action);
+		assertThat(action).isNotNull();
 
 		// when
 		getFixture().launchAction(action);
 
 		// then
-		getFixture().checkResultByFile("primitive-return.after.java");
+		getFixture().checkResultByFile("sample.after.java");
 	}
 }
