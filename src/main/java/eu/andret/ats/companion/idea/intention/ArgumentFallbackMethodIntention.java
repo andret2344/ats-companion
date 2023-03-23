@@ -6,7 +6,6 @@ package eu.andret.ats.companion.idea.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -15,21 +14,17 @@ import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiImportStatement;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
-import com.intellij.psi.codeStyle.CodeStyleManager;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 @NonNls
 public class ArgumentFallbackMethodIntention extends PsiElementBaseIntentionAction implements IntentionAction {
@@ -89,26 +84,12 @@ public class ArgumentFallbackMethodIntention extends PsiElementBaseIntentionActi
 			return;
 		}
 		containingClass.addAfter(psiMethod, method);
-		final PsiImportStatement importStatement = createImportStatement(project);
+		final PsiImportStatement importStatement = Util.createImportStatement(project, Constants.ANNOTATION_ARGUMENT_FALLBACK);
 		final PsiImportList importList = ((PsiJavaFile) containingClass.getParent()).getImportList();
 		if (importStatement == null || importList == null) {
 			return;
 		}
 		importList.add(importStatement);
-	}
-
-	@Nullable
-	private PsiImportStatement createImportStatement(@NotNull final Project project) {
-		final PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
-		final CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
-		final PsiJavaFile aFile = (PsiJavaFile) fileFactory.createFileFromText("_Dummy_.java", JavaFileType.INSTANCE, "import " + Constants.ANNOTATION_ARGUMENT_FALLBACK + ";");
-		return Optional.of(aFile)
-				.map(PsiJavaFile::getImportList)
-				.map(PsiImportList::getImportStatements)
-				.map(statements -> statements[0])
-				.map(codeStyleManager::reformat)
-				.map(PsiImportStatement.class::cast)
-				.orElse(null);
 	}
 
 	@Override

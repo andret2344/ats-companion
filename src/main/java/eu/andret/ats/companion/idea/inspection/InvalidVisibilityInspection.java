@@ -19,7 +19,6 @@ import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +29,7 @@ import java.util.stream.Stream;
 
 public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "Method annotated with @Argument must be public";
+	public static final String DESCRIPTION = "Method annotated with @Argument must be public";
 
 	@NotNull
 	@Override
@@ -81,15 +80,8 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 		};
 	}
 
-	@Slf4j
 	public static class ChangeToPublicQuickFix implements LocalQuickFix {
 		public static final String NAME = "Change visibility to public";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -101,22 +93,15 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 
-	@Slf4j
 	public static class AddPublicQuickFix implements LocalQuickFix {
 		public static final String NAME = "Add visibility modifier";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -130,10 +115,10 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

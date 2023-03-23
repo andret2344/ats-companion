@@ -23,7 +23,6 @@ import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,15 +62,8 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 		};
 	}
 
-	@Slf4j
 	public static class ChangeToStringQuickFix implements LocalQuickFix {
 		public static final String NAME = "Change to String";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -88,10 +80,10 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

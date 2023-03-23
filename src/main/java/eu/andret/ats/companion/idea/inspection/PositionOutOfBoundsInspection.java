@@ -19,7 +19,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiNameValuePair;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,15 +66,8 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 		};
 	}
 
-	@Slf4j
 	public static class RemoveParameterQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove parameter";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -85,10 +77,10 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 					.ifPresent(PsiElement::delete);
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

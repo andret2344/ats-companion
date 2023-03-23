@@ -18,11 +18,10 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,16 +62,14 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 		};
 	}
 
-	@Slf4j
-	@AllArgsConstructor
 	public static class ChangeParametersQuickFix implements LocalQuickFix {
+		public static final String NAME = "Change parameter list to (String %s)";
+
 		@NotNull
 		private final String paramName;
 
-		@NotNull
-		@Override
-		public String getName() {
-			return String.format("Change parameter list to (String %s)", paramName);
+		public ChangeParametersQuickFix(@NotNull final String paramName) {
+			this.paramName = paramName;
 		}
 
 		@Override
@@ -86,13 +83,14 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 						final PsiParameterList parameterList = factory
 								.createParameterList(new String[]{paramName}, new PsiType[]{stringType});
 						psiParameterList.replace(parameterList);
+						JavaCodeStyleManager.getInstance(project).shortenClassReferences(parameterList);
 					});
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return String.format(NAME, paramName);
 		}
 	}
 }

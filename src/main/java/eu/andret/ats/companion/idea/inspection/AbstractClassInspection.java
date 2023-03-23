@@ -17,7 +17,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiModifierListOwner;
 import eu.andret.ats.companion.idea.utilities.Constants;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +25,7 @@ import java.util.Optional;
 
 public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "@BaseCommand class cannot be abstract";
+	public static final String DESCRIPTION = "@BaseCommand class cannot be abstract";
 
 	@NotNull
 	@Override
@@ -50,15 +49,8 @@ public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool
 		};
 	}
 
-	@Slf4j
 	public static class RemoveModifierQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove modifier";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -67,10 +59,10 @@ public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool
 					.ifPresent(PsiElement::delete);
 		}
 
-		@Override
 		@NotNull
+		@Override
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

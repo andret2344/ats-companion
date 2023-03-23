@@ -21,7 +21,6 @@ import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.PsiTypeParameter;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import eu.andret.ats.companion.idea.utilities.Constants;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +28,7 @@ import java.util.Optional;
 
 public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "Missing the @BaseCommand annotation";
+	public static final String DESCRIPTION = "Missing the @BaseCommand annotation";
 
 	@NotNull
 	@Override
@@ -57,15 +56,8 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 		};
 	}
 
-	@Slf4j
 	public static class AddMissingAnnotationQuickFix implements LocalQuickFix {
 		public static final String NAME = "Add @BaseCommand annotation";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -88,7 +80,7 @@ public class MissingBaseCommandAnnotationInspection extends AbstractBaseJavaLoca
 		@Override
 		@NotNull
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }

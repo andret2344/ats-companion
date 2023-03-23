@@ -16,7 +16,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiPrimitiveType;
 import eu.andret.ats.companion.idea.utilities.Constants;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +23,7 @@ import java.util.Optional;
 
 public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	private static final String DESCRIPTION = "Cannot annotate a primitive parameter";
+	public static final String DESCRIPTION = "Cannot annotate a primitive parameter";
 
 	@NotNull
 	@Override
@@ -41,15 +40,8 @@ public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspecti
 		};
 	}
 
-	@Slf4j
 	public static class RemoveAnnotationQuickFix implements LocalQuickFix {
 		public static final String NAME = "Remove annotation";
-
-		@NotNull
-		@Override
-		public String getName() {
-			return NAME;
-		}
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -61,7 +53,7 @@ public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspecti
 		@Override
 		@NotNull
 		public String getFamilyName() {
-			return getName();
+			return NAME;
 		}
 	}
 }
