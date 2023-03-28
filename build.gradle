@@ -1,5 +1,5 @@
 plugins {
-	id 'org.jetbrains.intellij' version '1.13.2'
+	id 'org.jetbrains.intellij' version '1.13.3'
 	id 'org.barfuin.gradle.jacocolog' version '3.1.0'
 }
 
@@ -12,7 +12,7 @@ targetCompatibility = JavaVersion.VERSION_17
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-	version = '2022.2'
+	version = '2023.1'
 	plugins = ['com.intellij.java']
 	updateSinceUntilBuild = false
 	pluginName = 'atsCompanion-0.1.0'

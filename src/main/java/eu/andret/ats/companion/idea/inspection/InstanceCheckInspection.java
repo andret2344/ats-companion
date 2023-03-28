@@ -46,7 +46,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitInstanceOfExpression(final PsiInstanceOfExpression expression) {
+			public void visitInstanceOfExpression(@NotNull final PsiInstanceOfExpression expression) {
 				final PsiElement context = expression.getContext();
 				if (context == null) {
 					return;

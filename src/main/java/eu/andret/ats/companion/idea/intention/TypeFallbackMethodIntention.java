@@ -86,9 +86,4 @@ public class TypeFallbackMethodIntention extends PsiElementBaseIntentionAction i
 		}
 		importList.add(importStatement);
 	}
-
-	@Override
-	public boolean startInWriteAction() {
-		return true;
-	}
 }

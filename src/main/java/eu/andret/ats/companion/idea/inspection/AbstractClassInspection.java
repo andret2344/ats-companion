@@ -32,7 +32,7 @@ public class AbstractClassInspection extends AbstractBaseJavaLocalInspectionTool
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitClass(final PsiClass aClass) {
+			public void visitClass(@NotNull final PsiClass aClass) {
 				Optional.of(aClass)
 						.filter(psiClass -> psiClass.hasAnnotation(Constants.ANNOTATION_BASE_COMMAND))
 						.map(PsiModifierListOwner::getModifierList)

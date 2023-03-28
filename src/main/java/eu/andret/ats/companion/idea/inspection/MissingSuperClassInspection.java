@@ -27,7 +27,7 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitClass(final PsiClass aClass) {
+			public void visitClass(@NotNull final PsiClass aClass) {
 				if (!Verifier.verifyClass(aClass)) {
 					return;
 				}
