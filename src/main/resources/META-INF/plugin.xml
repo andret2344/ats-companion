@@ -87,8 +87,6 @@
 	<depends>com.intellij.modules.java</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileBasedIndex implementation="eu.andret.ats.companion.idea.index.Index"/>
-
 		<localInspection
 				language="JAVA"
 				displayName="Wrong parameters in fallback method"
