@@ -1,34 +1,23 @@
 #
-# Copyright Andret (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+# Copyright Andret (c) 2018-2023. Copying and modifying allowed only keeping git link reference.
 #
-image: gradle:jdk17
+image: gradle:8-jdk17-alpine
 
 cache:
   paths:
     - .gradle/wrapper
     - .gradle/caches
-
-before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-  - chmod a+x gradlew
+    - ~/.gradle/caches
 
 stages:
-  - prepare
   - build
   - test
   - deploy
 
-wrapper:
-  stage: prepare
-  script:
-    - gradle wrapper
-
 compile:
   stage: build
-  dependencies:
-    - wrapper
   script:
-    - ./gradlew assemble
+    - ./gradlew wrapper assemble
   artifacts:
     paths:
       - build/libs/*.jar
@@ -36,7 +25,7 @@ compile:
 junit:
   stage: test
   dependencies:
-    - wrapper
+    - compile
   script:
     - ./gradlew clean test
   coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
@@ -48,6 +37,7 @@ junit:
       - build/reports/jacoco/test/html/**
 
 pages:
+  image: nginx:alpine
   stage: deploy
   dependencies:
     - junit
@@ -55,7 +45,7 @@ pages:
     - mv build/reports/jacoco/test/html/ public/
   artifacts:
     paths:
-      - public/**
-  only:
-    - master
-  when: manual
+      - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: manual
