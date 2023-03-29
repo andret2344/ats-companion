@@ -16,7 +16,7 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiPrimitiveType;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiTypes;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
@@ -34,7 +34,7 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitBinaryExpression(final PsiBinaryExpression expression) {
+			public void visitBinaryExpression(@NotNull final PsiBinaryExpression expression) {
 				final PsiElement context = expression.getContext();
 				if (context == null) {
 					return;
@@ -69,7 +69,7 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 			private boolean isNull(final PsiExpression expression) {
 				return Optional.of(expression)
 						.map(PsiExpression::getType)
-						.map(PsiType.NULL::equals)
+						.map(PsiTypes.nullType()::equals)
 						.orElse(false);
 			}
 

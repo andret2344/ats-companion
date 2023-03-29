@@ -91,9 +91,4 @@ public class ArgumentFallbackMethodIntention extends PsiElementBaseIntentionActi
 		}
 		importList.add(importStatement);
 	}
-
-	@Override
-	public boolean startInWriteAction() {
-		return true;
-	}
 }

@@ -223,10 +223,12 @@
 				implementationClass="eu.andret.ats.companion.idea.inspection.ConstructorParametersInspection"
 		/>
 		<intentionAction>
+			<language>JAVA</language>
 			<className>eu.andret.ats.companion.idea.intention.ArgumentFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>
 		<intentionAction>
+			<language>JAVA</language>
 			<className>eu.andret.ats.companion.idea.intention.TypeFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>
