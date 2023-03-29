@@ -152,6 +152,11 @@
 				implementationClass="eu.andret.ats.companion.idea.completion.ArgumentPositionCompletionContributor"
 				order="first"
 		/>
+		<completion.contributor
+				language="JAVA"
+				implementationClass="eu.andret.ats.companion.idea.completion.ArgumentMapperCompletionContributor"
+				order="first"
+		/>
 		<localInspection
 				language="JAVA"
 				displayName="Instance check"
