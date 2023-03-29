@@ -39,7 +39,7 @@ junit:
     - wrapper
   script:
     - ./gradlew clean test
-  coverage: '/^Coverage:\s(\d+\.\d+%)/'
+  coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
   artifacts:
     reports:
       junit:
