@@ -14,7 +14,7 @@ public class ArgumentFallbackMethodIntentionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testGenerateFallbackMethod() {
+	public void generateFallbackMethod() {
 		// given
 		getFixture().configureByFile("argument-fallback.java");
 		final IntentionAction action = getFixture().findSingleIntention(ArgumentFallbackMethodIntention.TEXT);

@@ -15,7 +15,7 @@ public class ArgumentPositionCompletionContributorTest extends LightJavaCodeInsi
 	}
 
 	@Test
-	public void testPositionCompletionWithArguments() {
+	public void positionCompletionWithArguments() {
 		// given
 		getFixture().configureByFile("argument-position-with-parameter.java");
 
@@ -28,7 +28,7 @@ public class ArgumentPositionCompletionContributorTest extends LightJavaCodeInsi
 	}
 
 	@Test
-	public void testPositionCompletionWithoutArguments() {
+	public void positionCompletionWithoutArguments() {
 		// given
 		getFixture().configureByFile("argument-position-without-parameter.java");
 

@@ -22,7 +22,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentPublicMethodHighlight() {
+	public void argumentPublicMethodHighlight() {
 		// given
 		getFixture().configureByFile("argument-public-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());
@@ -40,7 +40,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentPrivateMethodHighlight() {
+	public void argumentPrivateMethodHighlight() {
 		// given
 		getFixture().configureByFile("argument-private-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());
@@ -60,7 +60,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentPackagePrivateMethodHighlight() {
+	public void argumentPackagePrivateMethodHighlight() {
 		// given
 		getFixture().configureByFile("argument-package-private-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());
@@ -80,7 +80,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentProtectedMethodHighlight() {
+	public void argumentProtectedMethodHighlight() {
 		// given
 		getFixture().configureByFile("argument-protected-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());
@@ -100,7 +100,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentPrivateMethodFix() {
+	public void argumentPrivateMethodFix() {
 		// given
 		getFixture().configureByFile("argument-private-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());
@@ -115,7 +115,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentPackagePrivateMethodFix() {
+	public void argumentPackagePrivateMethodFix() {
 		// given
 		getFixture().configureByFile("argument-package-private-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());
@@ -130,7 +130,7 @@ public class InvalidVisibilityInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentProtectedMethodFix() {
+	public void argumentProtectedMethodFix() {
 		// given
 		getFixture().configureByFile("argument-protected-method.java");
 		getFixture().enableInspections(new InvalidVisibilityInspection());

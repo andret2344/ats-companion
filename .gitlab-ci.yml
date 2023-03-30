@@ -9,6 +9,9 @@ cache:
     - .gradle/caches
     - ~/.gradle/caches
 
+before_script:
+  - chmod +x gradlew
+
 stages:
   - build
   - test

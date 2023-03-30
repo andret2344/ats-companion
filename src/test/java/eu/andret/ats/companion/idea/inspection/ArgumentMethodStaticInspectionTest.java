@@ -22,7 +22,7 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 	}
 
 	@Test
-	public void testArgumentMethodStaticHighlight() {
+	public void argumentMethodStaticHighlight() {
 		// given
 		getFixture().configureByFile("argument.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
@@ -42,7 +42,7 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 	}
 
 	@Test
-	public void testArgumentMethodStaticFixRemoveQualifier() {
+	public void argumentMethodStaticFixRemoveQualifier() {
 		// given
 		getFixture().configureByFile("argument.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
@@ -57,7 +57,7 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 	}
 
 	@Test
-	public void testRegularMethodStaticHighlight() {
+	public void regularMethodStaticHighlight() {
 		// given
 		getFixture().configureByFile("regular.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());

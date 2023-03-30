@@ -22,7 +22,7 @@ public class AbstractClassInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testNonAbstractClassHighlight() {
+	public void nonAbstractClassHighlight() {
 		// given
 		getFixture().configureByFile("base-command-class.java");
 		getFixture().enableInspections(new AbstractClassInspection());
@@ -40,7 +40,7 @@ public class AbstractClassInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testAbstractClassHighlight() {
+	public void abstractClassHighlight() {
 		// given
 		getFixture().configureByFile("base-command-abstract-class.java");
 		getFixture().enableInspections(new AbstractClassInspection());
@@ -60,7 +60,7 @@ public class AbstractClassInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testAbstractClassQuickFix() {
+	public void abstractClassQuickFix() {
 		// given
 		getFixture().configureByFile("base-command-abstract-class.java");
 		getFixture().enableInspections(new AbstractClassInspection());
@@ -76,7 +76,7 @@ public class AbstractClassInspectionTest extends LightJavaCodeInsightFixtureTest
 
 
 	@Test
-	public void testAbstractClassNoAnnotation() {
+	public void abstractClassNoAnnotation() {
 		// given
 		getFixture().configureByFile("base-command-no-annotation-class.java");
 		getFixture().enableInspections(new AbstractClassInspection());

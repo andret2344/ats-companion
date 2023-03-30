@@ -22,7 +22,7 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 	}
 
 	@Test
-	public void testPrimitiveReturnHighlight() {
+	public void primitiveReturnHighlight() {
 		// given
 		getFixture().configureByFile("sample.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());
@@ -42,7 +42,7 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 	}
 
 	@Test
-	public void testPrimitiveReturnFixChangeToString() {
+	public void primitiveReturnFixChangeToString() {
 		// given
 		getFixture().configureByFile("sample.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());

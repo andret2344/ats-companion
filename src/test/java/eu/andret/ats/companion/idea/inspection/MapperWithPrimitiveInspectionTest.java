@@ -22,7 +22,7 @@ public class MapperWithPrimitiveInspectionTest extends LightJavaCodeInsightFixtu
 	}
 
 	@Test
-	public void testPrimitiveParameterWithNoMapperHighlight() {
+	public void primitiveParameterWithNoMapperHighlight() {
 		// given
 		getFixture().configureByFile("with-no-mapper.java");
 		getFixture().enableInspections(new MapperWithPrimitiveInspection());
@@ -40,7 +40,7 @@ public class MapperWithPrimitiveInspectionTest extends LightJavaCodeInsightFixtu
 	}
 
 	@Test
-	public void testPrimitiveParameterWithMapperHighlight() {
+	public void primitiveParameterWithMapperHighlight() {
 		// given
 		getFixture().configureByFile("with-mapper.java");
 		getFixture().enableInspections(new MapperWithPrimitiveInspection());
@@ -60,7 +60,7 @@ public class MapperWithPrimitiveInspectionTest extends LightJavaCodeInsightFixtu
 	}
 
 	@Test
-	public void testPrimitiveParameterWithMapperFixRemoveMapper() {
+	public void primitiveParameterWithMapperFixRemoveMapper() {
 		// given
 		getFixture().configureByFile("with-mapper.java");
 		getFixture().enableInspections(new MapperWithPrimitiveInspection());

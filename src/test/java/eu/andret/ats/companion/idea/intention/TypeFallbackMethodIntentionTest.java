@@ -14,7 +14,7 @@ public class TypeFallbackMethodIntentionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testGenerateFallbackMethod() {
+	public void generateFallbackMethod() {
 		// given
 		getFixture().configureByFile("type-fallback.java");
 		final IntentionAction action = getFixture().findSingleIntention(TypeFallbackMethodIntention.NAME);

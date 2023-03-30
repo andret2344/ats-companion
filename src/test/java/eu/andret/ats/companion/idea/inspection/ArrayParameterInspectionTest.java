@@ -22,7 +22,7 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testArrayParameterVarArg() {
+	public void arrayParameterVarArg() {
 		// given
 		getFixture().configureByFile("vararg.java");
 		getFixture().enableInspections(new ArrayParameterInspection());
@@ -40,7 +40,7 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testArrayParameterNonVarArg() {
+	public void arrayParameterNonVarArg() {
 		// given
 		getFixture().configureByFile("non-vararg.java");
 		getFixture().enableInspections(new ArrayParameterInspection());
@@ -60,7 +60,7 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testArrayParameterFixToVarArg() {
+	public void arrayParameterFixToVarArg() {
 		// given
 		getFixture().configureByFile("brackets.java");
 		getFixture().enableInspections(new ArrayParameterInspection());
@@ -75,7 +75,7 @@ public class ArrayParameterInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testArrayParameterFixToVariable() {
+	public void arrayParameterFixToVariable() {
 		// given
 		getFixture().configureByFile("brackets.java");
 		getFixture().enableInspections(new ArrayParameterInspection());

@@ -22,7 +22,7 @@ public class MissingBaseCommandAnnotationInspectionTest extends LightJavaCodeIns
 	}
 
 	@Test
-	public void testBaseCommandMissing() {
+	public void baseCommandMissing() {
 		// given
 		getFixture().configureByFile("sample.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -43,7 +43,7 @@ public class MissingBaseCommandAnnotationInspectionTest extends LightJavaCodeIns
 	}
 
 	@Test
-	public void testBaseCommandMissingFix() {
+	public void baseCommandMissingFix() {
 		// given
 		getFixture().configureByFile("sample.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");

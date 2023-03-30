@@ -21,7 +21,7 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testSuperClassPresent() {
+	public void superClassPresent() {
 		// given
 		getFixture().configureByFile("super-present.java");
 		getFixture().addClass("package eu.andret.arguments; public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -40,7 +40,7 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testSuperClassMissing() {
+	public void superClassMissing() {
 		// given
 		getFixture().configureByFile("super-missing.java");
 		getFixture().enableInspections(new MissingSuperClassInspection());
@@ -60,7 +60,7 @@ public class MissingSuperClassInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testNoBaseCommand() {
+	public void noBaseCommand() {
 		// given
 		getFixture().configureByFile("no-base-command.java");
 		getFixture().enableInspections(new MissingSuperClassInspection());
