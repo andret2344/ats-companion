@@ -84,7 +84,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		};
 	}
 
-	private void analyzeAndReport(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
+	private void analyzeAndReport(final ProblemsHolder holder, final PsiElement expression,
 								  final PsiType type, @NotNull final String executorType) {
 		if (executorType.equals("PLAYER")) {
 			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {

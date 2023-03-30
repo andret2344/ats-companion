@@ -47,7 +47,7 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 			}
 
 			private void validateNoVisibilityModifier(@NotNull final PsiMethod method,
-													  @NotNull final List<PsiKeyword> keywords) {
+													  @NotNull final List<? extends PsiKeyword> keywords) {
 				if (keywords.stream().anyMatch(this::isVisibilityModifier)) {
 					return;
 				}
@@ -57,7 +57,7 @@ public class InvalidVisibilityInspection extends AbstractBaseJavaLocalInspection
 								ProblemHighlightType.GENERIC_ERROR, new AddPublicQuickFix()));
 			}
 
-			private void validateWrongVisibilityModifier(@NotNull final List<PsiKeyword> keywords) {
+			private void validateWrongVisibilityModifier(@NotNull final List<? extends PsiKeyword> keywords) {
 				keywords.stream()
 						.filter(kw -> Stream.of(PsiKeyword.PRIVATE, PsiKeyword.PROTECTED).anyMatch(kw::textMatches))
 						.findAny()

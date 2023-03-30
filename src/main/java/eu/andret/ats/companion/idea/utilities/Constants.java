@@ -27,6 +27,7 @@ public class Constants {
 	public static final String BUKKIT_PLAYER = "org.bukkit.entity.Player";
 
 	public static final String METHOD_ADD_TYPE_MAPPER = "addTypeMapper";
+	public static final String METHOD_ADD_ENUM_MAPPER = "addEnumMapper";
 	public static final String METHOD_ADD_ARGUMENT_MAPPER = "addArgumentMapper";
 
 	@Generated("private-constructor")

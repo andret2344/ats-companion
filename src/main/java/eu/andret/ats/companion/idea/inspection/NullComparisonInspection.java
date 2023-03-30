@@ -14,7 +14,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiTypes;
 import eu.andret.ats.companion.idea.utilities.Util;
@@ -58,11 +57,11 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 						});
 			}
 
-			private boolean validateParameter(final PsiParameter psiParameter, final PsiBinaryExpression expression) {
+			private boolean validateParameter(final PsiElement psiElement, final PsiBinaryExpression expression) {
 				final boolean rNull = isNull(expression.getROperand());
 				final boolean lNull = isNull(expression.getLOperand());
-				final boolean rMatches = is(expression.getROperand(), psiParameter);
-				final boolean lMatches = is(expression.getLOperand(), psiParameter);
+				final boolean rMatches = is(expression.getROperand(), psiElement);
+				final boolean lMatches = is(expression.getLOperand(), psiElement);
 				return (lMatches && rNull) || (rMatches && lNull);
 			}
 

@@ -12,11 +12,10 @@ import eu.andret.ats.companion.idea.utilities.Constants;
 
 import static com.intellij.patterns.PsiJavaPatterns.psiElement;
 
-public class ArgumentMapperCompletionContributor extends CompletionContributor {
-	public ArgumentMapperCompletionContributor() {
-		final CompletionProvider<CompletionParameters> provider = new ArgumentMapperCompletionProvider();
+public class TypeMapperCompletionContributor extends CompletionContributor {
+	public TypeMapperCompletionContributor() {
+		final CompletionProvider<CompletionParameters> provider = new TypeMapperCompletionProvider();
 		final CompletionType type = CompletionType.BASIC;
-		extend(type, psiElement().insideAnnotationParam(Constants.ANNOTATION_MAPPER), provider);
-		extend(type, psiElement().insideAnnotationParam(Constants.ANNOTATION_ARGUMENT_FALLBACK), provider);
+		extend(type, psiElement().insideAnnotationParam(Constants.ANNOTATION_TYPE_FALLBACK), provider);
 	}
 }
