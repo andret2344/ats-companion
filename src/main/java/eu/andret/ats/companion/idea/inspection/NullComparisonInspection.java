@@ -15,7 +15,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiPrimitiveType;
-import com.intellij.psi.PsiTypes;
+import com.intellij.psi.PsiType;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
@@ -68,7 +68,7 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 			private boolean isNull(final PsiExpression expression) {
 				return Optional.of(expression)
 						.map(PsiExpression::getType)
-						.map(PsiTypes.nullType()::equals)
+						.map(PsiType.NULL::equals)
 						.orElse(false);
 			}
 
