@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.processing.Generated;
 
-public class Constants {
+public final class Constants {
 	private static final String ARGUMENTS_MAIN = "eu.andret.arguments";
 	private static final String ARGUMENTS_API = ARGUMENTS_MAIN + ".api";
 	private static final String ARGUMENTS_ANNOTATION = ARGUMENTS_API + ".annotation";
@@ -18,6 +18,7 @@ public class Constants {
 	public static final String ANNOTATION_ARGUMENT_FALLBACK = ARGUMENTS_ANNOTATION + ".ArgumentFallback";
 	public static final String ANNOTATION_TYPE_FALLBACK = ARGUMENTS_ANNOTATION + ".TypeFallback";
 	public static final String ANNOTATION_MAPPER = ARGUMENTS_ANNOTATION + ".Mapper";
+	public static final String ANNOTATION_COMPLETER = ARGUMENTS_ANNOTATION + ".Completer";
 	public static final String CLASS_ANNOTATED_COMMAND_EXECUTOR = ARGUMENTS_MAIN + ".AnnotatedCommandExecutor";
 	public static final String CLASS_ANNOTATED_COMMAND = ARGUMENTS_MAIN + ".AnnotatedCommand";
 
@@ -29,6 +30,7 @@ public class Constants {
 	public static final String METHOD_ADD_TYPE_MAPPER = "addTypeMapper";
 	public static final String METHOD_ADD_ENUM_MAPPER = "addEnumMapper";
 	public static final String METHOD_ADD_ARGUMENT_MAPPER = "addArgumentMapper";
+	public static final String METHOD_ADD_ARGUMENT_COMPLETER = "addArgumentCompleter";
 
 	@Generated("private-constructor")
 	private Constants() {

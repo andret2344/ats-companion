@@ -1,6 +1,6 @@
 plugins {
-	id 'org.jetbrains.intellij' version '1.13.3'
-	id 'org.barfuin.gradle.jacocolog' version '3.1.0'
+	id 'org.jetbrains.intellij' version '1.9.0'
+	id 'de.jansauer.printcoverage' version '2.0.0'
 }
 
 apply plugin: 'java'
@@ -27,6 +27,9 @@ patchPluginXml {
 	setSinceBuild '222'
 }
 
+group project.group
+version project.version
+
 repositories {
 	mavenCentral()
 }
@@ -44,7 +47,11 @@ jar {
 
 test {
 	systemProperty("idea.force.use.core.classloader", "true")
-	finalizedBy jacocoTestCoverageVerification, jacocoAggregatedReport
+	finalizedBy jacocoTestCoverageVerification, printCoverage
+}
+
+jacocoTestReport {
+	reports.xml.required = true
 }
 
 jacocoTestCoverageVerification {
