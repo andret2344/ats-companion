@@ -19,19 +19,23 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class InvalidArgumentCompleterInspection extends AbstractBaseJavaLocalInspectionTool {
+	public static final String DESCRIPTION = "Invalid argument completer!";
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
+		final List<String> strings = Util.getArgumentCompleterValues(holder.getProject());
+
 		return new JavaElementVisitor() {
 			@Override
 			public void visitParameter(@NotNull final PsiParameter parameter) {
 				final PsiAnnotation annotation = parameter.getAnnotation(Constants.ANNOTATION_COMPLETER);
-				if (annotation != null) {
-					final List<String> strings = Util.getArgumentCompleterValues(holder.getProject());
-					final PsiAnnotationMemberValue value = annotation.findAttributeValue("value");
-					if (value != null && !strings.contains(value.getText())) {
-						holder.registerProblem(value, "Wrong!", ProblemHighlightType.ERROR);
-					}
+				if (annotation == null) {
+					return;
+				}
+				final PsiAnnotationMemberValue value = annotation.findAttributeValue("value");
+				if (value != null && !strings.contains(value.getText())) {
+					holder.registerProblem(value, DESCRIPTION, ProblemHighlightType.ERROR);
 				}
 			}
 		};
