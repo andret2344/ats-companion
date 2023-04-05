@@ -1,7 +1,4 @@
-#
-# Copyright Andret (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
-#
-image: gradle:jdk17
+image: gradle:7.6-jdk17-alpine
 
 cache:
   paths:
@@ -9,53 +6,39 @@ cache:
     - .gradle/caches
 
 before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-  - chmod a+x gradlew
+  - chmod u+x ./gradlew
 
 stages:
-  - prepare
   - build
   - test
   - deploy
 
-wrapper:
-  stage: prepare
-  script:
-    - gradle wrapper
-
-compile:
+build:
   stage: build
-  dependencies:
-    - wrapper
   script:
-    - ./gradlew assemble
+    - ./gradlew wrapper assemble
   artifacts:
     paths:
       - build/libs/*.jar
 
-junit:
+test:
   stage: test
-  dependencies:
-    - wrapper
   script:
     - ./gradlew clean test
-  coverage: '/^Coverage:\s(\d+\.\d+%)/'
   artifacts:
     reports:
       junit:
         - build/test-results/test/*.xml
-    paths:
-      - build/reports/jacoco/test/html/**
+      coverage:
+        - build/reports/jacoco/test/html/*
 
-pages:
+deploy:
   stage: deploy
-  dependencies:
-    - junit
   script:
-    - mv build/reports/jacoco/test/html/ public/
+    - mv build/reports/jacoco/test/html public/
   artifacts:
     paths:
-      - public/**
+      - public/*
   only:
     - master
   when: manual
