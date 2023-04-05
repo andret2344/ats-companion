@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class InvalidArgumentCompleterInspection extends AbstractBaseJavaLocalInspectionTool {
-	public static final String DESCRIPTION = "Invalid argument completer!";
+	public static final String DESCRIPTION = "Invalid argument completer.";
 
 	@NotNull
 	@Override
