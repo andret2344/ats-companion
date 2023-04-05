@@ -24,8 +24,6 @@ test:
     reports:
       junit:
         - build/test-results/test/*.xml
-      coverage:
-        - build/reports/jacoco/test/html/*
 
 deploy:
   stage: deploy
