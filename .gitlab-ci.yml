@@ -1,4 +1,4 @@
-image: openjdk:17-alpine
+image: gradle:7.5-jdk17
 
 before_script:
   - chmod a+x gradlew
@@ -19,7 +19,7 @@ compile:
 junit:
   stage: test
   script:
-    - ./gradlew clean test
+    - ./gradlew clean test --scan
   coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
   artifacts:
     reports:
@@ -29,13 +29,12 @@ junit:
       - build/reports/jacoco/test/html/**
 
 pages:
-  image: nginx:alpine
   stage: deploy
   script:
     - mv build/reports/jacoco/test/html/ public/
   artifacts:
     paths:
-      - public
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
-      when: manual
+      - public/**
+  only:
+    - master
+  when: manual
