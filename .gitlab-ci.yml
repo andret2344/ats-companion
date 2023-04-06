@@ -1,4 +1,4 @@
-image: gradle:7.6-jdk17-alpine
+image: gradle:7.5-jdk17
 
 before_script:
   - chmod u+x ./gradlew
@@ -19,7 +19,7 @@ build:
 test:
   stage: test
   script:
-    - ./gradlew clean test
+    - ./gradlew clean test --scan
   artifacts:
     reports:
       junit:
