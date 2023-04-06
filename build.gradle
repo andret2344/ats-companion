@@ -24,7 +24,7 @@ buildSearchableOptions {
 
 patchPluginXml {
 	version = project.version
-	setSinceBuild '222'
+	setSinceBuild '231'
 }
 
 group project.group
