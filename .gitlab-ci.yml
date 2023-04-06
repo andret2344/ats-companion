@@ -1,16 +1,7 @@
-#
-# Copyright Andret (c) 2018-2023. Copying and modifying allowed only keeping git link reference.
-#
-image: gradle:8-jdk17-alpine
-
-cache:
-  paths:
-    - .gradle/wrapper
-    - .gradle/caches
-    - ~/.gradle/caches
+image: openjdk:17-alpine
 
 before_script:
-  - chmod +x gradlew
+  - chmod a+x gradlew
 
 stages:
   - build
@@ -20,15 +11,13 @@ stages:
 compile:
   stage: build
   script:
-    - ./gradlew wrapper assemble
+    - ./gradlew assemble
   artifacts:
     paths:
       - build/libs/*.jar
 
 junit:
   stage: test
-  dependencies:
-    - compile
   script:
     - ./gradlew clean test
   coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
@@ -42,8 +31,6 @@ junit:
 pages:
   image: nginx:alpine
   stage: deploy
-  dependencies:
-    - junit
   script:
     - mv build/reports/jacoco/test/html/ public/
   artifacts:
