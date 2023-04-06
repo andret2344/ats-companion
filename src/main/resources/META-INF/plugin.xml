@@ -199,6 +199,16 @@
 		/>
 		<localInspection
 				language="JAVA"
+				displayName="Invalid constructor arguments"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="ERROR"
+				implementationClass="eu.andret.ats.companion.idea.inspection.ConstructorParametersInspection"
+		/>
+		<localInspection
+				language="JAVA"
 				displayName="Invalid argument mapper"
 				groupPath="ATS"
 				groupBundle="messages.InspectionsBundle"
@@ -209,13 +219,13 @@
 		/>
 		<localInspection
 				language="JAVA"
-				displayName="Invalid constructor arguments"
+				displayName="Invalid argument completer"
 				groupPath="ATS"
 				groupBundle="messages.InspectionsBundle"
 				groupKey="group.names.probable.bugs"
 				enabledByDefault="true"
-				level="ERROR"
-				implementationClass="eu.andret.ats.companion.idea.inspection.ConstructorParametersInspection"
+				level="WARNING"
+				implementationClass="eu.andret.ats.companion.idea.inspection.InvalidArgumentCompleterInspection"
 		/>
 		<completion.contributor
 				language="JAVA"
@@ -232,13 +242,16 @@
 				implementationClass="eu.andret.ats.companion.idea.completion.TypeMapperCompletionContributor"
 				order="first"
 		/>
+		<completion.contributor
+				language="JAVA"
+				implementationClass="eu.andret.ats.companion.idea.completion.ArgumentCompleterCompletionContributor"
+				order="first"
+		/>
 		<intentionAction>
-			<language>JAVA</language>
 			<className>eu.andret.ats.companion.idea.intention.ArgumentFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>
 		<intentionAction>
-			<language>JAVA</language>
 			<className>eu.andret.ats.companion.idea.intention.TypeFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>

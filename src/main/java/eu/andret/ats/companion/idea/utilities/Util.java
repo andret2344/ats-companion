@@ -44,6 +44,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public final class Util {
+	private static final String JAVA_LANG_STRING = "java.lang.String";
 	private static final String VALUE = "value";
 	private static final int LIMIT = 1_000_000;
 
@@ -105,7 +106,7 @@ public final class Util {
 	@NotNull
 	public static PsiType createStringType(@NotNull final Project project) {
 		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-		return factory.createTypeByFQClassName("java.lang.String");
+		return factory.createTypeByFQClassName(JAVA_LANG_STRING);
 	}
 
 	@Nullable
@@ -146,7 +147,7 @@ public final class Util {
 				.map(expressions -> expressions[0])
 				.map(argument -> {
 					final PsiClass aClass = PsiTypesUtil.getPsiClass(argument.getType());
-					if (aClass != null && Objects.equals(aClass.getQualifiedName(), "java.lang.String")) {
+					if (aClass != null && Objects.equals(aClass.getQualifiedName(), JAVA_LANG_STRING)) {
 						return argument.getText();
 					}
 					return null;
@@ -183,6 +184,39 @@ public final class Util {
 				.filter(Objects::nonNull)
 				.map(PsiImmediateClassType::getParameters)
 				.map(types -> types[0])
+				.filter(Objects::nonNull)
+				.toList();
+	}
+
+	@NotNull
+	public static List<String> getArgumentCompleterValues(final Project project) {
+		final PsiClass psiClass = JavaPsiFacade.getInstance(project)
+				.findClass(Constants.CLASS_ANNOTATED_COMMAND, GlobalSearchScope.allScope(project));
+		if (psiClass == null) {
+			return Collections.emptyList();
+		}
+
+		final PsiMethod[] methods = psiClass.findMethodsByName(Constants.METHOD_ADD_ARGUMENT_COMPLETER, true);
+		if (methods.length == 0) {
+			return Collections.emptyList();
+		}
+
+		return MethodReferencesSearch.search(methods[0])
+				.findAll()
+				.stream()
+				.map(PsiReference::getElement)
+				.map(element -> PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class))
+				.filter(Objects::nonNull)
+				.map(PsiMethodCallExpression::getArgumentList)
+				.map(PsiExpressionList::getExpressions)
+				.map(expressions -> expressions[0])
+				.map(argument -> {
+					final PsiClass aClass = PsiTypesUtil.getPsiClass(argument.getType());
+					if (aClass != null && Objects.equals(aClass.getQualifiedName(), JAVA_LANG_STRING)) {
+						return argument.getText();
+					}
+					return null;
+				})
 				.filter(Objects::nonNull)
 				.toList();
 	}

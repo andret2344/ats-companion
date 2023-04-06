@@ -1,3 +1,7 @@
+/*
+ * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.linemarker;
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
@@ -28,6 +32,7 @@ public class TypeFallbackLineMarkerProvider extends RelatedItemLineMarkerProvide
 
 		Optional.of(element)
 				.map(psiElement -> Util.ancestorOf(psiElement, PsiMethod.class, 2))
+				.filter(psiMethod -> psiMethod.hasAnnotation(Constants.ANNOTATION_ARGUMENT))
 				.map(PsiJvmMember::getContainingClass)
 				.map(PsiClass::getMethods)
 				.stream()
