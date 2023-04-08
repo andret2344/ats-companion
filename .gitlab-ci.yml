@@ -19,14 +19,14 @@ compile:
 junit:
   stage: test
   script:
-    - ./gradlew clean test --scan
+    - ./gradlew clean test
   coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
   artifacts:
     reports:
       junit:
         - build/test-results/test/*.xml
     paths:
-      - build/reports/jacoco/test/html/**
+      - build/reports/jacoco/jacocoAggregatedReport/html/**
 
 pages:
   stage: deploy
