@@ -9,13 +9,8 @@ import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiAnnotationMemberValue;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiImportList;
-import com.intellij.psi.PsiImportStatement;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
@@ -26,10 +21,13 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 @NonNls
 public class ArgumentFallbackMethodIntention extends PsiElementBaseIntentionAction implements IntentionAction {
 	public static final String TEXT = "ATS: Generate argument fallback method";
 	public static final String FAMILY_NAME = "Generate @ArgumentFallback method";
+	private static final String METHOD_TEMPLATE = "@ArgumentFallback(\"%s\") public String %sFallback(String %s) {return null;}";
 
 	@Override
 	@NotNull
@@ -46,49 +44,44 @@ public class ArgumentFallbackMethodIntention extends PsiElementBaseIntentionActi
 	@Override
 	public boolean isAvailable(@NotNull final Project project, final Editor editor,
 							   @Nullable final PsiElement element) {
-		if (element == null) {
-			return false;
-		}
-		final PsiParameter psiParameter = Util.ancestorOf(element, PsiParameter.class, 4);
-		return Verifier.verifyParameter(psiParameter);
+		return Optional.ofNullable(element)
+				.map(el -> Util.ancestorOf(el, PsiParameter.class, 4))
+				.map(Verifier::verifyParameter)
+				.orElse(false);
 	}
 
 	@Override
 	public void invoke(@NotNull final Project project, final Editor editor, @NotNull final PsiElement element) {
-		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-		final PsiParameter psiParameter = Util.ancestorOf(element, PsiParameter.class, 4);
-		if (psiParameter == null) {
-			return;
-		}
-		final PsiAnnotation annotation = psiParameter.getAnnotation(Constants.ANNOTATION_MAPPER);
-		if (annotation == null) {
-			return;
-		}
-		final PsiAnnotationMemberValue attributeValue = annotation.findAttributeValue("value");
-		if (attributeValue == null) {
-			return;
-		}
-		final String value = attributeValue.getText().substring(1, attributeValue.getText().length() - 1);
-		final PsiMethod method = Util.ancestorOf(psiParameter, PsiMethod.class);
-		if (method == null) {
-			return;
-		}
+		Optional.ofNullable(Util.ancestorOf(element, PsiParameter.class, 4))
+				.ifPresent(psiParameter -> {
+					final String value = Optional.of(psiParameter)
+							.map(parameter -> parameter.getAnnotation(Constants.ANNOTATION_MAPPER))
+							.map(annotation -> annotation.findAttributeValue("value"))
+							.map(attributeValue -> attributeValue.getText().substring(1, attributeValue.getText().length() - 1))
+							.orElse("");
+					Optional.ofNullable(Util.ancestorOf(psiParameter, PsiMethod.class))
+							.ifPresent(method -> {
+								final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+								final PsiMethod newMethod = factory.createMethodFromText(
+										String.format(METHOD_TEMPLATE, value, value, value),
+										method.getContext());
+								injectCode(project, method, newMethod);
+							});
+				});
+	}
 
-		final PsiMethod psiMethod = factory.createMethodFromText(
-				String.format(
-						"@ArgumentFallback(\"%s\") public String %sFallback(String %s) {return null;}",
-						value, value, value),
-				method.getContext());
-		final PsiClass containingClass = method.getContainingClass();
-		if (containingClass == null) {
-			return;
-		}
-		containingClass.addAfter(psiMethod, method);
-		final PsiImportStatement importStatement = Util.createImportStatement(project, Constants.ANNOTATION_ARGUMENT_FALLBACK);
-		final PsiImportList importList = ((PsiJavaFile) containingClass.getParent()).getImportList();
-		if (importStatement == null || importList == null) {
-			return;
-		}
-		importList.add(importStatement);
+	private static void injectCode(@NotNull final Project project, @NotNull final PsiMethod method,
+								   @NotNull final PsiMethod newMethod) {
+		Optional.ofNullable(method.getContainingClass())
+				.ifPresent(containingClass -> {
+					containingClass.addAfter(newMethod, method);
+					Optional.of(containingClass)
+							.map(PsiElement::getParent)
+							.map(PsiJavaFile.class::cast)
+							.map(PsiJavaFile::getImportList)
+							.ifPresent(importList -> Util.createImportStatement(project, Constants.ANNOTATION_ARGUMENT_FALLBACK)
+									.ifPresent(importList::add));
+
+				});
 	}
 }
