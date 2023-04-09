@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -47,23 +47,14 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		return new JavaElementVisitor() {
 			@Override
 			public void visitInstanceOfExpression(@NotNull final PsiInstanceOfExpression expression) {
-				final PsiElement context = expression.getContext();
-				if (context == null) {
-					return;
-				}
-				final PsiMethod method = Util.ancestorOf(context, PsiMethod.class);
-				if (!Verifier.verifyArgumentMethod(method)) {
-					return;
-				}
-				final PsiTypeElement checkType = expression.getCheckType();
-				if (checkType == null) {
-					return;
-				}
-				final PsiType type = checkType.getType();
-				if (!type.isValid()) {
-					return;
-				}
-				findElementAndValidate(expression, method, type);
+				Optional.of(expression)
+						.map(PsiElement::getContext)
+						.map(element -> Util.ancestorOf(element, PsiMethod.class))
+						.ifPresent(method -> Optional.of(method)
+								.filter(Verifier::verifyArgumentMethod)
+								.map(ignored -> expression.getCheckType())
+								.map(PsiTypeElement::getType)
+								.ifPresent(type -> findElementAndValidate(expression, method, type)));
 			}
 
 			private void findElementAndValidate(final PsiInstanceOfExpression expression, final PsiMethod psiMethod,
@@ -73,13 +64,14 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 						.map(annotation -> annotation.findAttributeValue("executorType"))
 						.map(PsiElement::getLastChild)
 						.map(PsiElement::getText)
-						.ifPresent(field -> {
-							final PsiElement resolve = ((PsiReference) expression.getOperand()).resolve();
-							if (!(resolve instanceof final PsiField psiField) || !psiField.getName().equals("sender")) {
-								return;
-							}
-							analyzeAndReport(holder, expression, type, field);
-						});
+						.ifPresent(field -> Optional.of(expression)
+								.map(PsiInstanceOfExpression::getOperand)
+								.map(PsiReference.class::cast)
+								.map(PsiReference::resolve)
+								.filter(PsiField.class::isInstance)
+								.map(PsiField.class::cast)
+								.filter(psiField -> psiField.getName().equals("sender"))
+								.ifPresent(ignored -> analyzeAndReport(holder, expression, type, field)));
 			}
 		};
 	}
@@ -111,12 +103,11 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 
 		@Override
 		public final void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-			final PsiElement element = getElement(descriptor);
-			final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-			if (editor == null || element == null) {
-				return;
-			}
-			getUnWrapper().unwrap(editor, element);
+			final PsiElement psiElement = getElement(descriptor);
+			final Editor textEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+			Optional.ofNullable(psiElement)
+					.ifPresent(element -> Optional.ofNullable(textEditor)
+							.ifPresent(editor -> getUnWrapper().unwrap(editor, element)));
 		}
 
 		public abstract PsiElement getElement(@NotNull final ProblemDescriptor problemDescriptor);

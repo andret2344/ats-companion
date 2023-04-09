@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -38,26 +38,18 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 		return new JavaElementVisitor() {
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
-				if (!Verifier.verifyClass(method.getContainingClass())) {
-					return;
-				}
-				if (!method.hasAnnotation(Constants.ANNOTATION_ARGUMENT)) {
-					return;
-				}
-				final PsiTypeElement returnTypeElement = method.getReturnTypeElement();
-				if (returnTypeElement == null) {
-					return;
-				}
-				final PsiType returnType = returnTypeElement.getType();
-				if (!returnType.isValid()) {
-					return;
-				}
-				if (returnType.equalsToText("void")) {
-					return;
-				}
-				if (returnType instanceof PsiPrimitiveType) {
-					holder.registerProblem(returnTypeElement, DESCRIPTION, ProblemHighlightType.WARNING, new ChangeToStringQuickFix());
-				}
+				Optional.of(method)
+						.filter(psiMethod -> Verifier.verifyClass(method.getContainingClass()))
+						.filter(psiMethod -> psiMethod.hasAnnotation(Constants.ANNOTATION_ARGUMENT))
+						.map(PsiMethod::getReturnTypeElement)
+						.ifPresent(psiTypeElement -> Optional.of(psiTypeElement)
+								.map(PsiTypeElement::getType)
+								.filter(PsiType::isValid)
+								.filter(psiType -> !psiType.equalsToText("void"))
+								.filter(PsiPrimitiveType.class::isInstance)
+								.ifPresent(ignored -> holder.registerProblem(psiTypeElement, DESCRIPTION,
+										ProblemHighlightType.WARNING, new ChangeToStringQuickFix())));
+
 			}
 		};
 	}

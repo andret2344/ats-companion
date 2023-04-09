@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -22,7 +22,7 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentFallbackWrongParameters() {
+	public void argumentFallbackWrongParameters() {
 		// given
 		getFixture().configureByFile("argument-wrong-parameters.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());
@@ -42,7 +42,7 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentFallbackWrongParametersFix() {
+	public void argumentFallbackWrongParametersFix() {
 		// given
 		getFixture().configureByFile("argument-wrong-parameters.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());
@@ -58,7 +58,7 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testArgumentFallbackCorrectParameters() {
+	public void argumentFallbackCorrectParameters() {
 		// given
 		getFixture().configureByFile("argument-wrong-parameters.after.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());
@@ -76,7 +76,7 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testTypeFallbackWrongParameters() {
+	public void typeFallbackWrongParameters() {
 		// given
 		getFixture().configureByFile("type-wrong-parameters.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());
@@ -96,7 +96,7 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testTypeFallbackWrongParametersFix() {
+	public void typeFallbackWrongParametersFix() {
 		// given
 		getFixture().configureByFile("type-wrong-parameters.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());
@@ -112,7 +112,7 @@ public class FallbackArgumentsInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testTypeFallbackCorrectParameters() {
+	public void typeFallbackCorrectParameters() {
 		// given
 		getFixture().configureByFile("type-wrong-parameters.after.java");
 		getFixture().enableInspections(new FallbackArgumentsInspection());

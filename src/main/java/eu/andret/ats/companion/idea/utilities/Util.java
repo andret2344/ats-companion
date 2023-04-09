@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.utilities;
@@ -109,8 +109,8 @@ public final class Util {
 		return factory.createTypeByFQClassName(JAVA_LANG_STRING);
 	}
 
-	@Nullable
-	public static PsiImportStatement createImportStatement(@NotNull final Project project, @NotNull final String statement) {
+	@NotNull
+	public static Optional<PsiImportStatement> createImportStatement(@NotNull final Project project, @NotNull final String statement) {
 		final PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
 		final CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
 		final PsiJavaFile aFile = (PsiJavaFile) fileFactory.createFileFromText("_Dummy_.java", JavaFileType.INSTANCE, "import " + statement + ";");
@@ -119,8 +119,7 @@ public final class Util {
 				.map(PsiImportList::getImportStatements)
 				.map(statements -> statements[0])
 				.map(codeStyleManager::reformat)
-				.map(PsiImportStatement.class::cast)
-				.orElse(null);
+				.map(PsiImportStatement.class::cast);
 	}
 
 	@NotNull

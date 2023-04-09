@@ -27,9 +27,6 @@ patchPluginXml {
 	setSinceBuild '231'
 }
 
-group project.group
-version project.version
-
 repositories {
 	mavenCentral()
 }
@@ -60,12 +57,5 @@ jacocoTestCoverageVerification {
 				minimum = 0.8
 			}
 		}
-	}
-}
-
-allprojects {
-	test {
-		scanForTestClasses false
-		include "**/*Test.class"
 	}
 }

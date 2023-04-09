@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -22,7 +22,7 @@ public class MissingBaseCommandAnnotationInspectionTest extends LightJavaCodeIns
 	}
 
 	@Test
-	public void testBaseCommandMissing() {
+	public void baseCommandMissing() {
 		// given
 		getFixture().configureByFile("sample.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -43,7 +43,7 @@ public class MissingBaseCommandAnnotationInspectionTest extends LightJavaCodeIns
 	}
 
 	@Test
-	public void testBaseCommandMissingFix() {
+	public void baseCommandMissingFix() {
 		// given
 		getFixture().configureByFile("sample.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");

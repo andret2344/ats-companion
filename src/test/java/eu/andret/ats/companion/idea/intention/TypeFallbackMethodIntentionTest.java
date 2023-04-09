@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.intention;
@@ -14,7 +14,7 @@ public class TypeFallbackMethodIntentionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
-	public void testGenerateFallbackMethod() {
+	public void generateFallbackMethod() {
 		// given
 		getFixture().configureByFile("type-fallback.java");
 		final IntentionAction action = getFixture().findSingleIntention(TypeFallbackMethodIntention.NAME);
