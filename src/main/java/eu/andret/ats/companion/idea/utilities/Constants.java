@@ -14,9 +14,9 @@ public final class Constants {
 	public static final String ANNOTATION_ARGUMENT_FALLBACK = "eu.andret.arguments.api.annotation.ArgumentFallback";
 	public static final String ANNOTATION_TYPE_FALLBACK = "eu.andret.arguments.api.annotation.TypeFallback";
 	public static final String ANNOTATION_MAPPER = "eu.andret.arguments.api.annotation.Mapper";
-	public static final String ANNOTATION_COMPLETER = ARGUMENTS_ANNOTATION + ".Completer";
+	public static final String ANNOTATION_COMPLETER = "eu.andret.arguments.api.annotation.Completer";
 	public static final String CLASS_ANNOTATED_COMMAND_EXECUTOR = "eu.andret.arguments.AnnotatedCommandExecutor";
-	public static final String CLASS_ANNOTATED_COMMAND = ARGUMENTS_MAIN + ".AnnotatedCommand";
+	public static final String CLASS_ANNOTATED_COMMAND = "eu.andret.arguments.AnnotatedCommand";
 
 	public static final String BUKKIT_JAVA_PLUGIN = "org.bukkit.plugin.java.JavaPlugin";
 	public static final String BUKKIT_COMMAND_SENDER = "org.bukkit.command.CommandSender";
