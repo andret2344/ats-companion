@@ -49,7 +49,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 			public void visitInstanceOfExpression(@NotNull final PsiInstanceOfExpression expression) {
 				Optional.of(expression)
 						.map(PsiElement::getContext)
-						.map(x -> Util.ancestorOf(x, PsiMethod.class))
+						.map(element -> Util.ancestorOf(element, PsiMethod.class))
 						.ifPresent(method -> Optional.of(method)
 								.filter(Verifier::verifyArgumentMethod)
 								.map(ignored -> expression.getCheckType())
