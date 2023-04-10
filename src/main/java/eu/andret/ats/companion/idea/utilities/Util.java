@@ -12,7 +12,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiImportList;
@@ -26,7 +25,6 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.impl.source.PsiImmediateClassType;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.MethodReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -133,15 +131,10 @@ public final class Util {
 				.map(PsiMethodCallExpression::getArgumentList)
 				.map(PsiExpressionList::getExpressions)
 				.map(expressions -> expressions[0])
-				.map(PsiExpression::getType)
-				.map(obj -> {
-					System.out.println(obj);
-					return PsiImmediateClassType.class.cast(obj);
-				})
-				.filter(Objects::nonNull)
-				.map(PsiClassType::getParameters)
-				.map(types -> types[0])
-				.filter(Objects::nonNull)
+				.filter(PsiClassObjectAccessExpression.class::isInstance)
+				.map(PsiClassObjectAccessExpression.class::cast)
+				.map(PsiClassObjectAccessExpression::getOperand)
+				.map(PsiTypeElement::getType)
 				.toList();
 	}
 
