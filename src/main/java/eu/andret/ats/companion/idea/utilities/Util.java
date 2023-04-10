@@ -136,7 +136,7 @@ public final class Util {
 				.map(PsiExpression::getType)
 				.map(PsiImmediateClassType.class::cast)
 				.filter(Objects::nonNull)
-				.map(PsiImmediateClassType::getParameters)
+				.map(PsiClassType::getParameters)
 				.map(types -> types[0])
 				.filter(Objects::nonNull)
 				.toList();

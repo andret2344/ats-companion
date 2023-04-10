@@ -4,8 +4,7 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
 		super(sender, plugin);
 	}
 
-	@eu.andret.arguments.api.annotation.Argument
-	public java.lang.String get() {
-		return 1;
+	@eu.andret.arguments.api.annotation.TypeFallback(<caret>java.lang.Object.class)
+    private void get() {
 	}
 }
