@@ -11,13 +11,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArgumentPositionCompletionContributorTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public ArgumentPositionCompletionContributorTest() {
-		super(null, "src/test/testData/completion");
+		super(null, "src/test/testData/completion/argument-position");
 	}
 
 	@Test
 	public void positionCompletionWithArguments() {
 		// given
-		getFixture().configureByFile("argument-position-with-parameter.java");
+		getFixture().configureByFile("with-parameter.java");
 
 		// when
 		getFixture().completeBasic();
@@ -30,7 +30,7 @@ public class ArgumentPositionCompletionContributorTest extends LightJavaCodeInsi
 	@Test
 	public void positionCompletionWithoutArguments() {
 		// given
-		getFixture().configureByFile("argument-position-without-parameter.java");
+		getFixture().configureByFile("without-parameter.java");
 
 		// when
 		getFixture().completeBasic();
