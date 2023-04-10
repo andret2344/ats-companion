@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -22,7 +22,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testNoArguments() {
+	public void noArguments() {
 		// given
 		getFixture().configureByFile("no-args.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -43,7 +43,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testPluginMissing() {
+	public void pluginMissing() {
 		// given
 		getFixture().configureByFile("plugin-missing.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -64,7 +64,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testSenderMissing() {
+	public void senderMissing() {
 		// given
 		getFixture().configureByFile("sender-missing.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -85,7 +85,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testSingleWrongArgument() {
+	public void singleWrongArgument() {
 		// given
 		getFixture().configureByFile("single-wrong-arg.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -106,7 +106,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testWrongArgForPlugin() {
+	public void wrongArgForPlugin() {
 		// given
 		getFixture().configureByFile("wrong-arg-for-plugin.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -127,7 +127,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testWrongArgForSender() {
+	public void wrongArgForSender() {
 		// given
 		getFixture().configureByFile("wrong-arg-for-sender.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -148,7 +148,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testTwoArgumentsFirstWrong() {
+	public void twoArgumentsFirstWrong() {
 		// given
 		getFixture().configureByFile("two-args-first-wrong.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -169,7 +169,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testTwoArgumentsBothWrong() {
+	public void twoArgumentsBothWrong() {
 		// given
 		getFixture().configureByFile("two-args-both-wrong.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -190,7 +190,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testTwoCorrectArguments() {
+	public void twoCorrectArguments() {
 		// given
 		getFixture().configureByFile("two-correct-args.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -209,7 +209,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testMultipleCorrectArguments() {
+	public void multipleCorrectArguments() {
 		// given
 		getFixture().configureByFile("multiple-correct-args.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -228,7 +228,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testNoBaseCommand() {
+	public void noBaseCommand() {
 		// given
 		getFixture().configureByFile("no-base-command.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -247,7 +247,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testChangeParametersFix() {
+	public void changeParametersFix() {
 		// given
 		getFixture().configureByFile("no-args.java");
 		getFixture().enableInspections(new ConstructorParametersInspection());
@@ -262,7 +262,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testInsertSecondParametersFix() {
+	public void insertSecondParametersFix() {
 		// given
 		getFixture().configureByFile("plugin-missing.java");
 		getFixture().enableInspections(new ConstructorParametersInspection());
@@ -277,7 +277,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testInsertFirstParametersFix() {
+	public void insertFirstParametersFix() {
 		// given
 		getFixture().configureByFile("sender-missing.java");
 		getFixture().enableInspections(new ConstructorParametersInspection());
@@ -292,7 +292,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testChangeParameterFixFirstWrong() {
+	public void changeParameterFixFirstWrong() {
 		// given
 		getFixture().configureByFile("two-args-first-wrong.java");
 		getFixture().enableInspections(new ConstructorParametersInspection());
@@ -307,7 +307,7 @@ public class ConstructorParametersInspectionTest extends LightJavaCodeInsightFix
 	}
 
 	@Test
-	public void testChangeParameterFixSecondWrong() {
+	public void changeParameterFixSecondWrong() {
 		// given
 		getFixture().configureByFile("two-args-second-wrong.java");
 		getFixture().enableInspections(new ConstructorParametersInspection());

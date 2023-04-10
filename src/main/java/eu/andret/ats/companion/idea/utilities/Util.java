@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
+ */
+
 package eu.andret.ats.companion.idea.utilities;
 
 import com.intellij.ide.highlighter.JavaFileType;
@@ -85,8 +89,8 @@ public final class Util {
 		return factory.createTypeByFQClassName("java.lang.String");
 	}
 
-	@Nullable
-	public static PsiImportStatement createImportStatement(@NotNull final Project project, @NotNull final String statement) {
+	@NotNull
+	public static Optional<PsiImportStatement> createImportStatement(@NotNull final Project project, @NotNull final String statement) {
 		final PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
 		final CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
 		final PsiJavaFile aFile = (PsiJavaFile) fileFactory.createFileFromText("_Dummy_.java", JavaFileType.INSTANCE, "import " + statement + ";");
@@ -95,7 +99,6 @@ public final class Util {
 				.map(PsiImportList::getImportStatements)
 				.map(statements -> statements[0])
 				.map(codeStyleManager::reformat)
-				.map(PsiImportStatement.class::cast)
-				.orElse(null);
+				.map(PsiImportStatement.class::cast);
 	}
 }

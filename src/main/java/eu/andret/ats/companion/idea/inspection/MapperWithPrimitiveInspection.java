@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -30,7 +30,7 @@ public class MapperWithPrimitiveInspection extends AbstractBaseJavaLocalInspecti
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitParameter(final PsiParameter parameter) {
+			public void visitParameter(@NotNull final PsiParameter parameter) {
 				Optional.of(parameter)
 						.filter(psiParameter -> psiParameter.getType() instanceof PsiPrimitiveType)
 						.map(psiParameter -> psiParameter.getAnnotation(Constants.ANNOTATION_MAPPER))

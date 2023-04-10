@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -15,8 +15,9 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiPrimitiveType;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiTypes;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
@@ -34,16 +35,15 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitBinaryExpression(final PsiBinaryExpression expression) {
-				final PsiElement context = expression.getContext();
-				if (context == null) {
-					return;
-				}
-				final PsiMethod method = Util.ancestorOf(context, PsiMethod.class);
-				if (!Verifier.verifyArgumentMethod(method)) {
-					return;
-				}
-				Arrays.stream(method.getParameterList().getParameters())
+			public void visitBinaryExpression(@NotNull final PsiBinaryExpression expression) {
+				Optional.of(expression)
+						.map(PsiElement::getContext)
+						.map(element -> Util.ancestorOf(element, PsiMethod.class))
+						.filter(Verifier::verifyArgumentMethod)
+						.map(PsiMethod::getParameterList)
+						.map(PsiParameterList::getParameters)
+						.stream()
+						.flatMap(Arrays::stream)
 						.filter(psiParameter -> !(psiParameter.getType() instanceof PsiPrimitiveType))
 						.filter(psiParameter -> validateParameter(psiParameter, expression))
 						.forEach(psiParameter -> {
@@ -63,13 +63,13 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 				final boolean lNull = isNull(expression.getLOperand());
 				final boolean rMatches = is(expression.getROperand(), psiParameter);
 				final boolean lMatches = is(expression.getLOperand(), psiParameter);
-				return (lMatches && rNull) || (rMatches && lNull);
+				return lMatches && rNull || rMatches && lNull;
 			}
 
 			private boolean isNull(final PsiExpression expression) {
 				return Optional.of(expression)
 						.map(PsiExpression::getType)
-						.map(PsiType.NULL::equals)
+						.map(PsiTypes.nullType()::equals)
 						.orElse(false);
 			}
 

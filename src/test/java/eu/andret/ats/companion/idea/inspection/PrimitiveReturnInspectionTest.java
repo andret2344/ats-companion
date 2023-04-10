@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -22,7 +22,7 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 	}
 
 	@Test
-	public void testPrimitiveReturnHighlight() {
+	public void primitiveReturnHighlight() {
 		// given
 		getFixture().configureByFile("sample.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());
@@ -42,7 +42,7 @@ public class PrimitiveReturnInspectionTest extends LightJavaCodeInsightFixtureTe
 	}
 
 	@Test
-	public void testPrimitiveReturnFixChangeToString() {
+	public void primitiveReturnFixChangeToString() {
 		// given
 		getFixture().configureByFile("sample.java");
 		getFixture().enableInspections(new PrimitiveReturnInspection());

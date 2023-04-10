@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.implicitusage;
@@ -24,7 +24,7 @@ public class ArgumentMethodImplicitUsageProviderTest extends LightJavaCodeInsigh
 	}
 
 	@Test
-	public void testImplicitUsageMethod() {
+	public void implicitUsageMethod() {
 		// given
 		getFixture().configureByFile("argument-method-implicit-usage.java");
 		getFixture().enableInspections(new UnusedDeclarationInspectionBase(true));
@@ -40,7 +40,7 @@ public class ArgumentMethodImplicitUsageProviderTest extends LightJavaCodeInsigh
 	}
 
 	@Test
-	public void testImplicitUsageMethodWithoutAnnotation() {
+	public void implicitUsageMethodWithoutAnnotation() {
 		// given
 		getFixture().configureByFile("argument-method-implicit-usage-no-annotation.java");
 		getFixture().enableInspections(new UnusedDeclarationInspectionBase(true));
@@ -56,7 +56,7 @@ public class ArgumentMethodImplicitUsageProviderTest extends LightJavaCodeInsigh
 	}
 
 	@Test
-	public void testImplicitUsageParameter() {
+	public void implicitUsageParameter() {
 		// given
 		getFixture().configureByFile("argument-parameter-implicit-usage.java");
 		getFixture().enableInspections(new UnusedDeclarationInspectionBase(true));
@@ -72,7 +72,7 @@ public class ArgumentMethodImplicitUsageProviderTest extends LightJavaCodeInsigh
 	}
 
 	@Test
-	public void testImplicitUsageParameterWithoutAnnotation() {
+	public void implicitUsageParameterWithoutAnnotation() {
 		// given
 		getFixture().configureByFile("argument-parameter-implicit-usage-no-annotation.java");
 		getFixture().enableInspections(new UnusedDeclarationInspectionBase(true));
