@@ -15,16 +15,16 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InvalidTypeMapperInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
-	public InvalidTypeMapperInspectionTest() {
-		super(null, "src/test/testData/inspection/invalid-type-mapper");
+public class InvalidArgumentMapperInspectionTest extends LightJavaCodeInsightFixtureTestCase4 {
+	public InvalidArgumentMapperInspectionTest() {
+		super(null, "src/test/testData/inspection/invalid-argument-mapper");
 	}
 
 	@Test
 	public void methodIncorrect() {
 		// given
 		getFixture().configureByFile("method-incorrect.java");
-		getFixture().enableInspections(new InvalidTypeMapperInspection());
+		getFixture().enableInspections(new InvalidArgumentMapperInspection());
 
 		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
@@ -33,7 +33,7 @@ public class InvalidTypeMapperInspectionTest extends LightJavaCodeInsightFixture
 		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
-						Objects.equals(element.getDescription(), InvalidTypeMapperInspection.DESCRIPTION))
+						Objects.equals(element.getDescription(), InvalidArgumentMapperInspection.DESCRIPTION))
 				.findAny();
 		assertThat(optionalHighlightInfo)
 				.map(HighlightInfo::getSeverity)
@@ -46,10 +46,10 @@ public class InvalidTypeMapperInspectionTest extends LightJavaCodeInsightFixture
 		getFixture().configureByFile("method-correct.java");
 		getFixture().addClass("package eu.andret.arguments;" +
 				"import java.util.function.Function;import java.util.function.Predicate;public class AnnotatedCommand<E extends org.bukkit.plugin.java.JavaPlugin> { " +
-				"public <T> void addTypeMapper(final Class<T> clazz, final Function<String, T> mapper, final Predicate<Object> fallbackCondition) {" +
+				"public <T> void addArgumentMapper(final String s, final Class<T> clazz, final Function<String, T> mapper, final Predicate<Object> fallbackCondition) {" +
 				"}" +
 				"}");
-		getFixture().enableInspections(new InvalidTypeMapperInspection());
+		getFixture().enableInspections(new InvalidArgumentMapperInspection());
 
 		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
@@ -58,7 +58,7 @@ public class InvalidTypeMapperInspectionTest extends LightJavaCodeInsightFixture
 		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
-						Objects.equals(element.getDescription(), InvalidTypeMapperInspection.DESCRIPTION))
+						Objects.equals(element.getDescription(), InvalidArgumentMapperInspection.DESCRIPTION))
 				.findAny();
 		assertThat(optionalHighlightInfo).isEmpty();
 	}
@@ -67,7 +67,7 @@ public class InvalidTypeMapperInspectionTest extends LightJavaCodeInsightFixture
 	public void parameterIncorrect() {
 		// given
 		getFixture().configureByFile("parameter-incorrect.java");
-		getFixture().enableInspections(new InvalidTypeMapperInspection());
+		getFixture().enableInspections(new InvalidArgumentMapperInspection());
 
 		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
@@ -76,7 +76,7 @@ public class InvalidTypeMapperInspectionTest extends LightJavaCodeInsightFixture
 		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
-						Objects.equals(element.getDescription(), InvalidTypeMapperInspection.DESCRIPTION))
+						Objects.equals(element.getDescription(), InvalidArgumentMapperInspection.DESCRIPTION))
 				.findAny();
 		assertThat(optionalHighlightInfo)
 				.map(HighlightInfo::getSeverity)
@@ -89,10 +89,10 @@ public class InvalidTypeMapperInspectionTest extends LightJavaCodeInsightFixture
 		getFixture().configureByFile("parameter-correct.java");
 		getFixture().addClass("package eu.andret.arguments;" +
 				"import java.util.function.Function;import java.util.function.Predicate;public class AnnotatedCommand<E extends org.bukkit.plugin.java.JavaPlugin> { " +
-				"public <T> void addTypeMapper(final Class<T> clazz, final Function<String, T> mapper, final Predicate<Object> fallbackCondition) {" +
+				"public <T> void addArgumentMapper(final String s, final Class<T> clazz, final Function<String, T> mapper, final Predicate<Object> fallbackCondition) {" +
 				"}" +
 				"}");
-		getFixture().enableInspections(new InvalidTypeMapperInspection());
+		getFixture().enableInspections(new InvalidArgumentMapperInspection());
 
 		// when
 		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
@@ -101,7 +101,7 @@ public class InvalidTypeMapperInspectionTest extends LightJavaCodeInsightFixture
 		assertThat(highlightInfos).isNotEmpty();
 		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
 				.filter(element ->
-						Objects.equals(element.getDescription(), InvalidTypeMapperInspection.DESCRIPTION))
+						Objects.equals(element.getDescription(), InvalidArgumentMapperInspection.DESCRIPTION))
 				.findAny();
 		assertThat(optionalHighlightInfo).isEmpty();
 	}

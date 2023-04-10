@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
+ */
+
 @eu.andret.arguments.api.annotation.BaseCommand("test")
 public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandExecutor<JavaPlugin> {
 	public LocalCommandExecutor(final CommandSender sender, final JavaPlugin plugin) {
@@ -8,7 +12,7 @@ public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandEx
     private void get() {
 	}
 
-	private void dupa3() {
+	private static void init() {
 		final eu.andret.arguments.AnnotatedCommand command = CommandManager.registerCommand(this.getClass(), null);
 		command.addTypeMapper(java.lang.Object.class, null, null);
 	}

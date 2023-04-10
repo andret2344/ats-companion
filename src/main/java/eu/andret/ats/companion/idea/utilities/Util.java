@@ -11,6 +11,7 @@ import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiFileFactory;
@@ -28,7 +29,6 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.MethodReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiTypesUtil;
 import com.intellij.util.Query;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -164,13 +164,8 @@ public final class Util {
 				.map(PsiMethodCallExpression::getArgumentList)
 				.map(PsiExpressionList::getExpressions)
 				.map(expressions -> expressions[0])
-				.map(argument -> {
-					final PsiClass aClass = PsiTypesUtil.getPsiClass(argument.getType());
-					if (aClass != null && Objects.equals(aClass.getQualifiedName(), JAVA_LANG_STRING)) {
-						return argument.getText();
-					}
-					return null;
-				})
+				.filter(argument -> createStringType(method.getProject()).equals(argument.getType()))
+				.map(PsiElement::getText)
 				.filter(Objects::nonNull)
 				.toList();
 	}
