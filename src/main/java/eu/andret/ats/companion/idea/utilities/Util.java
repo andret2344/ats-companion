@@ -134,7 +134,10 @@ public final class Util {
 				.map(PsiExpressionList::getExpressions)
 				.map(expressions -> expressions[0])
 				.map(PsiExpression::getType)
-				.map(PsiImmediateClassType.class::cast)
+				.map(obj -> {
+					System.out.println(obj);
+					return PsiImmediateClassType.class.cast(obj);
+				})
 				.filter(Objects::nonNull)
 				.map(PsiClassType::getParameters)
 				.map(types -> types[0])
