@@ -12,9 +12,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJvmMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.util.PsiTreeUtil;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.IconProvider;
-import eu.andret.ats.companion.idea.utilities.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -33,7 +33,7 @@ public class ArgumentFallbackLineMarkerProvider extends RelatedItemLineMarkerPro
 				.map(psiAnnotation -> psiAnnotation.getAnnotation(Constants.ANNOTATION_MAPPER))
 				.map(psiAnnotationMemberValue -> psiAnnotationMemberValue.findAttributeValue("value"))
 				.ifPresent(psiAnnotationMemberValue -> {
-					final PsiMethod psiMethod = Util.ancestorOf(element, PsiMethod.class, 2);
+					final PsiMethod psiMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
 					Optional.ofNullable(psiMethod)
 							.map(PsiJvmMember::getContainingClass)
 							.map(PsiClass::getMethods)

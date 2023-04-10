@@ -10,7 +10,7 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
@@ -31,10 +31,12 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.MethodReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiTypesUtil;
+import com.intellij.util.Query;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.Generated;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -46,35 +48,9 @@ import java.util.stream.Stream;
 public final class Util {
 	private static final String JAVA_LANG_STRING = "java.lang.String";
 	private static final String VALUE = "value";
-	private static final int LIMIT = 1_000_000;
 
 	@Generated("private-constructor")
 	private Util() {
-	}
-
-	@Nullable
-	public static <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,
-													  @NotNull final Class<E> target) {
-		return ancestorOf(psiElement, target, LIMIT);
-	}
-
-	@Nullable
-	public static <E extends PsiElement> E ancestorOf(@NotNull final PsiElement psiElement,
-													  @NotNull final Class<E> target, final int limit) {
-		PsiElement copy = psiElement;
-		int x = 0;
-		++x;
-		do {
-			if (copy == null) {
-				return null;
-			}
-			copy = copy.getParent();
-			++x;
-		} while (!target.isInstance(copy) && x <= limit);
-		if (!target.isInstance(copy)) {
-			return null;
-		}
-		return target.cast(copy);
 	}
 
 	@NotNull
@@ -104,7 +80,7 @@ public final class Util {
 	}
 
 	@NotNull
-	public static PsiType createStringType(@NotNull final Project project) {
+	public static PsiClassType createStringType(@NotNull final Project project) {
 		final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 		return factory.createTypeByFQClassName(JAVA_LANG_STRING);
 	}
@@ -134,25 +110,7 @@ public final class Util {
 		if (methods.length == 0) {
 			return Collections.emptyList();
 		}
-
-		return MethodReferencesSearch.search(methods[0])
-				.findAll()
-				.stream()
-				.map(PsiReference::getElement)
-				.map(element -> PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class))
-				.filter(Objects::nonNull)
-				.map(PsiMethodCallExpression::getArgumentList)
-				.map(PsiExpressionList::getExpressions)
-				.map(expressions -> expressions[0])
-				.map(argument -> {
-					final PsiClass aClass = PsiTypesUtil.getPsiClass(argument.getType());
-					if (aClass != null && Objects.equals(aClass.getQualifiedName(), JAVA_LANG_STRING)) {
-						return argument.getText();
-					}
-					return null;
-				})
-				.filter(Objects::nonNull)
-				.toList();
+		return getValues(methods[0]);
 	}
 
 	@NotNull
@@ -163,15 +121,12 @@ public final class Util {
 			return Collections.emptyList();
 		}
 
-		final PsiMethod[] addTypeMapperMethods = psiClass.findMethodsByName(Constants.METHOD_ADD_TYPE_MAPPER, true);
-		final PsiMethod[] addEnumMapperMethods = psiClass.findMethodsByName(Constants.METHOD_ADD_ENUM_MAPPER, true);
-		if (addTypeMapperMethods.length == 0 && addEnumMapperMethods.length == 0) {
-			return Collections.emptyList();
-		}
-
-		final Collection<PsiReference> addTypeMapperReferences = MethodReferencesSearch.search(addTypeMapperMethods[0]).findAll();
-		final Collection<PsiReference> addEnumMapperReferences = MethodReferencesSearch.search(addEnumMapperMethods[0]).findAll();
-		return Stream.concat(addTypeMapperReferences.stream(), addEnumMapperReferences.stream())
+		return Stream.of(Constants.METHOD_ADD_TYPE_MAPPER, Constants.METHOD_ADD_ENUM_MAPPER)
+				.map(methodName -> psiClass.findMethodsByName(methodName, true))
+				.flatMap(Arrays::stream)
+				.map(MethodReferencesSearch::search)
+				.map(Query::findAll)
+				.flatMap(Collection::stream)
 				.map(PsiReference::getElement)
 				.map(element -> PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class))
 				.filter(Objects::nonNull)
@@ -199,8 +154,12 @@ public final class Util {
 		if (methods.length == 0) {
 			return Collections.emptyList();
 		}
+		return getValues(methods[0]);
+	}
 
-		return MethodReferencesSearch.search(methods[0])
+	@NotNull
+	private static List<String> getValues(@NotNull final PsiMethod method) {
+		return MethodReferencesSearch.search(method)
 				.findAll()
 				.stream()
 				.map(PsiReference::getElement)

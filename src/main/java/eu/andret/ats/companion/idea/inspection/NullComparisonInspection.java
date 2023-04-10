@@ -17,7 +17,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiTypes;
-import eu.andret.ats.companion.idea.utilities.Util;
+import com.intellij.psi.util.PsiTreeUtil;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +37,7 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 			public void visitBinaryExpression(@NotNull final PsiBinaryExpression expression) {
 				Optional.of(expression)
 						.map(PsiElement::getContext)
-						.map(element -> Util.ancestorOf(element, PsiMethod.class))
+						.map(element -> PsiTreeUtil.getParentOfType(element, PsiMethod.class))
 						.filter(Verifier::verifyArgumentMethod)
 						.map(PsiMethod::getParameterList)
 						.map(PsiParameterList::getParameters)

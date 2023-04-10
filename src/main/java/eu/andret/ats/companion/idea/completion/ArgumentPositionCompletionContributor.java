@@ -15,9 +15,9 @@ import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import eu.andret.ats.companion.idea.utilities.Constants;
-import eu.andret.ats.companion.idea.utilities.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -39,7 +39,7 @@ public class ArgumentPositionCompletionContributor extends CompletionContributor
 		public void addCompletions(@NotNull final CompletionParameters parameters,
 								   @NotNull final ProcessingContext context,
 								   @NotNull final CompletionResultSet result) {
-			final PsiMethod method = Util.ancestorOf(parameters.getPosition(), PsiMethod.class);
+			final PsiMethod method = PsiTreeUtil.getParentOfType(parameters.getPosition(), PsiMethod.class);
 			Stream.iterate(0, i -> i + 1)
 					.limit(1L + Optional.ofNullable(method)
 							.map(PsiMethod::getParameterList)

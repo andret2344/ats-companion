@@ -8,8 +8,8 @@ import com.intellij.codeInsight.daemon.ImplicitUsageProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.util.PsiTreeUtil;
 import eu.andret.ats.companion.idea.utilities.Constants;
-import eu.andret.ats.companion.idea.utilities.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +38,7 @@ public class ArgumentMethodImplicitUsageProvider implements ImplicitUsageProvide
 			return psiMethod;
 		}
 		if (element instanceof final PsiParameter psiParameter) {
-			return Util.ancestorOf(psiParameter, PsiMethod.class, 2);
+			return PsiTreeUtil.getParentOfType(psiParameter, PsiMethod.class);
 		}
 		return null;
 	}

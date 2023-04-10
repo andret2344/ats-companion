@@ -14,6 +14,7 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.util.PsiTreeUtil;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
@@ -45,19 +46,19 @@ public class TypeFallbackMethodIntention extends PsiElementBaseIntentionAction i
 	public boolean isAvailable(@NotNull final Project project, final Editor editor,
 							   @Nullable final PsiElement element) {
 		return Optional.ofNullable(element)
-				.filter(psiElement -> !Verifier.verifyParameter(Util.ancestorOf(element, PsiParameter.class, 4)))
-				.map(psiElement -> Util.ancestorOf(element, PsiMethod.class, 7))
+				.filter(psiElement -> !Verifier.verifyParameter(PsiTreeUtil.getParentOfType(element, PsiParameter.class)))
+				.map(psiElement -> PsiTreeUtil.getParentOfType(element, PsiMethod.class))
 				.map(Verifier::verifyArgumentMethod)
 				.orElse(false);
 	}
 
 	@Override
 	public void invoke(@NotNull final Project project, final Editor editor, @NotNull final PsiElement element) {
-		Optional.ofNullable(Util.ancestorOf(element, PsiParameter.class, 4))
+		Optional.ofNullable(PsiTreeUtil.getParentOfType(element, PsiParameter.class))
 				.ifPresent(psiParameter -> {
 					final String value = psiParameter.getName();
 					final String type = psiParameter.getType().getPresentableText();
-					Optional.ofNullable(Util.ancestorOf(psiParameter, PsiMethod.class))
+					Optional.ofNullable(PsiTreeUtil.getParentOfType(psiParameter, PsiMethod.class))
 							.ifPresent(psiMethod -> {
 								final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 								final PsiMethod newMethod = factory.createMethodFromText(

@@ -219,6 +219,16 @@
 		/>
 		<localInspection
 				language="JAVA"
+				displayName="Invalid type mapper"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="WARNING"
+				implementationClass="eu.andret.ats.companion.idea.inspection.InvalidTypeMapperInspection"
+		/>
+		<localInspection
+				language="JAVA"
 				displayName="Invalid argument completer"
 				groupPath="ATS"
 				groupBundle="messages.InspectionsBundle"

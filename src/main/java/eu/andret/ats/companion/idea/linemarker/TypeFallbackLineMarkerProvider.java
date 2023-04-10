@@ -13,6 +13,7 @@ import com.intellij.psi.PsiJvmMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.util.PsiTreeUtil;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.IconProvider;
 import eu.andret.ats.companion.idea.utilities.Util;
@@ -31,7 +32,7 @@ public class TypeFallbackLineMarkerProvider extends RelatedItemLineMarkerProvide
 		}
 
 		Optional.of(element)
-				.map(psiElement -> Util.ancestorOf(psiElement, PsiMethod.class, 2))
+				.map(psiElement -> PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class))
 				.filter(psiMethod -> psiMethod.hasAnnotation(Constants.ANNOTATION_ARGUMENT))
 				.map(PsiJvmMember::getContainingClass)
 				.map(PsiClass::getMethods)
