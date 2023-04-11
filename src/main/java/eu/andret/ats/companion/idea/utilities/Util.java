@@ -98,17 +98,28 @@ public final class Util {
 
 	@NotNull
 	public static List<String> getArgumentMapperValues(final Project project) {
-		final PsiClass psiClass = JavaPsiFacade.getInstance(project)
-				.findClass(Constants.CLASS_ANNOTATED_COMMAND, GlobalSearchScope.allScope(project));
-		if (psiClass == null) {
-			return Collections.emptyList();
-		}
+		return Optional.of(project)
+				.map(JavaPsiFacade::getInstance)
+				.map(facade -> facade.findClass(Constants.CLASS_ANNOTATED_COMMAND, GlobalSearchScope.allScope(project)))
+				.map(psiClass -> psiClass.findMethodsByName(Constants.METHOD_ADD_ARGUMENT_MAPPER, true))
+				.stream()
+				.flatMap(Arrays::stream)
+				.map(Util::getValues)
+				.flatMap(Collection::stream)
+				.toList();
+	}
 
-		final PsiMethod[] methods = psiClass.findMethodsByName(Constants.METHOD_ADD_ARGUMENT_MAPPER, true);
-		if (methods.length == 0) {
-			return Collections.emptyList();
-		}
-		return getValues(methods[0]);
+	@NotNull
+	public static List<String> getArgumentCompleterValues(@NotNull final Project project) {
+		return Optional.of(project)
+				.map(JavaPsiFacade::getInstance)
+				.map(facade -> facade.findClass(Constants.CLASS_ANNOTATED_COMMAND, GlobalSearchScope.allScope(project)))
+				.map(psiClass -> psiClass.findMethodsByName(Constants.METHOD_ADD_ARGUMENT_COMPLETER, true))
+				.stream()
+				.flatMap(Arrays::stream)
+				.map(Util::getValues)
+				.flatMap(Collection::stream)
+				.toList();
 	}
 
 	@NotNull
@@ -136,21 +147,6 @@ public final class Util {
 				.map(PsiClassObjectAccessExpression::getOperand)
 				.map(PsiTypeElement::getType)
 				.toList();
-	}
-
-	@NotNull
-	public static List<String> getArgumentCompleterValues(final Project project) {
-		final PsiClass psiClass = JavaPsiFacade.getInstance(project)
-				.findClass(Constants.CLASS_ANNOTATED_COMMAND, GlobalSearchScope.allScope(project));
-		if (psiClass == null) {
-			return Collections.emptyList();
-		}
-
-		final PsiMethod[] methods = psiClass.findMethodsByName(Constants.METHOD_ADD_ARGUMENT_COMPLETER, true);
-		if (methods.length == 0) {
-			return Collections.emptyList();
-		}
-		return getValues(methods[0]);
 	}
 
 	@NotNull
