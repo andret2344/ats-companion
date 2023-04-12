@@ -17,6 +17,8 @@ import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Util;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 import static com.intellij.patterns.PsiJavaPatterns.psiElement;
 
 public class ArgumentCompleterCompletionContributor extends CompletionContributor {
@@ -31,14 +33,14 @@ public class ArgumentCompleterCompletionContributor extends CompletionContributo
 		public void addCompletions(@NotNull final CompletionParameters parameters,
 								   @NotNull final ProcessingContext context,
 								   @NotNull final CompletionResultSet result) {
-			Util.getArgumentCompleterValues(parameters.getEditor().getProject())
+			final boolean withQuotes = Optional.of(parameters)
+					.map(CompletionParameters::getPosition)
+					.map(PsiJavaToken.class::cast)
+					.map(PsiJavaToken::getTokenType)
+					.filter(JavaTokenType.STRING_LITERAL::equals)
+					.isEmpty();
+			Util.getArgumentCompleterValues(parameters.getEditor().getProject(), withQuotes)
 					.stream()
-					.map(value -> {
-						if (((PsiJavaToken) parameters.getPosition()).getTokenType().equals(JavaTokenType.STRING_LITERAL)) {
-							return value.substring(1, value.length() - 1);
-						}
-						return value;
-					})
 					.map(LookupElementBuilder::create)
 					.forEach(result::addElement);
 			result.stopHere();

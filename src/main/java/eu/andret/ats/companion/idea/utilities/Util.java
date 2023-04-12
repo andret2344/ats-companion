@@ -97,8 +97,19 @@ public final class Util {
 	}
 
 	@NotNull
-	public static List<String> getArgumentMapperValues(final Project project) {
-		return Optional.of(project)
+	public static List<String> getArgumentMapperValues(final Project project, final boolean withQuotes) {
+		final List<String> argumentMapperValues = getArgumentMapperValues(project);
+		if (withQuotes) {
+			return argumentMapperValues;
+		}
+		return argumentMapperValues.stream()
+				.map(value -> value.substring(1, value.length() - 1))
+				.toList();
+	}
+
+	@NotNull
+	public static List<String> getArgumentMapperValues(@Nullable final Project project) {
+		return Optional.ofNullable(project)
 				.map(JavaPsiFacade::getInstance)
 				.map(facade -> facade.findClass(Constants.CLASS_ANNOTATED_COMMAND, GlobalSearchScope.allScope(project)))
 				.map(psiClass -> psiClass.findMethodsByName(Constants.METHOD_ADD_ARGUMENT_MAPPER, true))
@@ -110,8 +121,19 @@ public final class Util {
 	}
 
 	@NotNull
-	public static List<String> getArgumentCompleterValues(@NotNull final Project project) {
-		return Optional.of(project)
+	public static List<String> getArgumentCompleterValues(@Nullable final Project project, final boolean withQuotes) {
+		final List<String> argumentMapperValues = getArgumentCompleterValues(project);
+		if (withQuotes) {
+			return argumentMapperValues;
+		}
+		return argumentMapperValues.stream()
+				.map(value -> value.substring(1, value.length() - 1))
+				.toList();
+	}
+
+	@NotNull
+	public static List<String> getArgumentCompleterValues(@Nullable final Project project) {
+		return Optional.ofNullable(project)
 				.map(JavaPsiFacade::getInstance)
 				.map(facade -> facade.findClass(Constants.CLASS_ANNOTATED_COMMAND, GlobalSearchScope.allScope(project)))
 				.map(psiClass -> psiClass.findMethodsByName(Constants.METHOD_ADD_ARGUMENT_COMPLETER, true))

@@ -9,7 +9,6 @@ import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
@@ -19,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class InvalidArgumentMapperInspection extends AbstractBaseJavaLocalInspectionTool {
 	public static final String DESCRIPTION = "Invalid argument mapper.";
@@ -26,6 +26,8 @@ public class InvalidArgumentMapperInspection extends AbstractBaseJavaLocalInspec
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
+		final List<String> strings = Util.getArgumentMapperValues(holder.getProject());
+
 		return new JavaElementVisitor() {
 			@Override
 			public void visitParameter(@NotNull final PsiParameter parameter) {
@@ -41,14 +43,10 @@ public class InvalidArgumentMapperInspection extends AbstractBaseJavaLocalInspec
 
 			private void analyzeAnnotation(@Nullable final PsiAnnotation annotation,
 										   @NotNull final ProblemsHolder holder) {
-				if (annotation == null) {
-					return;
-				}
-				final List<String> strings = Util.getArgumentMapperValues(holder.getProject());
-				final PsiAnnotationMemberValue value = annotation.findAttributeValue("value");
-				if (value != null && !strings.contains(value.getText())) {
-					holder.registerProblem(value, DESCRIPTION, ProblemHighlightType.ERROR);
-				}
+				Optional.ofNullable(annotation)
+						.map(psiAnnotation -> psiAnnotation.findAttributeValue("value"))
+						.filter(value -> !strings.contains(value.getText()))
+						.ifPresent(value -> holder.registerProblem(value, DESCRIPTION, ProblemHighlightType.ERROR));
 			}
 		};
 	}
