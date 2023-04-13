@@ -50,17 +50,17 @@ public class ArgumentFallbackMethodIntention extends PsiElementBaseIntentionActi
 	public boolean isAvailable(@NotNull final Project project, final Editor editor,
 							   @Nullable final PsiElement element) {
 		return Optional.ofNullable(element)
-				.map(psiElement -> Util.ancestorOf(element, PsiParameter.class, 4))
+				.map(psiElement -> Util.ancestorOf(element, PsiParameter.class))
 				.filter(psiParameter -> psiParameter.hasAnnotation(Constants.ANNOTATION_MAPPER))
 				.filter(Predicate.not(this::isFallbackMethodPresent))
-				.map(psiElement -> Util.ancestorOf(element, PsiMethod.class, 4))
+				.map(psiElement -> Util.ancestorOf(element, PsiMethod.class))
 				.map(Verifier::verifyArgumentMethod)
 				.orElse(false);
 	}
 
 	@Override
 	public void invoke(@NotNull final Project project, final Editor editor, @NotNull final PsiElement element) {
-		Optional.ofNullable(Util.ancestorOf(element, PsiParameter.class, 4))
+		Optional.ofNullable(Util.ancestorOf(element, PsiParameter.class))
 				.ifPresent(psiParameter -> {
 					final String value = Optional.of(psiParameter)
 							.map(parameter -> parameter.getAnnotation(Constants.ANNOTATION_MAPPER))
