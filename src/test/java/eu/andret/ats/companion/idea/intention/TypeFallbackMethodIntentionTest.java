@@ -6,7 +6,10 @@ package eu.andret.ats.companion.idea.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase4;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 public class TypeFallbackMethodIntentionTest extends LightJavaCodeInsightFixtureTestCase4 {
 	public TypeFallbackMethodIntentionTest() {
@@ -24,5 +27,18 @@ public class TypeFallbackMethodIntentionTest extends LightJavaCodeInsightFixture
 
 		// then
 		getFixture().checkResultByFile("type-fallback.after.java");
+	}
+
+	@Test
+	public void fallbackMethodExists() {
+		// given
+		getFixture().configureByFile("type-fallback.after.java");
+
+		// when
+		final ThrowableAssert.ThrowingCallable throwingCallable = () ->
+				getFixture().findSingleIntention(TypeFallbackMethodIntention.NAME);
+
+		// then
+		assertThatNoException().isThrownBy(throwingCallable);
 	}
 }

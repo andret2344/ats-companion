@@ -5,13 +5,10 @@
 package eu.andret.ats.companion.idea.utilities;
 
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.Generated;
-import java.util.Optional;
 
 public final class Verifier {
 	@Generated("private-constructor")
@@ -33,16 +30,5 @@ public final class Verifier {
 				&& verifyClass(psiMethod.getContainingClass())
 				&& (psiMethod.hasAnnotation(Constants.ANNOTATION_TYPE_FALLBACK)
 				|| psiMethod.hasAnnotation(Constants.ANNOTATION_ARGUMENT_FALLBACK));
-	}
-
-	public static boolean verifyParameter(@Nullable final PsiParameter psiParameter) {
-		return Optional.ofNullable(psiParameter)
-				.filter(annotation -> annotation.hasAnnotation(Constants.ANNOTATION_MAPPER))
-				.map(PsiElement::getParent)
-				.map(PsiElement::getParent)
-				.filter(PsiMethod.class::isInstance)
-				.map(PsiMethod.class::cast)
-				.map(Verifier::verifyArgumentMethod)
-				.orElse(false);
 	}
 }
