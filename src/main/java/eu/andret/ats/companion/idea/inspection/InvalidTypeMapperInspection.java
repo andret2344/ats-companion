@@ -43,9 +43,7 @@ public class InvalidTypeMapperInspection extends AbstractBaseJavaLocalInspection
 				final PsiAnnotationMemberValue value = annotation.findAttributeValue("value");
 				final Optional<PsiType> type = Util.getTypeMapperValues(holder.getProject())
 						.stream()
-						.filter(psiType -> Util.getTypeFallbackValue(annotation)
-								.map(psiType::equals)
-								.orElse(false))
+						.filter(psiType -> psiType.equals(Util.getTypeFallbackValue(annotation)))
 						.findAny();
 				if (value != null && type.isEmpty()) {
 					holder.registerProblem(value, DESCRIPTION, ProblemHighlightType.ERROR);
