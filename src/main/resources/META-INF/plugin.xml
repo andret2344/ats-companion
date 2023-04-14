@@ -26,6 +26,23 @@
 		</p>
 		<h3>Added</h3>
 		<ul>
+			<li>Completions for argument and type mappers.</li>
+			<li>Completion for argument completer.</li>
+			<li>Validations for argument and type mappers.</li>
+			<li>Validation for argument completer.</li>
+		</ul>
+		<h3>Fixed</h3>
+		<ul>
+			<li>Intentions that generates fallback methods now don't mess up.</li>
+			<li>Some random errors are now less likely.</li>
+		</ul>
+		<h2>atsCompanion v0.2.0</h2>
+		<p>
+			<span>atsArguments compatibility version:</span>
+			<strong>0.1.3</strong>
+		</p>
+		<h3>Added</h3>
+		<ul>
 			<li>Implicit usage provider, now methods annotated with @Argument won't be unused anymore.</li>
 			<li>Fallback method verifier, now those methods must have exactly one String parameter.</li>
 			<li>Inspection on `@Mapper` with primitive or complex type with no `@Mapper`.</li>
