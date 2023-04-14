@@ -64,6 +64,44 @@ public class NullComparisonInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
+	public void noParameterEqEq() {
+		// given
+		getFixture().configureByFile("eqeq-no-param.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new NullComparisonInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), NullComparisonInspection.DESCRIPTION))
+				.findAny();
+		assertThat(optionalHighlightInfo).isEmpty();
+	}
+
+	@Test
+	public void noParameterNe() {
+		// given
+		getFixture().configureByFile("ne-no-param.java");
+		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
+		getFixture().enableInspections(new NullComparisonInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), NullComparisonInspection.DESCRIPTION))
+				.findAny();
+		assertThat(optionalHighlightInfo).isEmpty();
+	}
+
+	@Test
 	public void nullParameterEqEqFix() {
 		// given
 		getFixture().configureByFile("eqeq.java");
