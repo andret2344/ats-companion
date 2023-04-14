@@ -66,14 +66,14 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 			}
 
 			private boolean isNull(final PsiExpression expression) {
-				return Optional.of(expression)
+				return Optional.ofNullable(expression)
 						.map(PsiExpression::getType)
 						.map(PsiTypes.nullType()::equals)
 						.orElse(false);
 			}
 
 			private boolean is(final PsiExpression expression, final PsiElement element) {
-				return Optional.of(expression)
+				return Optional.ofNullable(expression)
 						.map(PsiExpression::getReference)
 						.map(reference -> reference.isReferenceTo(element))
 						.orElse(false);
