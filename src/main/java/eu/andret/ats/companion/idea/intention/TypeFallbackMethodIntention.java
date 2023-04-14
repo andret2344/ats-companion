@@ -49,21 +49,21 @@ public class TypeFallbackMethodIntention extends PsiElementBaseIntentionAction i
 	public boolean isAvailable(@NotNull final Project project, final Editor editor,
 							   @Nullable final PsiElement element) {
 		return Optional.ofNullable(element)
-				.map(psiElement -> Util.ancestorOf(element, PsiParameter.class))
+				.map(psiElement -> PsiTreeUtil.getParentOfType(element, PsiParameter.class))
 				.filter(parameter -> !parameter.hasAnnotation(Constants.ANNOTATION_MAPPER))
 				.filter(Predicate.not(this::isFallbackMethodPresent))
-				.map(psiElement -> Util.ancestorOf(element, PsiMethod.class))
+				.map(psiElement -> PsiTreeUtil.getParentOfType(element, PsiMethod.class))
 				.map(Verifier::verifyArgumentMethod)
 				.orElse(false);
 	}
 
 	@Override
 	public void invoke(@NotNull final Project project, final Editor editor, @NotNull final PsiElement element) {
-		Optional.ofNullable(Util.ancestorOf(element, PsiParameter.class))
+		Optional.ofNullable(PsiTreeUtil.getParentOfType(element, PsiParameter.class))
 				.ifPresent(psiParameter -> {
 					final String value = psiParameter.getName();
 					final String type = psiParameter.getType().getPresentableText();
-					Optional.ofNullable(Util.ancestorOf(psiParameter, PsiMethod.class))
+					Optional.ofNullable(PsiTreeUtil.getParentOfType(psiParameter, PsiMethod.class))
 							.ifPresent(psiMethod -> {
 								final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
 								final PsiMethod newMethod = factory.createMethodFromText(

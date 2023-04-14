@@ -14,11 +14,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiTypes;
-import eu.andret.ats.companion.idea.utilities.Util;
+import com.intellij.psi.util.PsiTreeUtil;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +37,7 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 			public void visitBinaryExpression(@NotNull final PsiBinaryExpression expression) {
 				Optional.of(expression)
 						.map(PsiElement::getContext)
-						.map(element -> Util.ancestorOf(element, PsiMethod.class))
+						.map(element -> PsiTreeUtil.getParentOfType(element, PsiMethod.class))
 						.filter(Verifier::verifyArgumentMethod)
 						.map(PsiMethod::getParameterList)
 						.map(PsiParameterList::getParameters)
@@ -58,11 +57,11 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 						});
 			}
 
-			private boolean validateParameter(final PsiParameter psiParameter, final PsiBinaryExpression expression) {
+			private boolean validateParameter(final PsiElement psiElement, final PsiBinaryExpression expression) {
 				final boolean rNull = isNull(expression.getROperand());
 				final boolean lNull = isNull(expression.getLOperand());
-				final boolean rMatches = is(expression.getROperand(), psiParameter);
-				final boolean lMatches = is(expression.getLOperand(), psiParameter);
+				final boolean rMatches = is(expression.getROperand(), psiElement);
+				final boolean lMatches = is(expression.getLOperand(), psiElement);
 				return lMatches && rNull || rMatches && lNull;
 			}
 

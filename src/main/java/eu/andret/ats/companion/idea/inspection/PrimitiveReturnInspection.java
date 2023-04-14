@@ -22,6 +22,7 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import eu.andret.ats.companion.idea.utilities.Constants;
+import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -66,7 +67,7 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 					.map(PsiMethod::getReturnTypeElement)
 					.ifPresent(typeElement -> {
 						final PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-						final PsiClassType classType = factory.createTypeByFQClassName("String");
+						final PsiClassType classType = Util.createStringType(project);
 						typeElement.replace(factory.createTypeElement(classType));
 						JavaCodeStyleManager.getInstance(project).shortenClassReferences(typeElement);
 					});

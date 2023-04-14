@@ -25,8 +25,8 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import eu.andret.ats.companion.idea.utilities.Constants;
-import eu.andret.ats.companion.idea.utilities.Util;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +49,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 			public void visitInstanceOfExpression(@NotNull final PsiInstanceOfExpression expression) {
 				Optional.of(expression)
 						.map(PsiElement::getContext)
-						.map(element -> Util.ancestorOf(element, PsiMethod.class))
+						.map(element -> PsiTreeUtil.getParentOfType(element, PsiMethod.class))
 						.ifPresent(method -> Optional.of(method)
 								.filter(Verifier::verifyArgumentMethod)
 								.map(ignored -> expression.getCheckType())
@@ -76,7 +76,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 		};
 	}
 
-	private void analyzeAndReport(final ProblemsHolder holder, final PsiInstanceOfExpression expression,
+	private void analyzeAndReport(final ProblemsHolder holder, final PsiElement expression,
 								  final PsiType type, @NotNull final String executorType) {
 		if (executorType.equals("PLAYER")) {
 			if (type.getCanonicalText().equals(Constants.BUKKIT_PLAYER)) {

@@ -10,41 +10,37 @@ import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.patterns.PsiJavaElementPattern;
-import com.intellij.patterns.StandardPatterns;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameterList;
-import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.JavaTokenType;
+import com.intellij.psi.PsiJavaToken;
 import com.intellij.util.ProcessingContext;
 import eu.andret.ats.companion.idea.utilities.Constants;
+import eu.andret.ats.companion.idea.utilities.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static com.intellij.patterns.PsiJavaPatterns.psiElement;
 
-public class ArgumentPositionCompletionContributor extends CompletionContributor {
-	public ArgumentPositionCompletionContributor() {
+public class ArgumentCompleterCompletionContributor extends CompletionContributor {
+	public ArgumentCompleterCompletionContributor() {
+		final CompletionProvider<CompletionParameters> provider = new ArgumentCompleterCompletionProvider();
 		final CompletionType type = CompletionType.BASIC;
-		final CompletionProvider<CompletionParameters> provider = new ArgumentPositionCompletionProvider();
-		final PsiJavaElementPattern.Capture<PsiElement> position = psiElement().insideAnnotationParam(
-				StandardPatterns.string().equalTo(Constants.ANNOTATION_ARGUMENT), "position");
-		extend(type, position, provider);
+		extend(type, psiElement().insideAnnotationParam(Constants.ANNOTATION_COMPLETER), provider);
 	}
 
-	private static class ArgumentPositionCompletionProvider extends CompletionProvider<CompletionParameters> {
+	private static class ArgumentCompleterCompletionProvider extends CompletionProvider<CompletionParameters> {
 		@Override
 		public void addCompletions(@NotNull final CompletionParameters parameters,
 								   @NotNull final ProcessingContext context,
 								   @NotNull final CompletionResultSet result) {
-			final PsiMethod method = PsiTreeUtil.getParentOfType(parameters.getPosition(), PsiMethod.class);
-			Stream.iterate(0, i -> i + 1)
-					.limit(1L + Optional.ofNullable(method)
-							.map(PsiMethod::getParameterList)
-							.map(PsiParameterList::getParametersCount)
-							.orElse(0))
+			final boolean withQuotes = Optional.of(parameters)
+					.map(CompletionParameters::getPosition)
+					.map(PsiJavaToken.class::cast)
+					.map(PsiJavaToken::getTokenType)
+					.filter(JavaTokenType.STRING_LITERAL::equals)
+					.isEmpty();
+			Util.getArgumentCompleterValues(parameters.getEditor().getProject(), withQuotes)
+					.stream()
 					.map(LookupElementBuilder::create)
 					.forEach(result::addElement);
 			result.stopHere();
