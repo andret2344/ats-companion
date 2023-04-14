@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -22,7 +22,7 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 	}
 
 	@Test
-	public void testArgumentMethodStaticHighlight() {
+	public void argumentMethodStaticHighlight() {
 		// given
 		getFixture().configureByFile("argument.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
@@ -42,7 +42,7 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 	}
 
 	@Test
-	public void testArgumentMethodStaticFixRemoveQualifier() {
+	public void argumentMethodStaticFixRemoveQualifier() {
 		// given
 		getFixture().configureByFile("argument.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());
@@ -57,7 +57,7 @@ public class ArgumentMethodStaticInspectionTest extends LightJavaCodeInsightFixt
 	}
 
 	@Test
-	public void testRegularMethodStaticHighlight() {
+	public void regularMethodStaticHighlight() {
 		// given
 		getFixture().configureByFile("regular.java");
 		getFixture().enableInspections(new ArgumentMethodStaticInspection());

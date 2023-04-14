@@ -1,32 +1,15 @@
-#
-# Copyright Andret (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
-#
-image: gradle:jdk17
-
-cache:
-  paths:
-    - .gradle/wrapper
-    - .gradle/caches
+image: gradle:7.5-jdk17
 
 before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
   - chmod a+x gradlew
 
 stages:
-  - prepare
   - build
   - test
   - deploy
 
-wrapper:
-  stage: prepare
-  script:
-    - gradle wrapper
-
 compile:
   stage: build
-  dependencies:
-    - wrapper
   script:
     - ./gradlew assemble
   artifacts:
@@ -35,22 +18,18 @@ compile:
 
 junit:
   stage: test
-  dependencies:
-    - wrapper
   script:
     - ./gradlew clean test
-  coverage: '/^Coverage:\s(\d+\.\d+%)/'
+  coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
   artifacts:
     reports:
       junit:
         - build/test-results/test/*.xml
     paths:
-      - build/reports/jacoco/test/html/**
+      - build/reports/jacoco/jacocoAggregatedReport/html/**
 
 pages:
   stage: deploy
-  dependencies:
-    - junit
   script:
     - mv build/reports/jacoco/test/html/ public/
   artifacts:

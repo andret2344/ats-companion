@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -47,13 +47,13 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 				}
 				Optional.of(method)
 						.map(psiMethod -> psiMethod.getAnnotation(Constants.ANNOTATION_ARGUMENT_FALLBACK))
-						.flatMap(Util::getArgumentFallbackValue)
+						.map(Util::getArgumentFallbackValue)
 						.map(Util::toCamelCase)
 						.ifPresent(annotationValue -> holder.registerProblem(method.getParameterList(), DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, new ChangeParametersQuickFix(annotationValue)));
 				Optional.of(method)
 						.map(psiMethod -> psiMethod.getAnnotation(Constants.ANNOTATION_TYPE_FALLBACK))
-						.flatMap(Util::getTypeFallbackValue)
+						.map(Util::getTypeFallbackValue)
 						.map(PsiType::getPresentableText)
 						.map(Util::toCamelCase)
 						.ifPresent(annotationValue -> holder.registerProblem(method.getParameterList(), DESCRIPTION,

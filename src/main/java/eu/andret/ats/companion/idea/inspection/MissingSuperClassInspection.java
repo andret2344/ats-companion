@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -27,7 +27,7 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitClass(final PsiClass aClass) {
+			public void visitClass(@NotNull final PsiClass aClass) {
 				if (!Verifier.verifyClass(aClass)) {
 					return;
 				}

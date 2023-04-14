@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+  ~ Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
   -->
 
 <idea-plugin>
@@ -223,10 +223,12 @@
 				implementationClass="eu.andret.ats.companion.idea.inspection.ConstructorParametersInspection"
 		/>
 		<intentionAction>
+			<language>JAVA</language>
 			<className>eu.andret.ats.companion.idea.intention.ArgumentFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>
 		<intentionAction>
+			<language>JAVA</language>
 			<className>eu.andret.ats.companion.idea.intention.TypeFallbackMethodIntention</className>
 			<category>ATS</category>
 		</intentionAction>

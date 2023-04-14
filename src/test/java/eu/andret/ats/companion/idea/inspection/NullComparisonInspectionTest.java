@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -22,7 +22,7 @@ public class NullComparisonInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testNullParameterEqEq() {
+	public void nullParameterEqEq() {
 		// given
 		getFixture().configureByFile("eqeq.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -43,7 +43,7 @@ public class NullComparisonInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testNullParameterNE() {
+	public void nullParameterNE() {
 		// given
 		getFixture().configureByFile("ne.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -64,7 +64,7 @@ public class NullComparisonInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testNoParameterEqEq() {
+	public void noParameterEqEq() {
 		// given
 		getFixture().configureByFile("eqeq-no-param.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -83,7 +83,7 @@ public class NullComparisonInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testNoParameterNE() {
+	public void noParameterNe() {
 		// given
 		getFixture().configureByFile("ne-no-param.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -102,7 +102,7 @@ public class NullComparisonInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testNullParameterEqEqFix() {
+	public void nullParameterEqEqFix() {
 		// given
 		getFixture().configureByFile("eqeq.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -118,7 +118,7 @@ public class NullComparisonInspectionTest extends LightJavaCodeInsightFixtureTes
 	}
 
 	@Test
-	public void testNullParameterNEFix() {
+	public void nullParameterNEFix() {
 		// given
 		getFixture().configureByFile("ne.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");

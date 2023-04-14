@@ -1,5 +1,5 @@
 /*
- * Copyright Andret Tools System (c) 2018-2022. Copying and modifying allowed only keeping git link reference.
+ * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
 package eu.andret.ats.companion.idea.inspection;
@@ -22,7 +22,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testInstanceCheckPlayerTrue() {
+	public void instanceCheckPlayerTrue() {
 		// given
 		getFixture().configureByFile("player-true.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -43,7 +43,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testInstanceCheckPlayerFalse() {
+	public void instanceCheckPlayerFalse() {
 		// given
 		getFixture().configureByFile("player-false.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -64,7 +64,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testInstanceCheckConsoleTrue() {
+	public void instanceCheckConsoleTrue() {
 		// given
 		getFixture().configureByFile("console-true.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -85,7 +85,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testInstanceCheckConsoleFalse() {
+	public void instanceCheckConsoleFalse() {
 		// given
 		getFixture().configureByFile("console-false.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -106,7 +106,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testInstanceCheckPlayerTrueFix() {
+	public void instanceCheckPlayerTrueFix() {
 		// given
 		getFixture().configureByFile("player-true.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -122,7 +122,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testInstanceCheckPlayerFalseFix() {
+	public void instanceCheckPlayerFalseFix() {
 		// given
 		getFixture().configureByFile("player-false.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -138,7 +138,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testInstanceCheckConsoleTrueFix() {
+	public void instanceCheckConsoleTrueFix() {
 		// given
 		getFixture().configureByFile("console-true.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
@@ -154,7 +154,7 @@ public class InstanceCheckInspectionTest extends LightJavaCodeInsightFixtureTest
 	}
 
 	@Test
-	public void testInstanceCheckConsoleFalseFix() {
+	public void instanceCheckConsoleFalseFix() {
 		// given
 		getFixture().configureByFile("console-false.java");
 		getFixture().addClass("package eu.andret.arguments;public class AnnotatedCommandExecutor<E extends org.bukkit.plugin.java.JavaPlugin> { protected org.bukkit.command.CommandSender sender;protected E plugin;public AnnotatedCommandExecutor(final org.bukkit.command.CommandSender sender, final E plugin) {}}");
