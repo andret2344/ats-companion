@@ -33,7 +33,7 @@
 		</ul>
 		<h3>Fixed</h3>
 		<ul>
-			<li>Intentions that generates fallback methods now don't mess up.</li>
+			<li>Intentions generating fallback methods now work correctly.</li>
 			<li>Some random errors are now less likely.</li>
 		</ul>
 		<h2>atsCompanion v0.2.0</h2>
