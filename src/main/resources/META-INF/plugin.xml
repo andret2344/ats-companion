@@ -19,6 +19,23 @@
 	</description>
 	<change-notes>
 		<![CDATA[
+		<h2>atsCompanion v0.3.0</h2>
+		<p>
+			<span>atsArguments compatibility version:</span>
+			<strong>0.1.3</strong>
+		</p>
+		<h3>Added</h3>
+		<ul>
+			<li>Completions for argument and type mappers.</li>
+			<li>Completion for argument completer.</li>
+			<li>Validations for argument and type mappers.</li>
+			<li>Validation for argument completer.</li>
+		</ul>
+		<h3>Fixed</h3>
+		<ul>
+			<li>Intentions generating fallback methods now work correctly.</li>
+			<li>Some random errors are now less likely.</li>
+		</ul>
 		<h2>atsCompanion v0.2.0</h2>
 		<p>
 			<span>atsArguments compatibility version:</span>
