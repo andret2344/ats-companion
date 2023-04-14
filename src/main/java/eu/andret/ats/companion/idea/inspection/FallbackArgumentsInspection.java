@@ -47,13 +47,13 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 				}
 				Optional.of(method)
 						.map(psiMethod -> psiMethod.getAnnotation(Constants.ANNOTATION_ARGUMENT_FALLBACK))
-						.flatMap(Util::getArgumentFallbackValue)
+						.map(Util::getArgumentFallbackValue)
 						.map(Util::toCamelCase)
 						.ifPresent(annotationValue -> holder.registerProblem(method.getParameterList(), DESCRIPTION,
 								ProblemHighlightType.GENERIC_ERROR, new ChangeParametersQuickFix(annotationValue)));
 				Optional.of(method)
 						.map(psiMethod -> psiMethod.getAnnotation(Constants.ANNOTATION_TYPE_FALLBACK))
-						.flatMap(Util::getTypeFallbackValue)
+						.map(Util::getTypeFallbackValue)
 						.map(PsiType::getPresentableText)
 						.map(Util::toCamelCase)
 						.ifPresent(annotationValue -> holder.registerProblem(method.getParameterList(), DESCRIPTION,

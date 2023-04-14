@@ -23,6 +23,7 @@ import com.intellij.psi.PsiLiteralValue;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
@@ -56,25 +57,40 @@ public final class Util {
 		return String.format("%s%s", input.substring(0, 1).toLowerCase(Locale.ROOT), input.substring(1));
 	}
 
-	@NotNull
-	public static Optional<String> getArgumentFallbackValue(@Nullable final PsiAnnotation argumentFallbackAnnotation) {
+	@Nullable
+	public static String getArgumentFallbackValue(@Nullable final PsiAnnotation argumentFallbackAnnotation) {
 		return Optional.ofNullable(argumentFallbackAnnotation)
 				.map(psiAnnotation -> psiAnnotation.findAttributeValue(VALUE))
 				.filter(PsiLiteralExpression.class::isInstance)
 				.map(PsiLiteralExpression.class::cast)
 				.map(PsiLiteralValue::getValue)
 				.filter(String.class::isInstance)
-				.map(String.class::cast);
+				.map(String.class::cast)
+				.orElse(null);
 	}
 
-	@NotNull
-	public static Optional<PsiType> getTypeFallbackValue(@Nullable final PsiAnnotation argumentFallbackAnnotation) {
+	@Nullable
+	public static PsiType getTypeFallbackValue(@Nullable final PsiAnnotation argumentFallbackAnnotation) {
 		return Optional.ofNullable(argumentFallbackAnnotation)
 				.map(psiAnnotation -> psiAnnotation.findAttributeValue(VALUE))
 				.filter(PsiClassObjectAccessExpression.class::isInstance)
 				.map(PsiClassObjectAccessExpression.class::cast)
 				.map(PsiClassObjectAccessExpression::getOperand)
-				.map(PsiTypeElement::getType);
+				.map(PsiTypeElement::getType)
+				.orElse(null);
+	}
+
+	@Nullable
+	public static String getMapperFallbackValue(@Nullable final PsiParameter psiParameter) {
+		return Optional.ofNullable(psiParameter)
+				.map(parameter -> parameter.getAnnotation(Constants.ANNOTATION_MAPPER))
+				.map(psiAnnotation -> psiAnnotation.findAttributeValue(VALUE))
+				.filter(PsiLiteralExpression.class::isInstance)
+				.map(PsiLiteralExpression.class::cast)
+				.map(PsiLiteralValue::getValue)
+				.filter(String.class::isInstance)
+				.map(String.class::cast)
+				.orElse(null);
 	}
 
 	@NotNull
