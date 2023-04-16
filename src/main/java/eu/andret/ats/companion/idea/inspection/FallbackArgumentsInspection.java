@@ -37,7 +37,7 @@ public class FallbackArgumentsInspection extends AbstractBaseJavaLocalInspection
 		return new JavaElementVisitor() {
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
-				if (!Verifier.verifyFallbackMethod(method)) {
+				if (!Verifier.isFallbackMethod(method)) {
 					return;
 				}
 				final PsiParameter[] parameters = method.getParameterList().getParameters();

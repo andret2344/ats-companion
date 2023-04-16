@@ -50,10 +50,10 @@ public class TypeFallbackMethodIntention extends PsiElementBaseIntentionAction i
 							   @Nullable final PsiElement element) {
 		return Optional.ofNullable(element)
 				.map(psiElement -> PsiTreeUtil.getParentOfType(element, PsiParameter.class))
-				.filter(parameter -> !parameter.hasAnnotation(Constants.ANNOTATION_MAPPER))
+				.filter(Predicate.not(Verifier::isMapperParameter))
 				.filter(Predicate.not(this::isFallbackMethodPresent))
 				.map(psiElement -> PsiTreeUtil.getParentOfType(element, PsiMethod.class))
-				.map(Verifier::verifyArgumentMethod)
+				.map(Verifier::isArgumentMethod)
 				.orElse(false);
 	}
 

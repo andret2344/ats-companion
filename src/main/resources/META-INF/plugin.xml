@@ -254,6 +254,16 @@
 				level="WARNING"
 				implementationClass="eu.andret.ats.companion.idea.inspection.InvalidArgumentCompleterInspection"
 		/>
+		<localInspection
+				language="JAVA"
+				displayName="Invalid argument completer"
+				groupPath="ATS"
+				groupBundle="messages.InspectionsBundle"
+				groupKey="group.names.probable.bugs"
+				enabledByDefault="true"
+				level="WARNING"
+				implementationClass="eu.andret.ats.companion.idea.inspection.InvalidMapperAnnotationInspection"
+		/>
 		<completion.contributor
 				language="JAVA"
 				implementationClass="eu.andret.ats.companion.idea.completion.ArgumentPositionCompletionContributor"
