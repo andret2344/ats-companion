@@ -56,6 +56,9 @@ public class InvalidTypeMapperInspection extends AbstractBaseJavaLocalInspection
 				if (parentOfType != null) {
 					return;
 				}
+				if (parameter.hasAnnotation(Constants.ANNOTATION_MAPPER)) {
+					return;
+				}
 				final PsiMethod parent = PsiTreeUtil.getParentOfType(parameter, PsiMethod.class);
 				if (parent == null || !parent.hasAnnotation(Constants.ANNOTATION_ARGUMENT)) {
 					return;

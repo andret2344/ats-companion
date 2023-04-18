@@ -84,6 +84,24 @@ public class InvalidTypeMapperInspectionTest extends LightJavaCodeInsightFixture
 	}
 
 	@Test
+	public void parameterWithAnnotation() {
+		// given
+		getFixture().configureByFile("parameter-with-annotation.java");
+		getFixture().enableInspections(new InvalidTypeMapperInspection());
+
+		// when
+		final List<HighlightInfo> highlightInfos = getFixture().doHighlighting();
+
+		// then
+		assertThat(highlightInfos).isNotEmpty();
+		final Optional<HighlightInfo> optionalHighlightInfo = highlightInfos.stream()
+				.filter(element ->
+						Objects.equals(element.getDescription(), InvalidTypeMapperInspection.DESCRIPTION))
+				.findAny();
+		assertThat(optionalHighlightInfo).isEmpty();
+	}
+
+	@Test
 	public void parameterCorrect() {
 		// given
 		getFixture().configureByFile("parameter-correct.java");
