@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
+  -->
+
 <templateSet group="ATS">
 	<template name="fba"
 			  value="@ArgumentFallback(&quot;$MAPPER$&quot;)&#10;public String $MAPPER$Fallback(String $MAPPER$) {&#10;&#9;$END$&#10;    return $RESULT$;&#10;}"
