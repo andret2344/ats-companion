@@ -5,10 +5,14 @@
 package eu.andret.ats.companion.idea.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
+import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
@@ -18,9 +22,11 @@ import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class InvalidMapperAnnotationInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	public static final String DESCRIPTION = "Method annotated with @Argument cannot be static";
+	public static final String DESCRIPTION = "Cannot use @Mapper inside non-@Argument method.";
 
 	@NotNull
 	@Override
@@ -34,10 +40,27 @@ public class InvalidMapperAnnotationInspection extends AbstractBaseJavaLocalInsp
 				}
 				final PsiMethod psiMethod = PsiTreeUtil.getParentOfType(parameter, PsiMethod.class);
 				if (!Verifier.isArgumentMethod(psiMethod)) {
-					holder.registerProblem(annotation, "Nope!", ProblemHighlightType.GENERIC_ERROR);
+					holder.registerProblem(annotation, DESCRIPTION, ProblemHighlightType.GENERIC_ERROR,
+							new RemoveAnnotationQuickFix());
 				}
-				super.visitParameter(parameter);
 			}
 		};
+	}
+
+	public static class RemoveAnnotationQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove annotation";
+
+		@Override
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+			Optional.of(descriptor)
+					.map(ProblemDescriptor::getPsiElement)
+					.ifPresent(PsiElement::delete);
+		}
+
+		@NotNull
+		@Override
+		public String getFamilyName() {
+			return NAME;
+		}
 	}
 }
