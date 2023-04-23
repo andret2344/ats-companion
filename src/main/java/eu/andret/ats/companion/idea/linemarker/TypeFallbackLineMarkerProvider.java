@@ -12,11 +12,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJvmMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.util.PsiTreeUtil;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.IconProvider;
 import eu.andret.ats.companion.idea.utilities.Util;
+import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -31,9 +33,14 @@ public class TypeFallbackLineMarkerProvider extends RelatedItemLineMarkerProvide
 			return;
 		}
 
+		final PsiStatement parentOfType = PsiTreeUtil.getParentOfType(element, PsiStatement.class);
+		if (parentOfType != null) {
+			return;
+		}
+
 		Optional.of(element)
 				.map(psiElement -> PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class))
-				.filter(psiMethod -> psiMethod.hasAnnotation(Constants.ANNOTATION_ARGUMENT))
+				.filter(Verifier::verifyArgumentMethod)
 				.map(PsiJvmMember::getContainingClass)
 				.map(PsiClass::getMethods)
 				.stream()
@@ -43,7 +50,7 @@ public class TypeFallbackLineMarkerProvider extends RelatedItemLineMarkerProvide
 						.map(Util::getTypeFallbackValue)
 						.filter(PsiType::isValid)
 						.filter(((PsiParameter) element).getType()::equals)
-						.map(psiType -> NavigationGutterIconBuilder.create(IconProvider.FALLBACK)
+						.map(ignored -> NavigationGutterIconBuilder.create(IconProvider.FALLBACK)
 								.setTarget(method)
 								.setTooltipText("Find @TypeFallback method")
 								.createLineMarkerInfo(element.getLastChild()))
