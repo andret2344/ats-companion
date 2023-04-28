@@ -15,6 +15,7 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.util.PsiTreeUtil;
 import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.IconProvider;
+import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -35,6 +36,7 @@ public class ArgumentFallbackLineMarkerProvider extends RelatedItemLineMarkerPro
 				.ifPresent(psiAnnotationMemberValue -> {
 					final PsiMethod psiMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
 					Optional.ofNullable(psiMethod)
+							.filter(Verifier::verifyArgumentMethod)
 							.map(PsiJvmMember::getContainingClass)
 							.map(PsiClass::getMethods)
 							.stream()

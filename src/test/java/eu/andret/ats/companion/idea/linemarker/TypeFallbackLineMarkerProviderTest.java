@@ -50,4 +50,18 @@ public class TypeFallbackLineMarkerProviderTest extends LightJavaCodeInsightFixt
 				ContainerUtil.map(iconRenderer.getTargetElements(), SymbolPresentationUtil::getSymbolPresentableText),
 				"fallbackTest(String)");
 	}
+
+	public void testArgumentFallbackLineMarkerProviderInLambda() {
+		// given
+		myFixture.configureByFile("type-fallback-line-marker-in-lambda.java");
+		myFixture.addClass("package org.bukkit.player; public class Player {}");
+		myFixture.addClass("package org.bukkit.command; public class CommandSender {}");
+		myFixture.addClass("package org.bukkit.plugin.java; public class JavaPlugin {}");
+
+		// when
+		final GutterMark gutterMark = myFixture.findGutter("type-fallback-line-marker-in-lambda.java");
+
+		// then
+		assertNull(gutterMark);
+	}
 }
