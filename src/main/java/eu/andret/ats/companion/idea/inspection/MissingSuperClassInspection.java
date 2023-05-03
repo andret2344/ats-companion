@@ -28,7 +28,7 @@ public class MissingSuperClassInspection extends AbstractBaseJavaLocalInspection
 		return new JavaElementVisitor() {
 			@Override
 			public void visitClass(@NotNull final PsiClass aClass) {
-				if (!Verifier.verifyClass(aClass)) {
+				if (!Verifier.isBaseCommandClass(aClass)) {
 					return;
 				}
 				final Optional<String> superClass = Arrays.stream(aClass.getSupers())

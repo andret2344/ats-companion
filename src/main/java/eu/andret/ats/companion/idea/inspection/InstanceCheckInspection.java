@@ -51,7 +51,7 @@ public class InstanceCheckInspection extends AbstractBaseJavaLocalInspectionTool
 						.map(PsiElement::getContext)
 						.map(element -> PsiTreeUtil.getParentOfType(element, PsiMethod.class))
 						.ifPresent(method -> Optional.of(method)
-								.filter(Verifier::verifyArgumentMethod)
+								.filter(Verifier::isArgumentMethod)
 								.map(ignored -> expression.getCheckType())
 								.map(PsiTypeElement::getType)
 								.ifPresent(type -> findElementAndValidate(expression, method, type)));

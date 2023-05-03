@@ -38,13 +38,13 @@ public class PositionOutOfBoundsInspection extends AbstractBaseJavaLocalInspecti
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitMethod(@NotNull final PsiMethod psiMethod) {
-				if (!Verifier.verifyArgumentMethod(psiMethod)) {
+			public void visitMethod(@NotNull final PsiMethod method) {
+				if (!Verifier.isArgumentMethod(method)) {
 					return;
 				}
-				final int args = psiMethod.getParameterList().getParametersCount();
-				Optional.of(psiMethod)
-						.map(method -> method.getAnnotation(Constants.ANNOTATION_ARGUMENT))
+				final int args = method.getParameterList().getParametersCount();
+				Optional.of(method)
+						.map(psiMethod -> psiMethod.getAnnotation(Constants.ANNOTATION_ARGUMENT))
 						.map(PsiAnnotation::getParameterList)
 						.map(PsiAnnotationParameterList::getAttributes)
 						.stream()

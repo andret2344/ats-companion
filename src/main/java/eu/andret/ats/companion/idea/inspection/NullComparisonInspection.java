@@ -38,7 +38,7 @@ public class NullComparisonInspection extends AbstractBaseJavaLocalInspectionToo
 				Optional.of(expression)
 						.map(PsiElement::getContext)
 						.map(element -> PsiTreeUtil.getParentOfType(element, PsiMethod.class))
-						.filter(Verifier::verifyArgumentMethod)
+						.filter(Verifier::isArgumentMethod)
 						.map(PsiMethod::getParameterList)
 						.map(PsiParameterList::getParameters)
 						.stream()

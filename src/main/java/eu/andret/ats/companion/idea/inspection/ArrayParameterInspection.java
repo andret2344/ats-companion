@@ -37,7 +37,7 @@ public class ArrayParameterInspection extends AbstractBaseJavaLocalInspectionToo
 		return new JavaElementVisitor() {
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
-				if (!Verifier.verifyArgumentMethod(method)) {
+				if (!Verifier.isArgumentMethod(method)) {
 					return;
 				}
 				Arrays.stream(method.getParameterList().getParameters())

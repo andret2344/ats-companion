@@ -46,7 +46,7 @@ public class ConstructorParametersInspection extends AbstractBaseJavaLocalInspec
 		return new JavaElementVisitor() {
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
-				if (!Verifier.verifyClass(method.getContainingClass())) {
+				if (!Verifier.isBaseCommandClass(method.getContainingClass())) {
 					return;
 				}
 				if (!method.isConstructor()) {

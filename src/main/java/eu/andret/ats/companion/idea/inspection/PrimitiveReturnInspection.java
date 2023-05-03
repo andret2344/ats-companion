@@ -40,7 +40,7 @@ public class PrimitiveReturnInspection extends AbstractBaseJavaLocalInspectionTo
 			@Override
 			public void visitMethod(@NotNull final PsiMethod method) {
 				Optional.of(method)
-						.filter(psiMethod -> Verifier.verifyClass(method.getContainingClass()))
+						.filter(psiMethod -> Verifier.isBaseCommandClass(method.getContainingClass()))
 						.filter(psiMethod -> psiMethod.hasAnnotation(Constants.ANNOTATION_ARGUMENT))
 						.map(PsiMethod::getReturnTypeElement)
 						.ifPresent(psiTypeElement -> Optional.of(psiTypeElement)

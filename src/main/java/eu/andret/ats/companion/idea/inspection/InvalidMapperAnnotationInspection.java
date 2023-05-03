@@ -11,43 +11,44 @@ import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiKeyword;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.util.PsiTreeUtil;
+import eu.andret.ats.companion.idea.utilities.Constants;
 import eu.andret.ats.companion.idea.utilities.Verifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-public class ArgumentMethodStaticInspection extends AbstractBaseJavaLocalInspectionTool {
+public class InvalidMapperAnnotationInspection extends AbstractBaseJavaLocalInspectionTool {
 	@NonNls
-	public static final String DESCRIPTION = "Method annotated with @Argument cannot be static";
+	public static final String DESCRIPTION = "Cannot use @Mapper inside non-@Argument method.";
 
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
 		return new JavaElementVisitor() {
 			@Override
-			public void visitMethod(@NotNull final PsiMethod method) {
-				if (!Verifier.isArgumentMethod(method)) {
+			public void visitParameter(@NotNull final PsiParameter parameter) {
+				final PsiAnnotation annotation = parameter.getAnnotation(Constants.ANNOTATION_MAPPER);
+				if (annotation == null) {
 					return;
 				}
-				Arrays.stream(method.getModifierList().getChildren())
-						.filter(PsiKeyword.class::isInstance)
-						.map(PsiKeyword.class::cast)
-						.filter(keyword -> keyword.textMatches(PsiKeyword.STATIC))
-						.findAny()
-						.ifPresent(keyword -> holder.registerProblem(keyword, DESCRIPTION,
-								ProblemHighlightType.GENERIC_ERROR, new RemoveQualifierQuickFix()));
+				final PsiMethod psiMethod = PsiTreeUtil.getParentOfType(parameter, PsiMethod.class);
+				if (!Verifier.isArgumentMethod(psiMethod)) {
+					holder.registerProblem(annotation, DESCRIPTION, ProblemHighlightType.GENERIC_ERROR,
+							new RemoveAnnotationQuickFix());
+				}
 			}
 		};
 	}
 
-	public static class RemoveQualifierQuickFix implements LocalQuickFix {
-		public static final String NAME = "Remove qualifier";
+	public static class RemoveAnnotationQuickFix implements LocalQuickFix {
+		public static final String NAME = "Remove annotation";
 
 		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
