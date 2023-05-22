@@ -36,7 +36,7 @@ public class ArgumentFallbackLineMarkerProvider extends RelatedItemLineMarkerPro
 				.ifPresent(psiAnnotationMemberValue -> {
 					final PsiMethod psiMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
 					Optional.ofNullable(psiMethod)
-							.filter(Verifier::verifyArgumentMethod)
+							.filter(Verifier::isArgumentMethod)
 							.map(PsiJvmMember::getContainingClass)
 							.map(PsiClass::getMethods)
 							.stream()

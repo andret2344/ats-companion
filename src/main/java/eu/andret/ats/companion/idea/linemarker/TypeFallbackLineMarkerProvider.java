@@ -40,7 +40,7 @@ public class TypeFallbackLineMarkerProvider extends RelatedItemLineMarkerProvide
 
 		Optional.of(element)
 				.map(psiElement -> PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class))
-				.filter(Verifier::verifyArgumentMethod)
+				.filter(Verifier::isArgumentMethod)
 				.map(PsiJvmMember::getContainingClass)
 				.map(PsiClass::getMethods)
 				.stream()
