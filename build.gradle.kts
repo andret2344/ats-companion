@@ -32,7 +32,7 @@ tasks {
 	}
 
 	test {
-		finalizedBy(jacocoTestReport)
+		finalizedBy(jacocoTestReport, jacocoTestCoverageVerification)
 	}
 
 	withType<JacocoReport> {
