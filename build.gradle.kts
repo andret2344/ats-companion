@@ -2,15 +2,11 @@
  * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
  */
 
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
 	java
 	idea
 	jacoco
-	id("org.jetbrains.intellij") version "1.13.3"
-	id("org.barfuin.gradle.jacocolog") version "3.1.0"
-	id("org.jetbrains.kotlin.jvm") version "1.8.22"
+	id("org.jetbrains.intellij") version "1.14.2"
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
@@ -26,7 +22,7 @@ repositories {
 }
 
 dependencies {
-	testImplementation("org.assertj:assertj-core:3.24.2")
+	testImplementation(group = "org.assertj", name = "assertj-core", version = "3.24.2")
 }
 
 tasks {
@@ -35,17 +31,17 @@ tasks {
 		targetCompatibility = "17"
 	}
 
-	withType<KotlinCompile> {
-		kotlinOptions.jvmTarget = "17"
-	}
-
-	patchPluginXml {
-		version.set("${project.version}")
-		sinceBuild.set("231")
-	}
-
 	test {
-		finalizedBy(jacocoAggregatedReport, jacocoTestCoverageVerification)
+		finalizedBy(jacocoTestReport)
+	}
+
+	withType<JacocoReport> {
+		dependsOn(test)
+
+		reports {
+			html.required = true
+			xml.required = true
+		}
 	}
 
 	jacocoTestCoverageVerification {
@@ -56,5 +52,10 @@ tasks {
 				}
 			}
 		}
+	}
+
+	patchPluginXml {
+		version.set("${project.version}")
+		sinceBuild.set("231")
 	}
 }
