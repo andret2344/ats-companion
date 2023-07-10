@@ -6,7 +6,7 @@ plugins {
 	java
 	idea
 	jacoco
-	id("org.jetbrains.intellij") version "1.14.2"
+	id("org.jetbrains.intellij") version "1.15.0"
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
 	testImplementation(group = "org.assertj", name = "assertj-core", version = "3.24.2")
+	testImplementation(group = "org.jacoco", name = "org.jacoco.agent", version = "0.8.10")
 }
 
 tasks {
@@ -32,16 +33,11 @@ tasks {
 	}
 
 	test {
-		finalizedBy(jacocoTestReport, jacocoTestCoverageVerification)
-	}
-
-	withType<JacocoReport> {
-		dependsOn(test)
-
-		reports {
-			html.required = true
-			xml.required = true
+		configure<JacocoTaskExtension> {
+			isIncludeNoLocationClasses = true
+			excludes = listOf("jdk.internal.*")
 		}
+		finalizedBy(jacocoTestReport, jacocoTestCoverageVerification)
 	}
 
 	jacocoTestCoverageVerification {
