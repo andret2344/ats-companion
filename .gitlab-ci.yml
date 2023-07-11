@@ -26,7 +26,7 @@ unit:
       junit:
         - build/test-results/test/*.xml
     paths:
-      - build/reports/kover/html/**
+      - build/reports/jacoco/test/html/**
 
 pages:
   stage: deploy

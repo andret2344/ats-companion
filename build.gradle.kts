@@ -7,6 +7,7 @@ plugins {
 	idea
 	jacoco
 	id("org.jetbrains.intellij") version "1.15.0"
+	id("org.barfuin.gradle.jacocolog") version "3.1.0"
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
@@ -40,7 +41,12 @@ tasks {
 		finalizedBy(jacocoTestReport, jacocoTestCoverageVerification)
 	}
 
+	jacocoTestReport {
+		classDirectories.setFrom(instrumentCode)
+	}
+
 	jacocoTestCoverageVerification {
+		classDirectories.setFrom(instrumentCode)
 		violationRules {
 			rule {
 				limit {
