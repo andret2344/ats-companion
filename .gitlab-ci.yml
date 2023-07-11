@@ -1,4 +1,4 @@
-image: gradle:7.5-jdk17
+image: gradle:8.2-jdk17
 
 before_script:
   - chmod a+x gradlew
@@ -16,25 +16,27 @@ compile:
     paths:
       - build/libs/*.jar
 
-junit:
+unit:
   stage: test
   script:
-    - ./gradlew clean test
+    - ./gradlew test
   coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
   artifacts:
     reports:
       junit:
         - build/test-results/test/*.xml
     paths:
-      - build/reports/jacoco/jacocoAggregatedReport/html/**
+      - build/reports/jacoco/test/html/**
 
 pages:
   stage: deploy
+  dependencies:
+    - unit
   script:
     - mv build/reports/jacoco/test/html/ public/
   artifacts:
     paths:
       - public/**
   only:
-    - master
+    - main
   when: manual
