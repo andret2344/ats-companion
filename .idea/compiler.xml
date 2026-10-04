@@ -4,6 +4,10 @@
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
-    <bytecodeTargetLevel target="17" />
+    <bytecodeTargetLevel target="17">
+      <module name="atsCompanion" target="21" />
+      <module name="atsCompanion.main" target="21" />
+      <module name="atsCompanion.test" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>

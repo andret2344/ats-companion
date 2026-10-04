@@ -1,12 +1,5 @@
-/*
- * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
- */
-
-pluginManagement {
-	repositories {
-		mavenCentral()
-		gradlePluginPortal()
-	}
+plugins {
+	id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 rootProject.name = "atsCompanion"

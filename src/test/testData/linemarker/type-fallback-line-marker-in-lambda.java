@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
- */
-
 @eu.andret.arguments.api.annotation.BaseCommand("test")
 public class LocalCommandExecutor extends eu.andret.arguments.AnnotatedCommandExecutor<JavaPlugin> {
 	public LocalCommandExecutor(final org.bukkit.command.CommandSender sender, final org.bukkit.plugin.java.JavaPlugin plugin) {

@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
- */
-
 package eu.andret.ats.companion.idea.utilities;
 
 import com.intellij.ide.highlighter.JavaFileType;
@@ -22,8 +18,8 @@ import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiLiteralValue;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;

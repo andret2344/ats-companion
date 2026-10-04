@@ -1,107 +1,8 @@
-<!--
-  ~ Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
-  -->
-
 <idea-plugin>
 	<id>eu.andret.ats.companion.idea</id>
-	<!--suppress PluginXmlCapitalization -->
-	<name>atsCompanion</name>
 	<vendor email="andret2344@gmail.com" url="https://andret.eu/">Andret2344</vendor>
 
-	<description>
-		<![CDATA[
-		<p>
-			<span>Utility for</span>
-			<a href='https://gitlab.com/andret-tools-system/ats-arguments'>atsArguments</a>
-			<span>library, that adds a lot of inspections and a few more cool stuff.</span>
-		</p>
-		]]>
-	</description>
-	<change-notes>
-		<![CDATA[
-		<h2>atsCompanion v0.3.0</h2>
-		<p>
-			<span>atsArguments compatibility version:</span>
-			<strong>0.1.3</strong>
-		</p>
-		<h3>Added</h3>
-		<ul>
-			<li>Completions for argument and type mappers.</li>
-			<li>Completion for argument completer.</li>
-			<li>Validations for argument and type mappers.</li>
-			<li>Validation for argument completer.</li>
-		</ul>
-		<h3>Fixed</h3>
-		<ul>
-			<li>Intentions generating fallback methods now work correctly.</li>
-			<li>Some random errors are now less likely.</li>
-		</ul>
-		<h2>atsCompanion v0.2.0</h2>
-		<p>
-			<span>atsArguments compatibility version:</span>
-			<strong>0.1.3</strong>
-		</p>
-		<h3>Added</h3>
-		<ul>
-			<li>Implicit usage provider, now methods annotated with @Argument won't be unused anymore.</li>
-			<li>Fallback method verifier, now those methods must have exactly one String parameter.</li>
-			<li>Inspection on `@Mapper` with primitive or complex type with no `@Mapper`.</li>
-			<li>Basic gutter navigation. The icon is kinda ok!</li>
-			<li>Constructor verifier.</li>
-		</ul>
-		<h2>atsCompanion v0.1.0 - Initial release</h2>
-		<p>
-			<span>atsArguments compatibility version:</span>
-			<strong>0.1.3</strong>
-		</p>
-		<h3>Inspections changed</h3>
-		<ul>
-			<li>Null comparison inspection when using ExecutorType.</li>
-		</ul>
-		<h3>Intentions added</h3>
-		<ul>
-			<li>Type fallback method generation.</li>
-		</ul>
-		<h3>Intentions changed</h3>
-		<ul>
-			<li>Argument fallback method generation.</li>
-		</ul>
-		<h2>atsCompanion v0.0.1 - Initial release</h2>
-		<p>
-			<span>atsArguments compatibility version:</span>
-			<strong>0.1.1.2</strong>
-		</p>
-		<h3>Inspections added</h3>
-		<ul>
-			<li>Abstract class annotated with @BaseCommand</li>
-			<li>Static modifier in @Argument method</li>
-			<li>Use of array in @Argument method's parameter list</li>
-			<li>@Fallback method name must match the @Argument method name</li>
-			<li>Instance checking of sender against executorType</li>
-			<li>Non-public visibility of @Argument method</li>
-			<li>Missing @BaseCommand annotation in class extending AnnotatedCommandExecutor</li>
-			<li>Missing superclass in class annotated with @BaseCommand</li>
-			<li>Position must be positive lower or equal to parameters count</li>
-			<li>@Argument method should not return a primitive</li>
-		</ul>
-		<h3>Intentions added</h3>
-		<ul>
-			<li>Fallback method generation</li>
-		</ul>
-		<h3>Completions added</h3>
-		<ul>
-			<li>The position parameter in @Argument annotation</li>
-		</ul>
-		]]>
-	</change-notes>
-
-	<!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
-		 on how to target different products -->
-	<!-- uncomment to enable plugin in all products
-	<depends>com.intellij.modules.lang</depends>
-	-->
 	<depends>com.intellij.java</depends>
-	<depends>com.intellij.modules.java</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<localInspection
@@ -256,7 +157,7 @@
 		/>
 		<localInspection
 				language="JAVA"
-				displayName="Invalid argument completer"
+				displayName="Invalid mapper annotation"
 				groupPath="ATS"
 				groupBundle="messages.InspectionsBundle"
 				groupKey="group.names.probable.bugs"
@@ -307,14 +208,4 @@
 		/>
 		<defaultLiveTemplates file="/liveTemplates/ATS.xml"/>
 	</extensions>
-
-	<application-components>
-	</application-components>
-
-	<project-components>
-	</project-components>
-
-	<actions>
-	</actions>
-
 </idea-plugin>

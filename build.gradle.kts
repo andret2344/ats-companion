@@ -1,63 +1,147 @@
-/*
- * Copyright (c) 2018 Andret Tools System. Copying and modifying allowed only keeping git link reference.
- */
+import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
+import org.jetbrains.changelog.Changelog
+import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 
 plugins {
-	java
-	idea
-	jacoco
-	id("org.jetbrains.intellij") version "1.15.0"
-	id("org.barfuin.gradle.jacocolog") version "3.1.0"
+	id("java") // Java support
+	alias(libs.plugins.kotlin) // Kotlin support
+	alias(libs.plugins.intelliJPlatform) // IntelliJ Platform Gradle Plugin
+	alias(libs.plugins.changelog) // Gradle Changelog Plugin
+	alias(libs.plugins.kover) // Gradle Kover Plugin
 }
 
-// See https://github.com/JetBrains/gradle-intellij-plugin/
-intellij {
-	version.set("2023.1")
-	plugins.add("java")
-	updateSinceUntilBuild.set(false)
-	pluginName.set("${project.name}-${project.version}")
+group = providers.gradleProperty("pluginGroup").get()
+version = providers.gradleProperty("pluginVersion").get()
+
+kotlin {
+	jvmToolchain(21)
 }
 
 repositories {
 	mavenCentral()
+
+	intellijPlatform {
+		defaultRepositories()
+	}
 }
 
 dependencies {
-	testImplementation(group = "org.assertj", name = "assertj-core", version = "3.24.2")
-	testImplementation(group = "org.jacoco", name = "org.jacoco.agent", version = "0.8.10")
+	testImplementation(libs.junit)
+	testImplementation(libs.opentest4j)
+	testImplementation(libs.assertj)
+
+	intellijPlatform {
+		create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
+		bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
+		plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
+		bundledModules(providers.gradleProperty("platformBundledModules").map { it.split(',') })
+		testFramework(TestFrameworkType.Platform)
+		testFramework(TestFrameworkType.Plugin.Java)
+	}
 }
 
-tasks {
-	withType<JavaCompile> {
-		sourceCompatibility = "17"
-		targetCompatibility = "17"
-	}
+intellijPlatform {
+	pluginConfiguration {
+		name = providers.gradleProperty("pluginName")
+		version = providers.gradleProperty("pluginVersion")
 
-	test {
-		configure<JacocoTaskExtension> {
-			isIncludeNoLocationClasses = true
-			excludes = listOf("jdk.internal.*")
+		// Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
+		description = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
+			val start = "<!-- Plugin description -->"
+			val end = "<!-- Plugin description end -->"
+
+			with(it.lines()) {
+				if (!containsAll(listOf(start, end))) {
+					throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
+				}
+				subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
+			}
 		}
-		finalizedBy(jacocoTestReport, jacocoTestCoverageVerification)
+
+		val changelog = project.changelog // local variable for configuration cache compatibility
+		// Get the latest available change notes from the changelog file
+		changeNotes = providers.gradleProperty("pluginVersion").map { pluginVersion ->
+			with(changelog) {
+				renderItem(
+					(getOrNull(pluginVersion) ?: getUnreleased())
+						.withHeader(false)
+						.withEmptySections(false),
+					Changelog.OutputType.HTML,
+				)
+			}
+		}
+
+		ideaVersion {
+			sinceBuild = providers.gradleProperty("pluginSinceBuild")
+		}
 	}
 
-	jacocoTestReport {
-		classDirectories.setFrom(instrumentCode)
+	signing {
+		certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
+		privateKey = providers.environmentVariable("PRIVATE_KEY")
+		password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
 	}
 
-	jacocoTestCoverageVerification {
-		classDirectories.setFrom(instrumentCode)
-		violationRules {
-			rule {
-				limit {
-					minimum = BigDecimal("0.9")
+	publishing {
+		token = providers.environmentVariable("PUBLISH_TOKEN")
+		// The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
+		// Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
+		// https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+		channels = providers.gradleProperty("pluginVersion")
+			.map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+	}
+
+	pluginVerification {
+		ides {
+			val oldestBuild = providers.gradleProperty("pluginSinceBuild").get()
+			// Newest release of the oldest supported line
+			latest {
+				types = listOf(IntelliJPlatformType.IntellijIdeaUltimate)
+				channels = listOf(ProductRelease.Channel.RELEASE)
+				sinceBuild = oldestBuild
+				untilBuild = "$oldestBuild.*"
+			}
+			// Full verification (before publishing or on demand) covers every recommended IDE including EAP;
+			// the default one only checks the newest release, so pull requests stay fast
+			if (providers.gradleProperty("fullVerification").isPresent) {
+				recommended()
+			} else {
+				latest {
+					types = listOf(IntelliJPlatformType.IntellijIdeaUltimate)
+					channels = listOf(ProductRelease.Channel.RELEASE)
 				}
 			}
 		}
 	}
+}
 
-	patchPluginXml {
-		version.set("${project.version}")
-		sinceBuild.set("231")
+// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
+changelog {
+	groups.empty()
+	repositoryUrl = providers.gradleProperty("pluginRepositoryUrl")
+}
+
+// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
+kover {
+	reports {
+		total {
+			xml {
+				onCheck = true
+			}
+		}
+		verify {
+			rule {
+				minBound(90, CoverageUnit.INSTRUCTION)
+			}
+		}
+	}
+}
+
+tasks {
+	publishPlugin {
+		dependsOn(patchChangelog)
 	}
 }
